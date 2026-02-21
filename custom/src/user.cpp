@@ -7,7 +7,7 @@
 
 
 void runAutonomous() {
- int auton_selected = 1;
+ int auton_selected = 2;
  switch(auton_selected) {
    case 1:
      autonskillsActual();
