@@ -63,7 +63,7 @@ void runDriver() {
    while (true) {
        // 1. Get Joystick Inputs (PROS scale: -100 to 100)
        double forwardInput = (double)controller_1.Axis3.value();
-       double turnInput = (double)controller_1.Axis1.value();
+       double turnInput = (double)controller_1.Axis1.value();//Norrel was here
 
 
        // 2. Curvature Drive Logic
