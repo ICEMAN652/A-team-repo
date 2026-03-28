@@ -9,11 +9,11 @@
 body { background: #12141a; color: #e0e0e0; font-family: 'Courier New', monospace; display: flex; height: 100vh; overflow: hidden; }
 
 #sidebar {
-  width: 280px; min-width: 280px;
+  width: 320px; min-width: 320px;
   background: #1a1d26;
   border-right: 1px solid #2a2d3a;
   display: flex; flex-direction: column;
-  padding: 14px; gap: 12px;
+  padding: 20px; gap: 16px;
   overflow-y: auto;
 }
 
@@ -90,6 +90,7 @@ input[type=range] {
 .legend-item { display: flex; align-items: center; gap: 4px; }
 .legend-dot { width: 10px; height: 3px; border-radius: 1px; }
 
+
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: #12141a; }
 ::-webkit-scrollbar-thumb { background: #2a2d3a; border-radius: 2px; }
@@ -109,7 +110,7 @@ input[type=range] {
       <option value="rightsidelow">rightsidelow</option>
       <option value="leftside7">leftside7</option>
       <option value="autonskills">autonskills</option>
-      <option value="autonskillsActual">autonskillsActual</option>
+      <option selected value="autonskillsActual">autonskillsActual (case 1 — current)</option>
       <option value="exampleAuton2">exampleAuton2</option>
     </select>
   </div>
@@ -148,16 +149,30 @@ input[type=range] {
 
   <div style="display:flex;align-items:center;gap:6px;font-size:12px">
     <span style="white-space:nowrap">Timer:</span>
-    <select id="timerSelect" style="flex:1;padding:4px 6px;background:#12141a;border:1px solid #2a2d3a;color:#e0e0e0;border-radius:3px;font-family:inherit;font-size:11px">
-      <option value="15">Auton — 15s</option>
-      <option value="60">Skills — 60s</option>
-    </select>
+    <span id="timerLabelAuton" style="font-size:11px;color:#00e5ff;font-weight:bold">Auton 15s</span>
+    <label style="position:relative;display:inline-block;width:36px;height:18px;flex-shrink:0">
+      <input type="checkbox" id="timerSelect" style="opacity:0;width:0;height:0">
+      <span style="position:absolute;cursor:pointer;inset:0;background:#2a2d3a;border-radius:18px;transition:.2s" id="timerSlider"></span>
+      <span id="timerKnob" style="position:absolute;left:2px;top:2px;width:14px;height:14px;background:#00e5ff;border-radius:50%;transition:.2s;pointer-events:none"></span>
+    </label>
+    <span id="timerLabelSkills" style="font-size:11px;color:#aaa">Skills 60s</span>
     <span id="timerDisplay" style="min-width:56px;text-align:right;font-size:12px;color:#00e5ff;font-weight:bold">0.0s</span>
   </div>
+  <script>
+    document.getElementById('timerSelect').addEventListener('change', function() {
+      const on = this.checked;
+      document.getElementById('timerKnob').style.left = on ? '20px' : '2px';
+      document.getElementById('timerLabelAuton').style.color = on ? '#aaa' : '#00e5ff';
+      document.getElementById('timerLabelSkills').style.color = on ? '#00e5ff' : '#aaa';
+      document.getElementById('timerLabelAuton').style.fontWeight = on ? 'normal' : 'bold';
+      document.getElementById('timerLabelSkills').style.fontWeight = on ? 'bold' : 'normal';
+    });
+  </script>
 
   <div class="hud">
     <div>x: <span id="hudX">0.0</span> in&nbsp;&nbsp;y: <span id="hudY">0.0</span> in&nbsp;&nbsp;hdg: <span id="hudH">0.0</span>°</div>
-    <div>step: <span id="hudStep">0</span> / <span id="hudTotal">0</span></div>
+    <div>step: <span id="hudStep">0</span> / <span id="hudTotal">0</span>&nbsp;&nbsp;volt: <span id="hudVolt" style="font-weight:bold">—</span></div>
+    <div style="height:4px;border-radius:2px;background:#1e2130;margin:4px 0"><div id="voltBar" style="height:100%;border-radius:2px;width:0%;background:#00e5ff;transition:width 0.1s"></div></div>
     <div style="color:#aaa;margin-top:4px;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="hudCmd">—</div>
   </div>
 
@@ -167,6 +182,15 @@ input[type=range] {
     <div class="legend-item"><div class="legend-dot" style="background:#b388ff"></div>turn</div>
     <div class="legend-item"><div class="legend-dot" style="background:#ffab40"></div>boomerang</div>
     <div class="legend-item"><div class="legend-dot" style="background:#555566"></div>wait</div>
+  </div>
+  <div style="font-size:10px;color:#666;line-height:1.6">
+    volt bar: <span style="color:#69f0ae">■</span> 11-12V &nbsp;<span style="color:#ffab40">■</span> 8-10V &nbsp;<span style="color:#e94560">■</span> &lt;8V
+  </div>
+
+  <div>
+    <button id="btnSync" style="width:100%">&#8635; Update Code</button>
+    <div id="syncStatus" style="font-size:10px;margin-top:4px;min-height:14px;color:#555">—</div>
+    <input id="syncFileInput" type="file" accept=".cpp" multiple style="display:none">
   </div>
 
   <div>
@@ -183,8 +207,47 @@ input[type=range] {
 'use strict';
 
 // ============================================================
+// HOW TO START
+// ─────────────────────────────────────────────────────────────
+// RECOMMENDED — VS Code Live Server (Chrome / Edge / Firefox):
+//   1. Install the "Live Server" extension in VS Code.
+//   2. Right-click simulator.html in the file explorer
+//      and choose "Open with Live Server".
+//   3. The simulator opens in your browser at http://127.0.0.1:5500/
+//   4. The active auton is auto-synced from autonomous.cpp on load.
+//      Click "↺ Update Code" any time to re-sync after editing C++.
+//
+// FALLBACK — opening simulator.html directly (file:// protocol):
+//   • Chrome/Edge: click "↺ Update Code" → a file picker appears.
+//     Select autonomous.cpp AND user.cpp from custom/src/.
+//   • Firefox: same, uses a plain file-input fallback.
+//   Note: auto-sync on load won't work on file://, only manual sync.
+//
+// CONTROLS:
+//   ▶ Play   — animate the route in real time (respects Speed slider)
+//   ⏩ Cmd   — step forward one command at a time
+//   ↺ Reset  — rewind to start
+//   Drag field — place the robot start position
+//   Heading slider — rotate the starting heading
+// ============================================================
+
+// ============================================================
 // AUTON COMMAND TABLES
+// Each entry maps an auton name to its list of movement commands.
 // Types: 'drive' | 'turn' | 'turnToPoint' | 'moveToPoint' | 'boomerang' | 'wait'
+//
+// Commands are authored in robot-local coordinates:
+//   (0, 0) = robot start,  heading 0° = robot's "forward" direction.
+// The simulator rotates/translates them to field coordinates at runtime
+// based on where you drag the start marker on the field.
+//
+// Blocking / timeout semantics (matches C++ robot code):
+//   blocking: true  → simulator waits the full timeout (ms) before
+//                      chaining to the next command, even if the move
+//                      finishes sooner.  e.g. driveTo(13, 750, true)
+//   blocking: false → next command starts instantly (dur = 0 ms).
+//                      The path is still drawn smoothly using physics
+//                      duration, but the timeline doesn't advance.
 // ============================================================
 
 const C = (type, params, label) => ({ type, ...params, label });
@@ -194,62 +257,62 @@ const AUTONS = {
   leftandmid: { name: 'leftandmid', commands: [
     C('moveToPoint', {x:-14,   y:31.5,  dir: 1}, 'moveToPoint(-14, 31.5, 1)    // first stack'),
     C('wait',        {ms:100},                    'wait(100ms)'),
-    C('drive',       {dist:-4.5},                 'driveTo(-4.5)                // align midgoal'),
+    C('drive',       {dist:-4.5, voltage:10},     'driveTo(-4.5, 10V)           // align midgoal'),
     C('turn',        {angle:-110},                'turnToAngle(-110)'),
-    C('drive',       {dist:-3},                   'driveChassis(-3.4,-3.4)      // creep into midgoal'),
+    C('drive',       {dist:-3,   voltage:6},      'driveChassis(-3.4,-3.4) 6V   // creep into midgoal'),
     C('wait',        {ms:2570},                   'wait(2570ms)                 // midgoal score'),
     C('moveToPoint', {x:-18,   y:0,     dir: 1}, 'moveToPoint(-18, 0, 1)       // matchload approach'),
     C('turn',        {angle:181},                 'turnToAngle(181)'),
     C('wait',        {ms:100},                    'wait(100ms)'),
-    C('drive',       {dist:5},                    'driveTo(5)                   // into matchload'),
+    C('drive',       {dist:5,    voltage:6},      'driveTo(5, 6V)               // into matchload'),
     C('wait',        {ms:1150},                   'wait(1150ms)                 // load balls'),
     C('moveToPoint', {x:-18.4, y:8,     dir:-1}, 'moveToPoint(-18.4, 8, -1)    // align long goal'),
-    C('drive',       {dist:-12},                  'driveTo(-12)                 // into long goal'),
+    C('drive',       {dist:-12,  voltage:11},     'driveTo(-12, 11V)            // into long goal'),
     C('wait',        {ms:2200},                   'wait(2200ms)                 // score long goal'),
-    C('drive',       {dist:15},                   'driveTo(15)                  // descore'),
+    C('drive',       {dist:15,   voltage:12},     'driveTo(15, 12V)             // descore'),
     C('turn',        {angle:-90},                 'turnToAngle(-90)'),
-    C('drive',       {dist:-11},                  'driveTo(-11)'),
+    C('drive',       {dist:-11,  voltage:12},     'driveTo(-11, 12V)'),
     C('turn',        {angle:-180},                'turnToAngle(-180)'),
-    C('drive',       {dist:-32},                  'driveTo(-32)                 // descore'),
+    C('drive',       {dist:-32,  voltage:11},     'driveTo(-32, 11V)            // descore'),
     C('turn',        {angle:-90},                 'turnToAngle(-90)'),
   ]},
 
   rightsidepush: { name: 'rightsidepush', commands: [
     C('turnToPoint', {x:10,   y:33.5,  dir:1}, 'turnToPoint(10, 33.5, 1)'),
-    C('drive',       {dist:12},                 'driveTo(12)'),
+    C('drive',       {dist:12,   voltage:5},    'driveTo(12, 5V)'),
     C('wait',        {ms:500},                  'wait(500ms)                  // scraper down'),
-    C('drive',       {dist:2},                  'driveTo(2)'),
+    C('drive',       {dist:2,    voltage:7},    'driveTo(2, 7V)'),
     C('moveToPoint', {x:43.5, y:1,     dir:1}, 'moveToPoint(43.5, 1, 1)      // matchload approach'),
     C('turnToPoint', {x:44.2, y:-10,   dir:1}, 'turnToPoint(44.2, -10, 1)'),
     C('wait',        {ms:650},                  'wait(650ms)                  // intake unjam'),
-    C('drive',       {dist:17.5},               'driveTo(17.5)                // into matchload'),
+    C('drive',       {dist:17.5, voltage:9},    'driveTo(17.5, 9V)            // into matchload'),
     C('wait',        {ms:350},                  'wait(350ms)                  // settle'),
     C('moveToPoint', {x:45,   y:10.5,  dir:-1},'moveToPoint(45, 10.5, -1)    // back out'),
-    C('drive',       {dist:-10},                'driveTo(-10)                 // into long goal'),
+    C('drive',       {dist:-10,  voltage:12},   'driveTo(-10, 12V)            // into long goal'),
     C('wait',        {ms:2300},                 'wait(2300ms)                 // score long goal'),
-    C('drive',       {dist:15},                 'driveTo(15)'),
+    C('drive',       {dist:15,   voltage:12},   'driveTo(15, 12V)'),
     C('turn',        {angle:-85},               'turnToAngle(-85)'),
-    C('drive',       {dist:14.5},               'driveTo(14.5)'),
+    C('drive',       {dist:14.5, voltage:12},   'driveTo(14.5, 12V)'),
     C('turn',        {angle:0},                 'turnToAngle(0)'),
-    C('drive',       {dist:36},                 'driveTo(36)'),
+    C('drive',       {dist:36,   voltage:8},    'driveTo(36, 8V)'),
     C('turn',        {angle:-90},               'turnToAngle(-90)'),
     C('wait',        {ms:500},                  'wait(500ms)'),
   ]},
 
   rightside4push: { name: 'rightside4push', commands: [
     C('turnToPoint', {x:9,    y:33.5,  dir:1}, 'turnToPoint(9, 33.5, 1)'),
-    C('drive',       {dist:8.6},                'driveTo(8.6)'),
+    C('drive',       {dist:8.6,  voltage:7},    'driveTo(8.6, 7V)'),
     C('wait',        {ms:400},                  'wait(400ms)                  // scraper down'),
-    C('drive',       {dist:2},                  'driveTo(2)'),
+    C('drive',       {dist:2,    voltage:4},    'driveTo(2, 4V)'),
     C('moveToPoint', {x:43.7, y:2,     dir:1}, 'moveToPoint(43.7, 2, 1)      // matchload approach'),
     C('turnToPoint', {x:43.7, y:-10,   dir:1}, 'turnToPoint(43.7, -10, 1)'),
-    C('drive',       {dist:-7},                 'driveTo(-7)                  // back into goal'),
+    C('drive',       {dist:-7,   voltage:11},   'driveTo(-7, 11V)             // back into goal'),
     C('wait',        {ms:1600},                 'wait(1600ms)                 // score'),
-    C('drive',       {dist:8},                  'driveTo(8)'),
+    C('drive',       {dist:8,    voltage:12},   'driveTo(8, 12V)'),
     C('turn',        {angle:-90},               'turnToAngle(-90)'),
-    C('drive',       {dist:3.5},                'driveTo(3.5)'),
+    C('drive',       {dist:3.5,  voltage:12},    'driveTo(3.5, 12V)'),
     C('turn',        {angle:0},                 'turnToAngle(0)'),
-    C('drive',       {dist:19},                 'driveTo(19)'),
+    C('drive',       {dist:19,   voltage:5},    'driveTo(19, 5V)'),
   ]},
 
   rightsidelow: { name: 'rightsidelow', commands: [
@@ -267,112 +330,123 @@ const AUTONS = {
     C('turn',        {angle:-160},              'turnToAngle(-160)'),
     C('moveToPoint', {x:-21,   y:-5,  dir: 1}, 'moveToPoint(-21, -5, 1)      // align long goal'),
     C('turn',        {angle:180},               'turnToAngle(180)'),
-    C('drive',       {dist:-16},                'driveTo(-16)                 // into long goal'),
+    C('drive',       {dist:-16, voltage:10},    'driveTo(-16, 10V)            // into long goal'),
     C('wait',        {ms:1150},                 'wait(1150ms)                 // score long goal'),
     C('moveToPoint', {x:-20,   y:0,   dir: 1}, 'moveToPoint(-20, 0, 1)       // matchload approach'),
     C('turn',        {angle:185},               'turnToAngle(185)'),
     C('wait',        {ms:100},                  'wait(100ms)'),
-    C('drive',       {dist:4},                  'driveChassis(6,6) ~4in       // into matchload'),
+    C('drive',       {dist:4,   voltage:6},     'driveChassis(6,6) ~4in       // into matchload'),
     C('wait',        {ms:1000},                 'wait(1000ms)                 // load balls'),
     C('moveToPoint', {x:-22,   y:6,   dir:-1}, 'moveToPoint(-22, 6, -1)      // align long goal'),
     C('turn',        {angle:18},                'turnToAngle(18)'),
-    C('drive',       {dist:-19},                'driveTo(-19)                 // into long goal'),
+    C('drive',       {dist:-19, voltage:6},     'driveTo(-19, 6V)             // into long goal'),
   ]},
 
   autonskills: { name: 'autonskills', commands: [
-    C('drive',  {dist:59},         'driveTo(59)'),
-    C('turn',   {angle:-45},       'turnToAngle(-45)'),
-    C('drive',  {dist:23},         'driveTo(23)'),
-    C('wait',   {ms:1600},         'wait(1600ms)       // at first stack area'),
-    C('turn',   {angle:-80},       'turnToAngle(-80)'),
-    C('wait',   {ms:250},          'wait(250ms)'),
-    C('turn',   {angle:-65},       'turnToAngle(-65)'),
-    C('drive',  {dist:-27},        'driveTo(-27)'),
-    C('turn',   {angle:-45},       'turnToAngle(-45)'),
-    C('drive',  {dist:-76},        'driveTo(-76)       // corridor'),
-    C('turn',   {angle:45},        'turnToAngle(45)'),
-    C('drive',  {dist:-7},         'driveTo(-7)'),
-    C('turn',   {angle:135},       'turnToAngle(135)'),
-    C('drive',  {dist:-17},        'driveTo(-17)       // long goal'),
-    C('wait',   {ms:2000},         'wait(2000ms)       // score long goal'),
-    C('turn',   {angle:136},       'turnToAngle(136)'),
-    C('drive',  {dist:40},         'driveTo(40)'),
-    C('wait',   {ms:1600},         'wait(1600ms)       // settle'),
-    C('turn',   {angle:140},       'turnToAngle(140)'),
-    C('drive',  {dist:-20},        'driveTo(-20)'),
-    C('wait',   {ms:200},          'wait(200ms)'),
-    C('turn',   {angle:137},       'turnToAngle(137)'),
-    C('drive',  {dist:-20},        'driveTo(-20)       // long goal'),
-    C('wait',   {ms:2000},         'wait(2000ms)       // score long goal'),
-    C('drive',  {dist:10},         'driveTo(10)'),
-    C('turn',   {angle:-45},       'turnToAngle(-45)'),
-    C('drive',  {dist:-24},        'driveTo(-24)'),
-    C('turn',   {angle:90},        'turnToAngle(90)'),
+    C('drive',  {dist:59,  voltage:9},  'driveTo(59, 9V)'),
+    C('turn',   {angle:-45},            'turnToAngle(-45)'),
+    C('drive',  {dist:23,  voltage:8},  'driveTo(23, 8V)'),
+    C('wait',   {ms:1600},              'wait(1600ms)       // at first stack area'),
+    C('turn',   {angle:-80},            'turnToAngle(-80)'),
+    C('wait',   {ms:250},               'wait(250ms)'),
+    C('turn',   {angle:-65},            'turnToAngle(-65)'),
+    C('drive',  {dist:-27, voltage:9},  'driveTo(-27, 9V)'),
+    C('turn',   {angle:-45},            'turnToAngle(-45)'),
+    C('drive',  {dist:-76, voltage:12}, 'driveTo(-76, 12V)  // corridor'),
+    C('turn',   {angle:45},             'turnToAngle(45)'),
+    C('drive',  {dist:-7,  voltage:8},  'driveTo(-7, 8V)'),
+    C('turn',   {angle:135},            'turnToAngle(135)'),
+    C('drive',  {dist:-17, voltage:9},  'driveTo(-17, 9V)   // long goal'),
+    C('wait',   {ms:2000},              'wait(2000ms)       // score long goal'),
+    C('turn',   {angle:136},            'turnToAngle(136)'),
+    C('drive',  {dist:40,  voltage:7},  'driveTo(40, 7V)'),
+    C('wait',   {ms:1600},              'wait(1600ms)       // settle'),
+    C('turn',   {angle:140},            'turnToAngle(140)'),
+    C('drive',  {dist:-20, voltage:9},  'driveTo(-20, 9V)'),
+    C('wait',   {ms:200},               'wait(200ms)'),
+    C('turn',   {angle:137},            'turnToAngle(137)'),
+    C('drive',  {dist:-20, voltage:9},  'driveTo(-20, 9V)   // long goal'),
+    C('wait',   {ms:2000},              'wait(2000ms)       // score long goal'),
+    C('drive',  {dist:10,  voltage:12}, 'driveTo(10, 12V)'),
+    C('turn',   {angle:-45},            'turnToAngle(-45)'),
+    C('drive',  {dist:-24, voltage:12}, 'driveTo(-24, 12V)'),
+    C('turn',   {angle:90},             'turnToAngle(90)'),
   ]},
 
   autonskillsActual: { name: 'autonskillsActual', commands: [
-    C('turn',        {angle:60},                  'turnToAngle(60)'),
-    C('drive',       {dist:13},                   'driveTo(13)'),
-    C('drive',       {dist:10},                   'driveTo(10)'),
-    C('turn',        {angle:-45},                 'turnToAngle(-45)'),
-    C('drive',       {dist:-24},                  'driveTo(-24)              // midgoal'),
-    C('wait',        {ms:1800},                   'wait(1800ms)              // midgoal score'),
-    C('drive',       {dist:57},                   'driveTo(57)               // to matchloader'),
-    C('turn',        {angle:-90},                 'turnToAngle(-90)'),
-    C('drive',       {dist:23},                   'driveTo(23)               // into matchloader'),
-    C('wait',        {ms:1500},                   'wait(1500ms)              // load balls'),
-    C('moveToPoint', {x:11,  y:47,    dir:-1},   'moveToPoint(11, 47, -1)   // hop out'),
-    C('turn',        {angle:-95},                 'turnToAngle(-95)'),
-    C('drive',       {dist:-76},                  'driveTo(-76)              // corridor'),
-    C('boomerang',   {x:96, y:44, dir:1, angle:90, dlead:0.3}, 'boomerang(96, 44, 1, 90, 0.3) // long goal'),
-    C('drive',       {dist:-30},                  'driveTo(-30)              // into long goal'),
-    C('wait',        {ms:2250},                   'wait(2250ms)              // score long goal'),
-    C('moveToPoint', {x:140, y:55,    dir: 1},   'moveToPoint(140, 55, 1)   // matchloader'),
-    C('drive',       {dist:9.5},                  'driveTo(9.5)'),
-    C('wait',        {ms:1600},                   'wait(1600ms)              // load balls'),
-    C('turn',        {angle:87},                  'turnToAngle(87)'),
-    C('drive',       {dist:-50},                  'driveTo(-50)              // long goal'),
-    C('wait',        {ms:2500},                   'wait(2500ms)              // score long goal'),
-    C('moveToPoint', {x:110, y:12,    dir: 1},   'moveToPoint(110, 12, 1)   // park approach'),
-    C('turn',        {angle:174},                 'turnToAngle(174)'),
-    C('drive',       {dist:18},                   'driveTo(18)'),
-    C('drive',       {dist:-6},                   'driveTo(-6)'),
-    C('wait',        {ms:500},                    'wait(500ms)               // scraper settle'),
-    C('drive',       {dist:10},                   'driveTo(10)'),
-    C('drive',       {dist:92},                   'driveTo(92)               // drive section'),
-    C('moveToPoint', {x:60,  y:-28,   dir:-1},   'moveToPoint(60, -28, -1)'),
-    C('turn',        {angle:135},                 'turnToAngle(135)'),
-    C('drive',       {dist:-12.5},                'driveTo(-12.5)            // midgoal'),
-    C('wait',        {ms:1800},                   'wait(1800ms)              // midgoal score'),
-    C('drive',       {dist:57},                   'driveTo(57)               // drive out'),
-    C('turn',        {angle:90},                  'turnToAngle(90)'),
-    C('drive',       {dist:23},                   'driveTo(23)               // into matchloader'),
-    C('wait',        {ms:1600},                   'wait(1600ms)              // load balls'),
-    C('turn',        {angle:55},                  'turnToAngle(55)'),
-    C('wait',        {ms:250},                    'wait(250ms)'),
-    C('turn',        {angle:75},                  'turnToAngle(75)'),
-    C('drive',       {dist:-29},                  'driveTo(-29)'),
-    C('turn',        {angle:90},                  'turnToAngle(90)'),
-    C('drive',       {dist:-76},                  'driveTo(-76)              // corridor'),
-    C('turn',        {angle:180},                 'turnToAngle(180)'),
-    C('drive',       {dist:-7},                   'driveTo(-7)'),
-    C('turn',        {angle:-90},                 'turnToAngle(-90)'),
-    C('drive',       {dist:-17},                  'driveTo(-17)              // long goal'),
-    C('wait',        {ms:2000},                   'wait(2000ms)              // score long goal'),
-    C('turn',        {angle:-89},                 'turnToAngle(-89)'),
-    C('drive',       {dist:40},                   'driveTo(40)'),
-    C('wait',        {ms:1600},                   'wait(1600ms)              // settle'),
-    C('turn',        {angle:-91},                 'turnToAngle(-91)'),
-    C('drive',       {dist:-20},                  'driveTo(-20)'),
-    C('wait',        {ms:200},                    'wait(200ms)'),
-    C('turn',        {angle:-90},                 'turnToAngle(-90)'),
-    C('drive',       {dist:-20},                  'driveTo(-20)              // long goal'),
-    C('wait',        {ms:2000},                   'wait(2000ms)              // score long goal'),
-    C('drive',       {dist:10},                   'driveTo(10)'),
-    C('turn',        {angle:-45},                 'turnToAngle(-45)'),
-    C('drive',       {dist:-24},                  'driveTo(-24)'),
-    C('turn',        {angle:0},                   'turnToAngle(0)'),
-    C('drive',       {dist:60},                   'driveTo(60)               // park'),
+    C('turn',        {angle:60},  'turnToAngle(60)  // turn to face stack'),
+    C('drive',       {dist:13, voltage:8},  'driveTo(13, 8V)'),
+    C('drive',       {dist:10, voltage:6},  'driveTo(10, 6V)'),
+    C('turn',        {angle:-45},  'turnToAngle(-45)  // turn to angle midgaol'),
+    C('drive',       {dist:-24, voltage:7},  'driveTo(-24, 7V)'),
+    C('wait',        {ms:500},  'wait(500ms)'),
+    C('wait',        {ms:100},  'wait(100ms)'),
+    C('wait',        {ms:200},  'wait(200ms)'),
+    C('wait',        {ms:1000},  'wait(1000ms)'),
+    C('drive',       {dist:57, voltage:8},  'driveTo(57, 8V)  // drive to matchloader'),
+    C('turn',        {angle:-90},  'turnToAngle(-90)  // angle to matchloader'),
+    C('drive',       {dist:23, voltage:7},  'driveTo(23, 7V)  // inside of matchloader, 9 to 7'),
+    C('wait',        {ms:1500},  'wait(1500ms)'),
+    C('moveToPoint', {x:11, y:47, dir:-1},  'moveToPoint(11, 47, -1)  // hop out of matchloader, from 48 to 45 tp 49'),
+    C('turn',        {angle:-95},  'turnToAngle(-95)'),
+    C('drive',       {dist:-76, voltage:12},  'driveTo(-76, 12V)  // drive through corridor'),
+    C('boomerang',   {x:96, y:44, dir:1, angle:90, dlead:0.3},  'boomerang(96, 44, 1, 90, 0.3)  // align with long goal'),
+    C('drive',       {dist:-30, voltage:8},  'driveTo(-30, 8V)  // drive into it'),
+    C('wait',        {ms:250},  'wait(250ms)'),
+    C('wait',        {ms:2000},  'wait(2000ms)'),
+    C('moveToPoint', {x:140, y:55, dir:1},  'moveToPoint(140, 55, 1)  // 44 to 42y , drive into matchloader point'),
+    C('drive',       {dist:9.5, voltage:8},  'driveTo(9.5, 8V)'),
+    C('wait',        {ms:1600},  'wait(1600ms)'),
+    C('turn',        {angle:87},  'turnToAngle(87)'),
+    C('drive',       {dist:-50, voltage:9},  'driveTo(-50, 9V)  // align fully to long goal'),
+    C('wait',        {ms:500},  'wait(500ms)  // unjam'),
+    C('wait',        {ms:2000},  'wait(2000ms)  // score'),
+    C('moveToPoint', {x:110, y:12, dir:1},  'moveToPoint(110, 12, 1)  // move to park'),
+    C('turn',        {angle:174},  'turnToAngle(174)  // align to park'),
+    C('drive',       {dist:18, voltage:4},  'driveTo(18, 4V)  // move a lil further'),
+    C('drive',       {dist:-6, voltage:8},  'driveTo(-6, 8V)'),
+    C('wait',        {ms:500},  'wait(500ms)'),
+    C('drive',       {dist:10, voltage:4},  'driveTo(10, 4V)'),
+    C('drive',       {dist:92, voltage:7},  'driveTo(92, 7V)  // drive through section'),
+    C('moveToPoint', {x:60, y:-28, dir:-1},  'moveToPoint(60, -28, -1)'),
+    C('turn',        {angle:135},  'turnToAngle(135)'),
+    C('drive',       {dist:-12.5, voltage:9},  'driveTo(-12.5, 9V)'),
+    C('wait',        {ms:100},  'wait(100ms)'),
+    C('wait',        {ms:200},  'wait(200ms)'),
+    C('wait',        {ms:1000},  'wait(1000ms)'),
+    C('wait',        {ms:500},  'wait(500ms)'),
+    C('drive',       {dist:57, voltage:9},  'driveTo(57, 9V)  // drive out'),
+    C('turn',        {angle:90},  'turnToAngle(90)  // face loader'),
+    C('drive',       {dist:23, voltage:8},  'driveTo(23, 8V)  // drive forward'),
+    C('wait',        {ms:100},  'wait(100ms)'),
+    C('wait',        {ms:1500},  'wait(1500ms)'),
+    C('turn',        {angle:55},  'turnToAngle(55)  // turn out'),
+    C('wait',        {ms:250},  'wait(250ms)'),
+    C('turn',        {angle:75},  'turnToAngle(75)'),
+    C('drive',       {dist:-29, voltage:9},  'driveTo(-29, 9V)'),
+    C('turn',        {angle:90},  'turnToAngle(90)'),
+    C('drive',       {dist:-76, voltage:12},  'driveTo(-76, 12V)  // corrder'),
+    C('turn',        {angle:180},  'turnToAngle(180)'),
+    C('drive',       {dist:-7, voltage:8},  'driveTo(-7, 8V)'),
+    C('turn',        {angle:-90},  'turnToAngle(-90)'),
+    C('drive',       {dist:-17, voltage:9},  'driveTo(-17, 9V)'),
+    C('wait',        {ms:250},  'wait(250ms)'),
+    C('wait',        {ms:1750},  'wait(1750ms)'),
+    C('turn',        {angle:-89},  'turnToAngle(-89)'),
+    C('drive',       {dist:40, voltage:7},  'driveTo(40, 7V)'),
+    C('wait',        {ms:1600},  'wait(1600ms)'),
+    C('turn',        {angle:-91},  'turnToAngle(-91)'),
+    C('drive',       {dist:-20, voltage:9},  'driveTo(-20, 9V)'),
+    C('wait',        {ms:200},  'wait(200ms)'),
+    C('turn',        {angle:-90},  'turnToAngle(-90)'),
+    C('drive',       {dist:-20, voltage:9},  'driveTo(-20, 9V)'),
+    C('wait',        {ms:250},  'wait(250ms)'),
+    C('wait',        {ms:1750},  'wait(1750ms)'),
+    C('drive',       {dist:10, voltage:12},  'driveTo(10, 12V)  // starting from long goal'),
+    C('turn',        {angle:42},  'turnToAngle(42)'),
+    C('drive',       {dist:-28, voltage:12},  'driveTo(-28, 12V)'),
+    C('turn',        {angle:0},  'turnToAngle(0)'),
+    C('drive',       {dist:60, voltage:12},  'driveTo(60, 12V)  // park'),
   ]},
 
   exampleAuton2: { name: 'exampleAuton2', commands: [
@@ -399,14 +473,20 @@ const CMD_COLOR = {
 };
 
 // ============================================================
-// SIMULATOR  —  builds an array of pose frames from commands
+// SIMULATOR  —  converts command list into an array of pose frames
+//
+// Pipeline:
+//   buildFrames()         iterates commands, calls execCmd() for each
+//     └─ transformCmd()   rotates/translates robot-local coords to field
+//     └─ execCmd()        returns {frames[], dur, x, y, h} per command
+//         frames[] = one entry per sub-step (used for smooth animation)
+//         dur      = how long the timeline advances in ms (= timeout if
+//                    blocking, 0 if non-blocking)
+//   frames[]             flat array of {x,y,h,t,color,...} fed to render
 // ============================================================
 
-// The autonomous commands are authored in robot-local coordinates:
-//   (0,0) = robot start position, heading 0 = north.
-// When the user places the robot at (sx, sy) heading sh on the field,
-// we transform every absolute target (moveToPoint, turnToPoint, boomerang, turn)
-// from robot-local into field coordinates before executing.
+// Convert a command's absolute targets from robot-local space to field space.
+// 'drive' commands use relative distance, so they pass through unchanged.
 function transformCmd(cmd, sx, sy, sh) {
   const shr = sh * Math.PI / 180;
   const cs = Math.cos(shr), sn = Math.sin(shr);
@@ -469,10 +549,13 @@ function execCmd(cmd, x, y, h, ci) {
       const nx = x + cmd.dist * Math.sin(hr);
       const ny = y + cmd.dist * Math.cos(hr);
       const steps = Math.max(8, Math.abs(Math.round(cmd.dist)));
-      const dur = Math.abs(cmd.dist) / 20.0 * 1000; // ~20 in/sec avg
+      const voltage = cmd.voltage !== undefined ? cmd.voltage : 12;
+      const physicsDur = Math.abs(cmd.dist) / ((voltage / 12) * 45) * 1000; // 45 in/sec at 12V
+      const blocking = cmd.blocking !== false;
+      const dur = blocking ? (cmd.timeout != null ? cmd.timeout : 5000) : 0;
       for (let s = 1; s <= steps; s++) {
         const t = s / steps;
-        push(x + (nx - x) * t, y + (ny - y) * t, h, dur * t);
+        frames.push({ x: x + (nx - x) * t, y: y + (ny - y) * t, h, cmdIdx: ci, label: cmd.label, color, tw: physicsDur * t, voltage });
       }
       return { x: nx, y: ny, h, frames, dur };
     }
@@ -482,9 +565,11 @@ function execCmd(cmd, x, y, h, ci) {
       while (diff >  180) diff -= 360;
       while (diff < -180) diff += 360;
       const steps = Math.max(8, Math.round(Math.abs(diff) / 4));
-      const dur = Math.abs(diff) / 150.0 * 1000; // ~150 deg/sec avg
+      const physicsDur = Math.abs(diff) / 165.0 * 1000; // ~165 deg/sec avg
+      const blocking = cmd.blocking !== false;
+      const dur = blocking ? (cmd.timeout != null ? cmd.timeout : 3000) : 0;
       for (let s = 1; s <= steps; s++) {
-        push(x, y, h + diff * (s / steps), dur * s / steps);
+        push(x, y, h + diff * (s / steps), physicsDur * s / steps);
       }
       return { x, y, h: cmd.angle, frames, dur };
     }
@@ -526,7 +611,9 @@ function execCmd(cmd, x, y, h, ci) {
       while (dh < -180) dh += 360;
 
       const dist = Math.sqrt((x1 - x0) ** 2 + (y1 - y0) ** 2);
-      const dur  = dist / 18.0 * 1000; // ~18 in/sec curved
+      const physicsDur = dist / 20.0 * 1000; // ~20 in/sec curved
+      const blocking = cmd.blocking !== false;
+      const dur = blocking ? (cmd.timeout != null ? cmd.timeout : 5000) : 0;
       const h0r  = h0 * Math.PI / 180;
       const cpx  = x0 + Math.sin(h0r) * dist * 0.55;
       const cpy  = y0 + Math.cos(h0r) * dist * 0.55;
@@ -536,7 +623,7 @@ function execCmd(cmd, x, y, h, ci) {
         const t  = s / steps;
         const bx = (1 - t) * (1 - t) * x0 + 2 * (1 - t) * t * cpx + t * t * x1;
         const by = (1 - t) * (1 - t) * y0 + 2 * (1 - t) * t * cpy + t * t * y1;
-        push(bx, by, h0 + dh * t, dur * t);
+        push(bx, by, h0 + dh * t, physicsDur * t);
       }
       return { x: x1, y: y1, h: h1, frames, dur };
     }
@@ -781,7 +868,7 @@ function render() {
 
   // Timer bar at bottom of canvas
   if (frames.length > 1 && f) {
-    const timeLimitMs = parseInt(document.getElementById('timerSelect').value) * 1000;
+    const timeLimitMs = (document.getElementById('timerSelect').checked ? 60 : 15) * 1000;
     const simMs = f.t || 0;
     const frac = Math.min(simMs / timeLimitMs, 1);
     const barH = 6, barY = canvas.height - barH;
@@ -812,13 +899,29 @@ function updateHUD(f) {
   document.getElementById('hudCmd').textContent  = f.label || '—';
 
   // Timer display
-  const timeLimitMs = parseInt(document.getElementById('timerSelect').value) * 1000;
+  const timeLimitMs = (document.getElementById('timerSelect').checked ? 60 : 15) * 1000;
   const simMs = f.t || 0;
   const remaining = Math.max(0, (timeLimitMs - simMs) / 1000);
   const elapsed = simMs / 1000;
   const timerEl = document.getElementById('timerDisplay');
   timerEl.textContent = elapsed.toFixed(1) + 's / ' + (timeLimitMs / 1000) + 's';
   timerEl.style.color = remaining <= 3 ? '#e94560' : remaining <= 5 ? '#ffab40' : '#00e5ff';
+
+  // Voltage display
+  const voltEl = document.getElementById('hudVolt');
+  const voltBar = document.getElementById('voltBar');
+  if (f && f.voltage !== undefined) {
+    const v = f.voltage;
+    const pct = (v / 12 * 100).toFixed(0);
+    voltEl.textContent = v + 'V (' + pct + '%)';
+    voltEl.style.color = v >= 11 ? '#69f0ae' : v >= 8 ? '#ffab40' : '#e94560';
+    voltBar.style.width = pct + '%';
+    voltBar.style.background = v >= 11 ? '#69f0ae' : v >= 8 ? '#ffab40' : '#e94560';
+  } else {
+    voltEl.textContent = '—';
+    voltEl.style.color = '#00e5ff';
+    voltBar.style.width = '0%';
+  }
 
   // Highlight command in log
   document.querySelectorAll('.cmd-entry').forEach(e => e.classList.remove('active'));
@@ -860,7 +963,7 @@ function animate(ts) {
     lastTs = ts;
     frameIdx = Math.min(frameIdx + speed, frames.length - 1);
     render();
-    const timeLimitMs = parseInt(document.getElementById('timerSelect').value) * 1000;
+    const timeLimitMs = (document.getElementById('timerSelect').checked ? 60 : 15) * 1000;
     const simTime = frames[frameIdx] ? frames[frameIdx].t : 0;
     if (frameIdx >= frames.length - 1 || simTime >= timeLimitMs) {
       playing = false;
@@ -1028,10 +1131,198 @@ function resizeCanvas() {
 window.addEventListener('resize', resizeCanvas);
 
 // ============================================================
-// INIT
+// C++ SYNC  —  parses autonomous.cpp at runtime so you don't
+//              have to manually update the JS command tables.
+//
+// Flow when "↺ Update Code" is clicked:
+//   syncFromCode()        reads user.cpp + autonomous.cpp (3 strategies below)
+//     └─ syncApplyText()  finds auton_selected → case N → function name
+//         └─ syncExtractBody()  extracts the function body from autonomous.cpp
+//         └─ syncParseBody()    regex-parses each movement call into a command
+//         └─ AUTONS[name] = …   hot-patches the command table in memory
+//         └─ load()             re-builds frames + re-renders
+//
+// The three fetch strategies (tried in order):
+//   1. fetch()                  works when served via Live Server / HTTP
+//   2. File System Access API   Chrome/Edge on file:// — opens a picker once,
+//                               then silently re-reads on every sync
+//   3. <input type="file">      Firefox fallback — opens a picker every time
 // ============================================================
-resizeCanvas();
-load();
+
+// Remove block comments and line comments, preserving line count for sync.
+function syncStrip(src) {
+  return src
+    .replace(/\/\*[\s\S]*?\*\//g, m => '\n'.repeat((m.match(/\n/g)||[]).length))
+    .replace(/\/\/[^\n]*/g, '');
+}
+
+function syncExtractBody(src, name) {
+  const re = new RegExp(`void\\s+${name}\\s*\\([^)]*\\)\\s*\\{`);
+  const m  = re.exec(src);
+  if (!m) return null;
+  let depth = 1, i = m.index + m[0].length;
+  while (i < src.length && depth > 0) {
+    if (src[i] === '{') depth++;
+    else if (src[i] === '}') depth--;
+    i++;
+  }
+  return src.slice(m.index + m[0].length, i - 1);
+}
+
+function syncParseBody(rawBody) {
+  const cmds      = [];
+  const rawLines   = rawBody.split('\n');
+  const cleanLines = syncStrip(rawBody).split('\n');
+  for (let i = 0; i < cleanLines.length; i++) {
+    const cl = cleanLines[i].trim();
+    if (!cl) continue;
+    const cmtM = rawLines[i].match(/\/\/\s*(.*)/);
+    const cmt  = cmtM ? cmtM[1].trim() : '';
+    let m;
+    // driveTo(dist, timeout, blocking, voltage)
+    m = cl.match(/\bdriveTo\s*\(\s*(-?[\d.]+)(?:\s*,\s*([\d.]+))?(?:\s*,\s*(true|false))?(?:\s*,\s*([\d.]+))?\s*\)/);
+    if (m) {
+      const dist=+m[1], timeout=m[2]!=null?+m[2]:5000, blocking=m[3]!=='false', voltage=m[4]!=null?+m[4]:12;
+      cmds.push(C('drive',{dist,voltage,timeout,blocking},`driveTo(${dist}, ${timeout}ms, ${blocking}, ${voltage}V)${cmt?' // '+cmt:''}`)); continue; }
+    m = cl.match(/\bdriveChassis\s*\(\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)\s*\)/);
+    if (m) { const l=+m[1],r=+m[2]; if(l===0&&r===0) continue;
+      cmds.push(C('drive',{dist:l<0?-3:3,voltage:Math.abs(l),timeout:500,blocking:false},`driveChassis(${l},${r})${cmt?' // '+cmt:''}`)); continue; }
+    // turnToAngle(angle, timeout, blocking, voltage)
+    m = cl.match(/\bturnToAngle\s*\(\s*(-?[\d.]+)(?:\s*,\s*([\d.]+))?(?:\s*,\s*(true|false))?(?:\s*,\s*([\d.]+))?\s*\)/);
+    if (m) {
+      const angle=+m[1], timeout=m[2]!=null?+m[2]:3000, blocking=m[3]!=='false';
+      cmds.push(C('turn',{angle,timeout,blocking},`turnToAngle(${angle}, ${timeout}ms, ${blocking})${cmt?' // '+cmt:''}`)); continue; }
+    // moveToPoint(x, y, dir, timeout, blocking, voltage)
+    m = cl.match(/\bmoveToPoint\s*\(\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)(?:\s*,\s*([\d.]+))?(?:\s*,\s*(true|false))?(?:\s*,\s*([\d.]+))?\s*\)/);
+    if (m) {
+      const timeout=m[4]!=null?+m[4]:5000, blocking=m[5]!=='false', voltage=m[6]!=null?+m[6]:12;
+      cmds.push(C('moveToPoint',{x:+m[1],y:+m[2],dir:+m[3],timeout,blocking,voltage},`moveToPoint(${+m[1]},${+m[2]},${+m[3]}, ${timeout}ms, ${blocking})${cmt?' // '+cmt:''}`)); continue; }
+    // turnToPoint(x, y, dir, timeout, blocking)
+    m = cl.match(/\bturnToPoint\s*\(\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)(?:\s*,\s*([\d.]+))?(?:\s*,\s*(true|false))?\s*\)/);
+    if (m) {
+      const timeout=m[4]!=null?+m[4]:3000, blocking=m[5]!=='false';
+      cmds.push(C('turnToPoint',{x:+m[1],y:+m[2],dir:+m[3],timeout,blocking},`turnToPoint(${+m[1]},${+m[2]},${+m[3]}, ${timeout}ms, ${blocking})${cmt?' // '+cmt:''}`)); continue; }
+    // boomerang(x, y, dir, angle, dlead, timeout, blocking, voltage)
+    m = cl.match(/\bboomerang\s*\(\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)\s*,\s*([\d.]+)(?:\s*,\s*([\d.]+))?(?:\s*,\s*(true|false))?(?:\s*,\s*([\d.]+))?\s*\)/);
+    if (m) {
+      const timeout=m[6]!=null?+m[6]:5000, blocking=m[7]!=='false', voltage=m[8]!=null?+m[8]:12;
+      cmds.push(C('boomerang',{x:+m[1],y:+m[2],dir:+m[3],angle:+m[4],dlead:+m[5],timeout,blocking,voltage},`boomerang(${+m[1]},${+m[2]},${+m[3]},${+m[4]},${+m[5]}, ${timeout}ms, ${blocking})${cmt?' // '+cmt:''}`)); continue; }
+    m = cl.match(/\bwait\s*\(\s*([\d.]+)\s*,\s*msec\s*\)/);
+    if (m) { cmds.push(C('wait',{ms:+m[1]},`wait(${+m[1]}ms)${cmt?' // '+cmt:''}`)); continue; }
+  }
+  return cmds;
+}
+
+function syncStatus(msg, color) {
+  const el = document.getElementById('syncStatus');
+  el.textContent = msg;
+  el.style.color = color || '#555';
+}
+
+// Apply parsed text from both files into the simulator
+function syncApplyText(userText, autoText) {
+  const clean = syncStrip(userText || '');
+  const valM  = clean.match(/auton_selected\s*=\s*(\d+)/);
+  let fnName  = document.getElementById('autonSelect').value;
+  let caseNum = null;
+  if (valM) {
+    const caseRe = new RegExp(`case\\s+${valM[1]}\\s*:[\\s\\n\\r]+(\\w+)\\s*\\(`);
+    const caseM  = caseRe.exec(clean);
+    if (caseM) { fnName = caseM[1]; caseNum = +valM[1]; }
+  }
+  const body = syncExtractBody(autoText, fnName);
+  if (!body) { syncStatus(`⚠ ${fnName}() not found in autonomous.cpp`, '#e94560'); return; }
+  const cmds = syncParseBody(body);
+  if (!cmds.length) { syncStatus(`⚠ no commands parsed from ${fnName}`, '#e94560'); return; }
+
+  AUTONS[fnName] = { name: fnName, commands: cmds };
+
+  const sel = document.getElementById('autonSelect');
+  for (const opt of sel.options) {
+    opt.text = opt.text.replace(/\s*\(current\)/, '');
+    if (opt.value === fnName) { opt.text += ' (current)'; opt.selected = true; }
+  }
+  load();
+  syncStatus(`✓ case ${caseNum ?? '?'}: ${fnName} (${cmds.length} cmds)`, '#69f0ae');
+}
+
+// Stored file handles so repeat clicks don't re-prompt (Chrome/Edge)
+let _handles = null;
+
+async function syncFromCode() {
+  syncStatus('syncing…', '#ffab40');
+
+  // Option 1: fetch — works when opened via Live Server or any HTTP server
+  try {
+    const [u, a] = await Promise.all([
+      fetch('./custom/src/user.cpp').then(r => { if (!r.ok) throw 0; return r.text(); }),
+      fetch('./custom/src/autonomous.cpp').then(r => { if (!r.ok) throw 0; return r.text(); }),
+    ]);
+    syncApplyText(u, a);
+    return;
+  } catch(_) {}
+
+  // Option 2: File System Access API — works when opened as a local file in Chrome/Edge
+  // First click: prompts to pick the files. Every click after: silently re-reads them.
+  if ('showOpenFilePicker' in window) {
+    try {
+      if (!_handles) {
+        syncStatus('select autonomous.cpp + user.cpp', '#ffab40');
+        const hs = await window.showOpenFilePicker({
+          multiple: true,
+          types: [{ description: 'C++ source files', accept: { 'text/plain': ['.cpp', '.h'] } }],
+        });
+        _handles = { auto: null, user: null };
+        for (const h of hs) {
+          if (h.name === 'autonomous.cpp') _handles.auto = h;
+          if (h.name === 'user.cpp')       _handles.user = h;
+        }
+        if (!_handles.auto) { _handles = null; syncStatus('⚠ autonomous.cpp not selected', '#e94560'); return; }
+      }
+      const autoText = await (await _handles.auto.getFile()).text();
+      const userText = _handles.user ? await (await _handles.user.getFile()).text() : null;
+      syncApplyText(userText, autoText);
+    } catch(e) {
+      if (e.name === 'AbortError') { syncStatus('cancelled', '#555'); return; }
+      _handles = null; // reset so next click re-prompts
+      syncStatus('⚠ ' + e.message, '#e94560');
+    }
+    return;
+  }
+
+  // Option 3: plain file input — fallback for Firefox and other browsers
+  syncStatus('select autonomous.cpp + user.cpp', '#ffab40');
+  document.getElementById('syncFileInput').click();
+}
+
+// File input fallback handler
+document.getElementById('syncFileInput').addEventListener('change', e => {
+  const files = [...e.target.files];
+  e.target.value = '';
+  let userText = null, autoText = null, pending = files.length;
+  if (!pending) return;
+  files.forEach(f => {
+    const r = new FileReader();
+    r.onload = ev => {
+      if (f.name === 'autonomous.cpp') autoText = ev.target.result;
+      if (f.name === 'user.cpp')       userText = ev.target.result;
+      if (--pending === 0) {
+        if (!autoText) { syncStatus('⚠ autonomous.cpp not in selection', '#e94560'); return; }
+        syncApplyText(userText, autoText);
+      }
+    };
+    r.readAsText(f);
+  });
+});
+
+document.getElementById('btnSync').addEventListener('click', syncFromCode);
+
+// ============================================================
+// INIT  —  runs once on page load
+// ============================================================
+resizeCanvas();   // size canvas to fit the window
+load();           // build frames from the default selected auton
+syncFromCode();   // auto-sync from C++ (works on Live Server; silently skips on file://)
 </script>
 </body>
 </html>

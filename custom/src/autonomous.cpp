@@ -270,9 +270,9 @@ void autonskillsActual(){
   intake1.spin(fwd,12,volt);
   intake2.spin(reverse,1,volt);
   turnToAngle(60,500,true,12); // turn to face stack
-  driveTo(13,750,true,8);
+  driveTo(13,750,false,8);
   intake1.spin(fwd,0,volt);
-  driveTo(10,500,true,6);
+  driveTo(10,500,false,6);
   turnToAngle(-45,500,true,12); // turn to angle midgaol
   driveTo(-24,700,true,7);
   scraper.set(true);
@@ -286,13 +286,13 @@ void autonskillsActual(){
   wait(1000,msec);
   midgoal.set(false);
   intake2.spin(reverse,1,volt);
-  driveTo(57,1500, true, 8); // drive to matchloader
+  driveTo(57,1500, false, 8); // drive to matchloader
   turnToAngle(-90,400,true,7); //angle to matchloader
   driveTo(23,1000,true,7); // inside of matchloader, 9 to 7 
   wait(1500,msec);
-  moveToPoint(11,47,-1,1000,true,8); // hop out of matchloader, from 48 to 45 tp 49
+  moveToPoint(11,47,-1,1000,false,8); // hop out of matchloader, from 48 to 45 tp 49
   turnToAngle(-95,400,true,7);
-  driveTo(-76,1750,true,12); //drive through corridor
+  driveTo(-76,1750,false,12); //drive through corridor
   boomerang(96, 44, 1, 90, 0.3, 1000, false, 8); // align with long goal
   driveTo(-30, 1000, true, 8); //drive into it
   resetPositionLeft();
@@ -373,7 +373,7 @@ void autonskillsActual(){
   turnToAngle(75,400,true,12); //
   driveTo(-29, 800, true, 9);
   turnToAngle(90, 400, true, 12);
-  driveTo(-76,1750,true,12);//corrder
+  driveTo(-76,1750,false,12);//corrder
   turnToAngle(180, 600, true, 12);
   driveTo(-7, 400, true, 8);
   turnToAngle(-90, 600, true, 12);
@@ -386,13 +386,13 @@ void autonskillsActual(){
   wait(1750, msec);
   intake2.spin(fwd,0,volt);
   turnToAngle(-89, 500, false, 9);
-  driveTo(40, 2000, true, 7);
+  driveTo(40, 2000, false, 7);
   wait(1600, msec);
   turnToAngle(-91, 500, true, 12);
   driveTo(-20, 1000, false, 9);
   wait(200, msec);
   turnToAngle(-90, 500, true, 12);
-  driveTo(-20, 1000, true, 9);
+  driveTo(-20, 1000, false, 9);
   intake1.spin(reverse, 12, volt);
   intake2.spin(reverse, 12, volt);
   wait(250, msec); 
@@ -404,9 +404,9 @@ void autonskillsActual(){
 
 
   driveTo(10, 500, false, 12); // starting from long goal which haas angle of 90
-  turnToAngle(-45, 500, false, 12);
+  turnToAngle(55, 500, false, 12);
   intake1.spin(reverse, 12, volt);
-  driveTo(-24, 1000, false, 12);
+  driveTo(-35, 1000, false, 12);
   turnToAngle(0, 500, true, 12);
   driveTo(60, 2000, true, 12);
 
