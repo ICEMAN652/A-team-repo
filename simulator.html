@@ -887,6 +887,70 @@ function render() {
   }
 
   updateHUD(f);
+
+  // Hover tooltip — shows robot-local coords anywhere on field,
+  // plus heading + command label when near a path point
+  if (hoverPos) {
+    const { px, py, fx, fy } = hoverPos;
+
+    // Inverse-transform field coords → robot-local coords
+    // so the numbers match what you'd write in C++ (moveToPoint, driveTo, etc.)
+    const startX = parseFloat(document.getElementById('startX').value) || 0;
+    const startY = parseFloat(document.getElementById('startY').value) || 0;
+    const startH = parseFloat(document.getElementById('startH').value) || 0;
+    const shr = startH * Math.PI / 180;
+    const cs = Math.cos(shr), sn = Math.sin(shr);
+    const dx = fx - startX, dy = fy - startY;
+    const rx = cs * dx - sn * dy;  // robot-local x
+    const ry = sn * dx + cs * dy;  // robot-local y
+
+    // Snap to nearest path frame for extra info (heading + label)
+    const SNAP_PX = 16;
+    let best = null, bestD2 = SNAP_PX * SNAP_PX;
+    for (const f of frames) {
+      const [cx, cy] = toCanvas(f.x, f.y);
+      const d2 = (cx - px) ** 2 + (cy - py) ** 2;
+      if (d2 < bestD2) { bestD2 = d2; best = f; }
+    }
+
+    const lines = [
+      `x: ${rx.toFixed(1)}  y: ${ry.toFixed(1)}`,
+    ];
+    if (best) {
+      lines.push(`hdg: ${best.h.toFixed(1)}°`);
+      if (best.label) lines.push(best.label.split('//')[0].trim());
+    }
+
+    const dotColor = best ? (best.color || '#00e5ff') : '#ffffff99';
+    const [hx, hy] = toCanvas(fx, fy);
+
+    // Crosshair dot at cursor position
+    ctx.beginPath(); ctx.arc(hx, hy, best ? 4 : 3, 0, Math.PI * 2);
+    ctx.fillStyle = dotColor;
+    ctx.fill();
+
+    // Tooltip box
+    const pad = 7, lineH = 14;
+    const W = 175, H = pad * 2 + lines.length * lineH;
+    let tx = hx + 14, ty = hy - H / 2;
+    if (tx + W > canvas.width)  tx = hx - W - 10;
+    if (ty < 4)                  ty = 4;
+    if (ty + H > canvas.height)  ty = canvas.height - H - 4;
+
+    ctx.fillStyle = '#1a1d26ee';
+    ctx.strokeStyle = dotColor;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.roundRect(tx, ty, W, H, 4);
+    ctx.fill(); ctx.stroke();
+
+    ctx.font = '11px monospace';
+    ctx.textAlign = 'left';
+    lines.forEach((l, i) => {
+      ctx.fillStyle = i === 0 ? '#00e5ff' : '#aaaaaa';
+      ctx.fillText(l, tx + pad, ty + pad + 11 + i * lineH);
+    });
+  }
 }
 
 function updateHUD(f) {
@@ -1036,25 +1100,35 @@ canvas.addEventListener('mousedown', e => {
   e.preventDefault();
 });
 
+let hoverPos = null; // { px, py, fx, fy } — current mouse position over the canvas
+
 canvas.addEventListener('mousemove', e => {
   const { px, py, fx, fy } = canvasFieldPos(e);
-  canvas.title = `(${fx.toFixed(1)}, ${fy.toFixed(1)})`;
-  if (!draggingStart) return;
 
-  // Live ghost robot preview at current drag position
+  if (draggingStart) {
+    // Live ghost robot preview while dragging start position
+    render();
+    const sh = parseFloat(document.getElementById('startH').value) || 0;
+    ctx.save();
+    ctx.globalAlpha = 0.5;
+    drawRobot({ x: fx, y: fy, h: sh });
+    ctx.globalAlpha = 1;
+    const [cpx, cpy] = toCanvas(fx, fy);
+    ctx.fillStyle = '#ffd700';
+    ctx.font = '11px monospace';
+    ctx.textAlign = 'left';
+    ctx.fillText(`(${fx.toFixed(1)}, ${fy.toFixed(1)})`, cpx + 16, cpy - 12);
+    ctx.restore();
+    return;
+  }
+
+  hoverPos = { px, py, fx, fy };
   render();
-  const sh = parseFloat(document.getElementById('startH').value) || 0;
-  ctx.save();
-  ctx.globalAlpha = 0.5;
-  drawRobot({ x: fx, y: fy, h: sh });
-  ctx.globalAlpha = 1;
-  // Position label
-  const [cpx, cpy] = toCanvas(fx, fy);
-  ctx.fillStyle = '#ffd700';
-  ctx.font = '11px monospace';
-  ctx.textAlign = 'left';
-  ctx.fillText(`(${fx.toFixed(1)}, ${fy.toFixed(1)})`, cpx + 16, cpy - 12);
-  ctx.restore();
+});
+
+canvas.addEventListener('mouseleave', () => {
+  if (draggingStart) { draggingStart = false; canvas.style.cursor = 'crosshair'; }
+  if (hoverPos) { hoverPos = null; render(); }
 });
 
 canvas.addEventListener('mouseup', e => {
@@ -1067,9 +1141,6 @@ canvas.addEventListener('mouseup', e => {
   load();
 });
 
-canvas.addEventListener('mouseleave', () => {
-  if (draggingStart) { draggingStart = false; canvas.style.cursor = 'crosshair'; }
-});
 
 // ============================================================
 // UI EVENTS
@@ -1252,17 +1323,20 @@ let _handles = null;
 async function syncFromCode() {
   syncStatus('syncing…', '#ffab40');
 
-  // Option 1: fetch — works when opened via Live Server or any HTTP server
-  try {
-    const [u, a] = await Promise.all([
-      fetch('./custom/src/user.cpp').then(r => { if (!r.ok) throw 0; return r.text(); }),
-      fetch('./custom/src/autonomous.cpp').then(r => { if (!r.ok) throw 0; return r.text(); }),
-    ]);
-    syncApplyText(u, a);
-    return;
-  } catch(_) {}
+  // Option 1: fetch — only on HTTP (Live Server). Skipped on file:// so the
+  // async await doesn't consume the user-gesture needed for the file picker below.
+  if (window.location.protocol.startsWith('http')) {
+    try {
+      const [u, a] = await Promise.all([
+        fetch('./custom/src/user.cpp').then(r => { if (!r.ok) throw 0; return r.text(); }),
+        fetch('./custom/src/autonomous.cpp').then(r => { if (!r.ok) throw 0; return r.text(); }),
+      ]);
+      syncApplyText(u, a);
+      return;
+    } catch(_) {}
+  }
 
-  // Option 2: File System Access API — works when opened as a local file in Chrome/Edge
+  // Option 2: File System Access API — Chrome/Edge on file://
   // First click: prompts to pick the files. Every click after: silently re-reads them.
   if ('showOpenFilePicker' in window) {
     try {
@@ -1322,7 +1396,9 @@ document.getElementById('btnSync').addEventListener('click', syncFromCode);
 // ============================================================
 resizeCanvas();   // size canvas to fit the window
 load();           // build frames from the default selected auton
-syncFromCode();   // auto-sync from C++ (works on Live Server; silently skips on file://)
+// Only auto-sync on HTTP (i.e. Live Server) — on file:// just use the hardcoded
+// command tables and let the user click "↺ Update Code" manually if needed
+if (window.location.protocol.startsWith('http')) syncFromCode();
 </script>
 </body>
 </html>
