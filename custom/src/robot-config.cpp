@@ -77,7 +77,7 @@ double heading_correction_kp = 0.6, heading_correction_ki = 0, heading_correctio
 
 // Enable or disable the use of tracking wheels
 bool using_horizontal_tracker = false;  // Set to true if a horizontal tracking wheel is installed and used for odometry
-bool using_vertical_tracker = true;   // Set to true if a vertical tracking wheel is installed and used for odometry
+bool using_vertical_tracker = false;   // Set to true if a vertical tracking wheel is installed and used for odometry
 
 
 // IGNORE THESE IF YOU ARE NOT USING TRACKING WHEELS
