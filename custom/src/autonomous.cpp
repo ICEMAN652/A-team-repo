@@ -75,8 +75,9 @@ void rightsidelow(){
 }
 
 void rightside2(){
-  driveTo(10, 500, false, 12); // starting from long goal which haas angle of 90
-
+  moveToPoint(17.0,25.6,1,1200,false,10);
+  intake2.spin(fwd,12,volt);
+  wait(300,msec);
 }
 
 void rightsidepush(){
