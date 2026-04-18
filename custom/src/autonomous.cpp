@@ -68,10 +68,15 @@ void rightsidelow(){
  wait(1500, msec);
 
 
+
+
  
   //moveToPoint(6.5, 25, 1, 2500, false, 5);//drive to balls
 }
 
+void rightside2(){
+  
+}
 
 void rightsidepush(){
  intake1.spin(fwd,12,volt);
