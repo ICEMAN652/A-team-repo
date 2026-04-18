@@ -11,7 +11,7 @@
 
 
 void runAutonomous() {
-int auton_selected = 1;
+int auton_selected = 9;
 switch(auton_selected) {
   case 1:
     autonskillsActual();
@@ -38,7 +38,10 @@ switch(auton_selected) {
     rightside4push();
     break;
   case 9:
+    test();
     break;
+  case 10:
+    break;  
 }
 }
 

@@ -104,14 +104,15 @@ input[type=range] {
   <div>
     <div class="section-label">Autonomous</div>
     <select id="autonSelect">
-      <option value="leftandmid">leftandmid (case 4 — current)</option>
+      <option value="leftandmid">leftandmid </option>
       <option value="rightsidepush">rightsidepush</option>
       <option value="rightside4push">rightside4push</option>
       <option value="rightsidelow">rightsidelow</option>
       <option value="leftside7">leftside7</option>
       <option value="autonskills">autonskills</option>
-      <option selected value="autonskillsActual">autonskillsActual (case 1 — current)</option>
+      <option selected value="autonskillsActual">autonskillsActual </option>
       <option value="exampleAuton2">exampleAuton2</option>
+      <option value="test">test </option>
     </select>
   </div>
 
@@ -458,6 +459,8 @@ const AUTONS = {
     C('turn',        {angle:90},            'turnToAngle(90)'),
     C('turn',        {angle:180},           'turnToAngle(180)'),
   ]},
+
+  test: { name: 'test', commands: [] },
 };
 
 // ============================================================
@@ -1304,11 +1307,17 @@ function syncApplyText(userText, autoText) {
   const body = syncExtractBody(autoText, fnName);
   if (!body) { syncStatus(`⚠ ${fnName}() not found in autonomous.cpp`, '#e94560'); return; }
   const cmds = syncParseBody(body);
-  if (!cmds.length) { syncStatus(`⚠ no commands parsed from ${fnName}`, '#e94560'); return; }
 
   AUTONS[fnName] = { name: fnName, commands: cmds };
 
   const sel = document.getElementById('autonSelect');
+  // Add to dropdown if not already present
+  if (![...sel.options].some(o => o.value === fnName)) {
+    const opt = document.createElement('option');
+    opt.value = fnName;
+    opt.text  = fnName;
+    sel.appendChild(opt);
+  }
   for (const opt of sel.options) {
     opt.text = opt.text.replace(/\s*\(current\)/, '');
     if (opt.value === fnName) { opt.text += ' (current)'; opt.selected = true; }
@@ -1392,13 +1401,35 @@ document.getElementById('syncFileInput').addEventListener('change', e => {
 document.getElementById('btnSync').addEventListener('click', syncFromCode);
 
 // ============================================================
+// AUTO-POLL  —  on HTTP (Live Server), re-sync whenever either
+//               user.cpp or autonomous.cpp changes on disk.
+// ============================================================
+let _pollUserText = null;
+let _pollAutoText = null;
+
+async function pollSync() {
+  try {
+    const [u, a] = await Promise.all([
+      fetch('./custom/src/user.cpp?_='      + Date.now()).then(r => r.ok ? r.text() : null),
+      fetch('./custom/src/autonomous.cpp?_='+ Date.now()).then(r => r.ok ? r.text() : null),
+    ]);
+    if (u && a && (u !== _pollUserText || a !== _pollAutoText)) {
+      _pollUserText = u;
+      _pollAutoText = a;
+      syncApplyText(u, a);
+    }
+  } catch(_) {}
+}
+
+// ============================================================
 // INIT  —  runs once on page load
 // ============================================================
 resizeCanvas();   // size canvas to fit the window
 load();           // build frames from the default selected auton
-// Only auto-sync on HTTP (i.e. Live Server) — on file:// just use the hardcoded
-// command tables and let the user click "↺ Update Code" manually if needed
-if (window.location.protocol.startsWith('http')) syncFromCode();
+if (window.location.protocol.startsWith('http')) {
+  syncFromCode();
+  setInterval(pollSync, 1500);
+}
 </script>
 </body>
 </html>

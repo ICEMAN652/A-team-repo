@@ -712,3 +712,7 @@ void leftside(){
  wait(250, msec);                   
 }
 */
+
+void test(){
+  
+}

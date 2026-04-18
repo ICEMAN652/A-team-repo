@@ -13,3 +13,4 @@ void rightsidepush();
 void rightside4push();
 void autonskills();
 void autonskillsActual();
+void test();
