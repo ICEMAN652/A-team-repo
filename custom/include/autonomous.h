@@ -13,8 +13,4 @@ void rightsidepush();
 void rightside4push();
 void autonskills();
 void autonskillsActual();
-<<<<<<< HEAD
-void test();
-=======
 void rightside2();
->>>>>>> 00a0212 (hi manav)

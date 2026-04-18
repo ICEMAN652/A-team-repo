@@ -38,11 +38,7 @@ switch(auton_selected) {
     rightside4push();
     break;
   case 9:
-<<<<<<< HEAD
-    test();
-=======
     rightside2();
->>>>>>> 00a0212 (hi manav)
     break;
   case 10:
     break;  

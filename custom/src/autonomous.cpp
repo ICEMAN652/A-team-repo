@@ -75,7 +75,7 @@ void rightsidelow(){
 }
 
 void rightside2(){
-  
+
 }
 
 void rightsidepush(){
@@ -717,7 +717,3 @@ void leftside(){
  wait(250, msec);                   
 }
 */
-
-void test(){
-  
-}
