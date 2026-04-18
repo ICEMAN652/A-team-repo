@@ -1141,6 +1141,8 @@ canvas.addEventListener('mouseup', e => {
   const { fx, fy } = canvasFieldPos(e);
   document.getElementById('startX').value = fx.toFixed(1);
   document.getElementById('startY').value = fy.toFixed(1);
+  localStorage.setItem('sim_startX', fx.toFixed(1));
+  localStorage.setItem('sim_startY', fy.toFixed(1));
   load();
 });
 
