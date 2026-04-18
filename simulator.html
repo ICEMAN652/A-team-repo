@@ -1148,12 +1148,19 @@ canvas.addEventListener('mouseup', e => {
 // ============================================================
 // UI EVENTS
 // ============================================================
-document.getElementById('autonSelect').addEventListener('change', load);
+document.getElementById('autonSelect').addEventListener('change', e => {
+  localStorage.setItem('sim_auton', e.target.value);
+  load();
+});
 ['startX', 'startY'].forEach(id =>
-  document.getElementById(id).addEventListener('change', load)
+  document.getElementById(id).addEventListener('change', e => {
+    localStorage.setItem('sim_' + id, e.target.value);
+    load();
+  })
 );
 document.getElementById('startH').addEventListener('input', e => {
   document.getElementById('startHLabel').textContent = e.target.value + '°';
+  localStorage.setItem('sim_startH', e.target.value);
   load();
 });
 document.getElementById('timerSelect').addEventListener('change', () => { render(); });
@@ -1424,6 +1431,18 @@ async function pollSync() {
 // ============================================================
 // INIT  —  runs once on page load
 // ============================================================
+// Restore saved settings so page reloads (e.g. Live Server) don't wipe them
+(function() {
+  const sx = localStorage.getItem('sim_startX');
+  const sy = localStorage.getItem('sim_startY');
+  const sh = localStorage.getItem('sim_startH');
+  const sa = localStorage.getItem('sim_auton');
+  if (sx) document.getElementById('startX').value = sx;
+  if (sy) document.getElementById('startY').value = sy;
+  if (sh) { document.getElementById('startH').value = sh; document.getElementById('startHLabel').textContent = sh + '°'; }
+  if (sa) document.getElementById('autonSelect').value = sa;
+})();
+
 resizeCanvas();   // size canvas to fit the window
 load();           // build frames from the default selected auton
 if (window.location.protocol.startsWith('http')) {

@@ -75,6 +75,7 @@ void rightsidelow(){
 }
 
 void rightside2(){
+  driveTo(10, 500, false, 12); // starting from long goal which haas angle of 90
 
 }
 
