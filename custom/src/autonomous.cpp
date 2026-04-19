@@ -75,9 +75,33 @@ void rightsidelow(){
 }
 
 void rightside2(){
-  moveToPoint(17.0,25.6,1,1200,false,10);
+  moveToPoint(17.0,25.6,1,1500,false,10);
+  scraper.set(true);
   intake2.spin(fwd,12,volt);
-  wait(300,msec);
+  wait(1200,msec);
+  turnToPoint(43,2.7,1,1200);
+  wait(500,msec);
+  moveToPoint(43,2.7,1800,false,10);
+  wait(500,msec);
+  turnToPoint(43,-14.0,700,400);
+  wait(500,msec);
+  distanceReset('F','R');
+  moveToPoint(43,-14.0,1800,false,10);
+  intake2.spin(fwd,12,volt);
+  wait(2500,msec);
+  distanceReset('F','R');
+  resetChassis();
+  driveTo(-37.5,1800,false,7);
+  intake2.spin(reverse,12,volt);
+  scraper.set(false);
+  moveToPoint(60.8,19.5,800,false,10);
+  wait(900,msec);
+  turnToPoint(60.8,40.8,500,400);
+  distanceReset('F','R');
+  wait(900,msec);
+  driveTo(20,1800,false,10);
+  
+
 }
 
 void rightsidepush(){
