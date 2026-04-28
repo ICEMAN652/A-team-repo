@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>VEX Push Back — Auton Simulator</title>
+<title>VEX Override — Auton Simulator</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { background: #12141a; color: #e0e0e0; font-family: 'Courier New', monospace; display: flex; height: 100vh; overflow: hidden; }
@@ -99,7 +99,7 @@ input[type=range] {
 <body>
 
 <div id="sidebar">
-  <h1>&#9655; Push Back Sim</h1>
+  <h1>&#9655; Override Sim</h1>
 
   <div>
     <div class="section-label">Autonomous</div>
@@ -645,10 +645,9 @@ function execCmd(cmd, x, y, h, ci) {
 const canvas = document.getElementById('field');
 const ctx    = canvas.getContext('2d');
 
-// Load the official Push Back H2H field image
+// Load the Override field image from the local file
 const fieldImg = new Image();
-fieldImg.crossOrigin = 'anonymous';
-fieldImg.src = 'https://raw.githubusercontent.com/Jerrylum/path.jerryio/main/public/precache/V5RC-PushBack-H2H-TopDownHighlighted-TileColor66_71@0.1+2000px.png';
+fieldImg.src = 'field.png';
 fieldImg.onload = () => { render(); };
 
 let scale = 3, viewX = 0, viewY = 0;
@@ -663,7 +662,7 @@ function toCanvas(fx, fy) {
 }
 
 // ──────────────────────────────────────────────────────────
-// Push Back field helpers
+// Override field helpers
 // ──────────────────────────────────────────────────────────
 function ball(fx, fy, color, r) {
   const [cx, cy] = toCanvas(fx, fy);
@@ -740,14 +739,38 @@ function drawField() {
   ctx.fillStyle = '#111116';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // ── Official Push Back field image ────────────────────────
+  // ── Official Override field image ─────────────────────────
   if (fieldImg.complete && fieldImg.naturalWidth > 0) {
-    const [x0, y0] = toCanvas(-72,  72);  // top-left field corner in canvas px
-    const [x1, y1] = toCanvas( 72, -72);  // bottom-right field corner in canvas px
+    const [x0, y0] = toCanvas(-72,  72);
+    const [x1, y1] = toCanvas( 72, -72);
     ctx.drawImage(fieldImg, x0, y0, x1 - x0, y1 - y0);
   } else {
-    // Fallback: plain gray while image loads
-    fRect(-72, -72, 72, 72, '#484848');
+    // Fallback: draw Override field programmatically
+    // Tile background
+    fRect(-72, -72, 72, 72, '#555555');
+    // Tile grid lines
+    for (let g = -72; g <= 72; g += 24) {
+      line(-72, g, 72, g, '#44444488', 0.5);
+      line(g, -72, g, 72, '#44444488', 0.5);
+    }
+    // White X diagonal lines (corner to corner)
+    line(-72, -72, 72, 72, '#ffffffcc', 2);
+    line(-72,  72, 72, -72, '#ffffffcc', 2);
+    // Center square outline (one tile radius each way)
+    sRect(-24, -24, 24, 24, '#ffffffcc', 2);
+    // Red alliance zone — bottom-left
+    fRect(-72, -72, -48, -48, '#ff000033');
+    sRect(-72, -72, -48, -48, '#ff4444', 2);
+    // Blue alliance zone — top-right
+    fRect(48, 48, 72, 72, '#0055ff33');
+    sRect(48, 48, 72, 72, '#4488ff', 2);
+    // Yellow wall stakes — left and right perimeter
+    fRect(-72, -9, -63, 9, '#cc990088'); sRect(-72, -9, -63, 9, '#ffcc00', 1.5);
+    fRect( 63, -9, 72,  9, '#cc990088'); sRect( 63, -9,  72, 9, '#ffcc00', 1.5);
+    // Yellow wall stakes — top and bottom perimeter
+    fRect(-9, -72, 9, -63, '#cc990088'); sRect(-9, -72, 9, -63, '#ffcc00', 1.5);
+    fRect(-9,  63, 9,  72, '#cc990088'); sRect(-9,  63, 9,  72, '#ffcc00', 1.5);
+    // Field border
     sRect(-72, -72, 72, 72, '#cccccc', 3);
   }
 

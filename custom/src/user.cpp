@@ -59,6 +59,7 @@ int chassis_flag = 0;
 
 
 void runDriver() {
+  //r1 and r2
    // Set brake mode to coast at the start of driver control
   stopChassis(coast);
   heading_correction = false;
