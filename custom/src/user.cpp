@@ -11,36 +11,27 @@
 
 
 void runAutonomous() {
-  int auton_selected = 9;
+  int auton_selected = 5;
   switch(auton_selected) {
     case 1:
-      autonskillsActual();
+      autonskills();
       break;
     case 2:
-      autonskills(); //newly made
-      break;
-    case 3:
-      rightsidelow();
-      break;
-    case 4:
       leftandmid();
       break;
-    case 5:
+    case 3:
       leftside7();
       break;
-    case 6:
+    case 4:
       movetwoinch();
       break;
-    case 7:
+    case 5:
       rightsidepush();
       break;
-    case 8:
+    case 6:
       rightside4push();
       break;
-    case 9:
-      rightside2();
-      break;
-    case 10:
+    case 7:
       break;  
   }
 }
