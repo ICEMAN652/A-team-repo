@@ -15,11 +15,12 @@ double field_half_size = 72.0;
 // Call these functions from custom/include/user.cpp
 // Format: returnType functionName() { code }
 
-
+//fix this function so that it can do the roller first and then move 2 inches
 void movetwoinch(){
  wait(10000, msec);
  driveTo(6.5,3000);
 }
+//not gonna use (testing purposes)
 void exampleAuton() {
  // Use this for tuning linear and turn pid
  driveTo(60, 3000);
@@ -34,7 +35,7 @@ void exampleAuton() {
  driveTo(-60, 3000);
 }
 
-
+//testing purposes
 void exampleAuton2() {
  moveToPoint(24, 24, 1, 2000, false);
  moveToPoint(48, 48, 1, 2000, true);
@@ -47,31 +48,43 @@ void exampleAuton2() {
 }
 
 
-
+//Change the name but this would be the for the right side quadrant -- route 1
+//unfinished route
 void rightsidepush(){
  
 }
 
-
+//Change the name but this would be for the right side quadrant -- route 2
+//unfinished route
 void rightside4push(){
  
 }
 
 
-
+//change the name but this would be for the left side quadrant -- route 1
+//unfinished route
 void leftandmid(){
  
 }
 
-
+//change the name but this would be for the left side quadrant -- route 2
+//unfinished route
 void leftside7(){
  
 }
 
-void sawp (){
+//unfinished route
+void sawp(){
 }
 
+//regular sawp but it also bumbs our alliance off the wall if they don't have a move two inch
+//unfinished route
+void sawp_bumb_version(){
 
+}
+
+//autonskills for override
+//when done with all autonomous functions then start working on the skills code for override, until then keep the pushback code
 void autonskills(){ 
   intake1.spin(fwd,12,volt);
   intake2.spin(reverse,1,volt);
