@@ -202,18 +202,37 @@ function opt(c, ...keys) {
   return keys.filter(k => c[k] != null).map(k => `, ${k}:${c[k]}`).join('');
 }
 
+// Build a label string matching the C++ call, including all present optional params
+function callLabel(fn, base, c, ...optKeys) {
+  const extra = optKeys.map(k => {
+    if (c[k] == null) return null;
+    if (k === 'timeout')  return `${c[k]}ms`;
+    if (k === 'voltage')  return `${c[k]}V`;
+    return String(c[k]);  // blocking: true/false
+  }).filter(v => v != null);
+  return `${fn}(${[...base, ...extra].join(', ')})`;
+}
+
 function cmdToJS(c) {
   switch (c.t) {
     case 'drive':
       return `    C('drive',       {dist:${c.dist}, voltage:${c.voltage}},  '${lbl(`driveTo(${c.dist}, ${c.voltage}V)`, c.cmt)}'),`;
-    case 'turn':
-      return `    C('turn',        {angle:${c.angle}${opt(c,'timeout','blocking','voltage')}},  '${lbl(`turnToAngle(${c.angle})`, c.cmt)}'),`;
-    case 'turnToPoint':
-      return `    C('turnToPoint', {x:${c.x}, y:${c.y}, dir:${c.dir}${opt(c,'timeout')}},  '${lbl(`turnToPoint(${c.x}, ${c.y}, ${c.dir})`, c.cmt)}'),`;
-    case 'moveToPoint':
-      return `    C('moveToPoint', {x:${c.x}, y:${c.y}, dir:${c.dir}${opt(c,'timeout','blocking','voltage')}},  '${lbl(`moveToPoint(${c.x}, ${c.y}, ${c.dir})`, c.cmt)}'),`;
-    case 'boomerang':
-      return `    C('boomerang',   {x:${c.x}, y:${c.y}, dir:${c.dir}, angle:${c.angle}, dlead:${c.dlead}${opt(c,'timeout','blocking','voltage')}},  '${lbl(`boomerang(${c.x}, ${c.y}, ${c.dir}, ${c.angle}, ${c.dlead})`, c.cmt)}'),`;
+    case 'turn': {
+      const lbTxt = callLabel('turnToAngle', [c.angle], c, 'timeout', 'blocking', 'voltage');
+      return `    C('turn',        {angle:${c.angle}${opt(c,'timeout','blocking','voltage')}},  '${lbl(lbTxt, c.cmt)}'),`;
+    }
+    case 'turnToPoint': {
+      const lbTxt = callLabel('turnToPoint', [c.x, c.y, c.dir], c, 'timeout');
+      return `    C('turnToPoint', {x:${c.x}, y:${c.y}, dir:${c.dir}${opt(c,'timeout')}},  '${lbl(lbTxt, c.cmt)}'),`;
+    }
+    case 'moveToPoint': {
+      const lbTxt = callLabel('moveToPoint', [c.x, c.y, c.dir], c, 'timeout', 'blocking', 'voltage');
+      return `    C('moveToPoint', {x:${c.x}, y:${c.y}, dir:${c.dir}${opt(c,'timeout','blocking','voltage')}},  '${lbl(lbTxt, c.cmt)}'),`;
+    }
+    case 'boomerang': {
+      const lbTxt = callLabel('boomerang', [c.x, c.y, c.dir, c.angle, c.dlead], c, 'timeout', 'blocking', 'voltage');
+      return `    C('boomerang',   {x:${c.x}, y:${c.y}, dir:${c.dir}, angle:${c.angle}, dlead:${c.dlead}${opt(c,'timeout','blocking','voltage')}},  '${lbl(lbTxt, c.cmt)}'),`;
+    }
     case 'wait':
       return `    C('wait',        {ms:${c.ms}},  '${lbl(`wait(${c.ms}ms)`, c.cmt)}'),`;
     default:
