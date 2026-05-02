@@ -577,7 +577,8 @@ function execCmd(cmd, x, y, h, ci) {
       while (diff >  180) diff -= 360;
       while (diff < -180) diff += 360;
       const steps = Math.max(8, Math.round(Math.abs(diff) / 4));
-      const rawPhysicsDur = Math.abs(diff) / 165.0 * 1000; // ~165 deg/sec avg
+      const turnSpeed = (cmd.voltage != null ? cmd.voltage : 12) / 12 * 165.0;
+      const rawPhysicsDur = Math.abs(diff) / turnSpeed * 1000;
       const blocking = cmd.blocking !== false;
       const physicsDur = cmd.timeout != null ? Math.min(rawPhysicsDur, cmd.timeout) : rawPhysicsDur;
       const dur = physicsDur;
@@ -600,7 +601,7 @@ function execCmd(cmd, x, y, h, ci) {
 
     case 'moveToPoint': {
       const add = cmd.dir === -1 ? 180 : 0;
-      const maxLinearSpeed = 45;  // in/sec at 12V (matches 'drive' case)
+      const maxLinearSpeed = (cmd.voltage != null ? cmd.voltage : 12) / 12 * 45;
       const blocking = cmd.blocking !== false;
 
       const dt = 0.02;  // 20 ms time step
@@ -645,7 +646,8 @@ function execCmd(cmd, x, y, h, ci) {
       const add = cmd.dir === -1 ? 180 : 0;
 
       const dist = Math.sqrt((x1 - x0) ** 2 + (y1 - y0) ** 2);
-      const rawPhysicsDur = dist / 20.0 * 1000; // ~20 in/sec curved
+      const boomerangSpeed = (cmd.voltage != null ? cmd.voltage : 12) / 12 * 20.0;
+      const rawPhysicsDur = dist / boomerangSpeed * 1000;
       const blocking = cmd.blocking !== false;
       const physicsDur = cmd.timeout != null ? Math.min(rawPhysicsDur, cmd.timeout) : rawPhysicsDur;
       const dur = physicsDur;
