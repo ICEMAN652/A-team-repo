@@ -1344,13 +1344,13 @@ function syncParseBody(rawBody) {
     // turnToAngle(angle, timeout, blocking, voltage)
     m = cl.match(/\bturnToAngle\s*\(\s*(-?[\d.]+)(?:\s*,\s*([\d.]+))?(?:\s*,\s*(true|false))?(?:\s*,\s*([\d.]+))?\s*\)/);
     if (m) {
-      const angle=+m[1], timeout=m[2]!=null?+m[2]:3000, blocking=m[3]!=='false';
-      cmds.push(C('turn',{angle,timeout,blocking},`turnToAngle(${angle}, ${timeout}ms, ${blocking})${cmt?' // '+cmt:''}`)); continue; }
+      const angle=+m[1], timeout=m[2]!=null?+m[2]:3000, blocking=m[3]!=='false', voltage=m[4]!=null?+m[4]:12;
+      cmds.push(C('turn',{angle,timeout,blocking,voltage},`turnToAngle(${angle}, ${timeout}ms, ${blocking}, ${voltage}V)${cmt?' // '+cmt:''}`)); continue; }
     // moveToPoint(x, y, dir, timeout, blocking, voltage)
     m = cl.match(/\bmoveToPoint\s*\(\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)(?:\s*,\s*([\d.]+))?(?:\s*,\s*(true|false))?(?:\s*,\s*([\d.]+))?\s*\)/);
     if (m) {
       const timeout=m[4]!=null?+m[4]:5000, blocking=m[5]!=='false', voltage=m[6]!=null?+m[6]:12;
-      cmds.push(C('moveToPoint',{x:+m[1],y:+m[2],dir:+m[3],timeout,blocking,voltage},`moveToPoint(${+m[1]},${+m[2]},${+m[3]}, ${timeout}ms, ${blocking})${cmt?' // '+cmt:''}`)); continue; }
+      cmds.push(C('moveToPoint',{x:+m[1],y:+m[2],dir:+m[3],timeout,blocking,voltage},`moveToPoint(${+m[1]},${+m[2]},${+m[3]}, ${timeout}ms, ${blocking}, ${voltage}V)${cmt?' // '+cmt:''}`)); continue; }
     // turnToPoint(x, y, dir, timeout, blocking)
     m = cl.match(/\bturnToPoint\s*\(\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)(?:\s*,\s*([\d.]+))?(?:\s*,\s*(true|false))?\s*\)/);
     if (m) {
@@ -1360,7 +1360,7 @@ function syncParseBody(rawBody) {
     m = cl.match(/\bboomerang\s*\(\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)\s*,\s*([\d.]+)(?:\s*,\s*([\d.]+))?(?:\s*,\s*(true|false))?(?:\s*,\s*([\d.]+))?\s*\)/);
     if (m) {
       const timeout=m[6]!=null?+m[6]:5000, blocking=m[7]!=='false', voltage=m[8]!=null?+m[8]:12;
-      cmds.push(C('boomerang',{x:+m[1],y:+m[2],dir:+m[3],angle:+m[4],dlead:+m[5],timeout,blocking,voltage},`boomerang(${+m[1]},${+m[2]},${+m[3]},${+m[4]},${+m[5]}, ${timeout}ms, ${blocking})${cmt?' // '+cmt:''}`)); continue; }
+      cmds.push(C('boomerang',{x:+m[1],y:+m[2],dir:+m[3],angle:+m[4],dlead:+m[5],timeout,blocking,voltage},`boomerang(${+m[1]},${+m[2]},${+m[3]},${+m[4]},${+m[5]}, ${timeout}ms, ${blocking}, ${voltage}V)${cmt?' // '+cmt:''}`)); continue; }
     m = cl.match(/\bwait\s*\(\s*([\d.]+)\s*,\s*msec\s*\)/);
     if (m) { cmds.push(C('wait',{ms:+m[1]},`wait(${+m[1]}ms)${cmt?' // '+cmt:''}`)); continue; }
   }
