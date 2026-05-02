@@ -11,7 +11,7 @@
 
 
 void runAutonomous() {
-  int auton_selected = 5;
+  int auton_selected = 7;
   switch(auton_selected) {
     case 1:
       autonskills();
@@ -32,7 +32,13 @@ void runAutonomous() {
       rightside4push();
       break;
     case 7:
+      sawp();
+      break; 
+    case 8:
+      sawp_second_version();
       break;  
+    case 9:
+      break;   
   }
 }
 

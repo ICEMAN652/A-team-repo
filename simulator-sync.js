@@ -211,8 +211,15 @@ function patchCommandBlock(html, name, newBlock) {
   const marker = `  ${name}: {`;
   const si = html.indexOf(marker);
   if (si === -1) {
-    console.warn(`  ⚠  '${name}' entry not found in simulator.html — skipping command update`);
-    return html;
+    // New auton — insert before the closing }; of AUTONS
+    const autonsStart = html.indexOf('const AUTONS = {');
+    const autonsEnd   = html.indexOf('\n};', autonsStart);
+    if (autonsStart === -1 || autonsEnd === -1) {
+      console.warn(`  ⚠  Cannot locate AUTONS block in simulator.html`);
+      return html;
+    }
+    console.log(`  inserting new '${name}' entry into AUTONS`);
+    return html.slice(0, autonsEnd) + '\n\n' + newBlock + html.slice(autonsEnd);
   }
   let depth = 0, i = si, started = false;
   while (i < html.length) {
@@ -244,7 +251,12 @@ function patchSelectedOption(html, name, caseNum) {
       return tag.replace('value=', 'selected value=') + `${cleanText} (case ${caseNum} — current)`;
     });
   } else {
-    console.warn(`  ⚠  <option value="${name}"> not found in simulator.html`);
+    // New auton — add option to the dropdown before </select>
+    console.log(`  inserting new '${name}' option into dropdown`);
+    html = html.replace(
+      '</select>',
+      `  <option selected value="${name}">${name} (case ${caseNum} — current)\n    </select>`
+    );
   }
   return html;
 }
@@ -270,8 +282,6 @@ function doSync() {
   if (!body) { console.log(`  ⚠  ${sel.fnName}() not found in autonomous.cpp`); return; }
   const cmds = parseBody(body);
   console.log(`  parsed ${cmds.length} movement commands`);
-
-  if (!cmds.length) { console.log('  nothing to update'); return; }
 
   // 3. Build new command block
   const block = buildBlock(sel.fnName, cmds);

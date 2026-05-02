@@ -113,6 +113,7 @@ input[type=range] {
       <option selected value="autonskillsActual">autonskillsActual </option>
       <option value="exampleAuton2">exampleAuton2</option>
       <option value="test">test </option>
+      <option selected value="sawp">sawp (case 7 — current)
     </select>
   </div>
 
@@ -461,6 +462,10 @@ const AUTONS = {
   ]},
 
   test: { name: 'test', commands: [] },
+
+  sawp: { name: 'sawp', commands: [
+
+  ]},
 };
 
 // ============================================================
@@ -553,14 +558,18 @@ function execCmd(cmd, x, y, h, ci) {
       const ny = y + cmd.dist * Math.cos(hr);
       const steps = Math.max(8, Math.abs(Math.round(cmd.dist)));
       const voltage = cmd.voltage !== undefined ? cmd.voltage : 12;
-      const physicsDur = Math.abs(cmd.dist) / ((voltage / 12) * 45) * 1000; // 45 in/sec at 12V
+      const rawPhysicsDur = Math.abs(cmd.dist) / ((voltage / 12) * 45) * 1000; // 45 in/sec at 12V
       const blocking = cmd.blocking !== false;
-      const dur = blocking ? (cmd.timeout != null ? cmd.timeout : 5000) : 0;
+      const physicsDur = cmd.timeout != null ? Math.min(rawPhysicsDur, cmd.timeout) : rawPhysicsDur;
+      const dur = physicsDur;
+      const pathFrac = rawPhysicsDur > 0 ? physicsDur / rawPhysicsDur : 1;
+      const endX = x + pathFrac * (nx - x);
+      const endY = y + pathFrac * (ny - y);
       for (let s = 1; s <= steps; s++) {
-        const t = s / steps;
-        frames.push({ x: x + (nx - x) * t, y: y + (ny - y) * t, h, cmdIdx: ci, label: cmd.label, color, tw: physicsDur * t, voltage });
+        const f = (s / steps) * pathFrac;
+        frames.push({ x: x + (nx - x) * f, y: y + (ny - y) * f, h, cmdIdx: ci, label: cmd.label, color, tw: (s / steps) * physicsDur, voltage });
       }
-      return { x: nx, y: ny, h, frames, dur };
+      return { x: endX, y: endY, h, frames, dur };
     }
 
     case 'turn': {
@@ -568,13 +577,16 @@ function execCmd(cmd, x, y, h, ci) {
       while (diff >  180) diff -= 360;
       while (diff < -180) diff += 360;
       const steps = Math.max(8, Math.round(Math.abs(diff) / 4));
-      const physicsDur = Math.abs(diff) / 165.0 * 1000; // ~165 deg/sec avg
+      const rawPhysicsDur = Math.abs(diff) / 165.0 * 1000; // ~165 deg/sec avg
       const blocking = cmd.blocking !== false;
-      const dur = blocking ? (cmd.timeout != null ? cmd.timeout : 3000) : 0;
+      const physicsDur = cmd.timeout != null ? Math.min(rawPhysicsDur, cmd.timeout) : rawPhysicsDur;
+      const dur = physicsDur;
+      const angleFrac = rawPhysicsDur > 0 ? physicsDur / rawPhysicsDur : 1;
+      const endAngle = h + diff * angleFrac;
       for (let s = 1; s <= steps; s++) {
-        push(x, y, h + diff * (s / steps), physicsDur * s / steps);
+        push(x, y, h + diff * (s / steps) * angleFrac, (s / steps) * physicsDur);
       }
-      return { x, y, h: cmd.angle, frames, dur };
+      return { x, y, h: endAngle, frames, dur };
     }
 
     case 'turnToPoint': {
@@ -587,21 +599,41 @@ function execCmd(cmd, x, y, h, ci) {
     }
 
     case 'moveToPoint': {
-      const dx = cmd.x - x, dy = cmd.y - y;
-      let face = Math.atan2(dx, dy) * 180 / Math.PI;
-      if (cmd.dir === -1) face += 180;
-      while (face >  180) face -= 360;
-      while (face < -180) face += 360;
+      const add = cmd.dir === -1 ? 180 : 0;
+      const maxLinearSpeed = 45;  // in/sec at 12V (matches 'drive' case)
+      const blocking = cmd.blocking !== false;
 
-      const r1 = execCmd({ ...cmd, type: 'turn', angle: face }, x, y, h, ci);
-      const dist = Math.sqrt(dx * dx + dy * dy) * (cmd.dir === -1 ? -1 : 1);
-      const r2 = execCmd({ ...cmd, type: 'drive', dist }, r1.x, r1.y, r1.h, ci);
+      const dt = 0.02;  // 20 ms time step
+      const timeLimit = cmd.timeout != null ? cmd.timeout : 5000;
+      const maxSteps = Math.ceil(timeLimit / 1000 / dt);
+      let cx = x, cy = y, ch = h;
+      let tSim = 0;
+      let reachedTarget = false;
 
-      const combined = [
-        ...r1.frames,
-        ...r2.frames.map(f => ({ ...f, tw: f.tw + r1.dur })),
-      ];
-      return { x: r2.x, y: r2.y, h: r2.h, frames: combined, dur: r1.dur + r2.dur };
+      for (let s = 0; s < maxSteps; s++) {
+        const ddx = cmd.x - cx, ddy = cmd.y - cy;
+        const dist = Math.sqrt(ddx * ddx + ddy * ddy);
+        if (dist < 0.5) { reachedTarget = true; break; }
+
+        let tH = Math.atan2(ddx, ddy) * 180 / Math.PI + add;
+        let hErr = tH - ch;
+        while (hErr >  180) hErr -= 360;
+        while (hErr < -180) hErr += 360;
+
+        const drivePower = maxLinearSpeed * Math.cos(hErr * Math.PI / 180) * cmd.dir;
+        const corrVoltage = Math.max(-12, Math.min(12, 0.6 * hErr));
+        ch += corrVoltage * (165 / 12) * dt;
+
+        const chr = ch * Math.PI / 180;
+        cx += drivePower * dt * Math.sin(chr);
+        cy += drivePower * dt * Math.cos(chr);
+        tSim += dt * 1000;
+        push(cx, cy, ch, tSim);
+      }
+
+      // Only snap to exact target if robot actually reached it (not a timeout exit)
+      if (reachedTarget) push(cmd.x, cmd.y, ch, tSim);
+      return { x: reachedTarget ? cmd.x : cx, y: reachedTarget ? cmd.y : cy, h: ch, frames, dur: tSim };
     }
 
     case 'boomerang': {
@@ -613,27 +645,36 @@ function execCmd(cmd, x, y, h, ci) {
       const add = cmd.dir === -1 ? 180 : 0;
 
       const dist = Math.sqrt((x1 - x0) ** 2 + (y1 - y0) ** 2);
-      const physicsDur = dist / 20.0 * 1000; // ~20 in/sec curved
+      const rawPhysicsDur = dist / 20.0 * 1000; // ~20 in/sec curved
       const blocking = cmd.blocking !== false;
-      const dur = blocking ? (cmd.timeout != null ? cmd.timeout : 5000) : 0;
+      const physicsDur = cmd.timeout != null ? Math.min(rawPhysicsDur, cmd.timeout) : rawPhysicsDur;
+      const dur = physicsDur;
+      const pathFrac = rawPhysicsDur > 0 ? physicsDur / rawPhysicsDur : 1;
 
-      // Mirror actual carrot formula: carrot = target - hyp*dlead * direction(a + add)
+      // Quadratic Bezier — carrot formula matches C++, dlead scaled up for visibility
       const aRad = (h1 + add) * Math.PI / 180;
-      const cpx = x1 - dist * dlead * Math.sin(aRad);
-      const cpy = y1 - dist * dlead * Math.cos(aRad);
+      const visualDlead = dlead * 1.5;
+      const cpx = x1 - dist * visualDlead * Math.sin(aRad);
+      const cpy = y1 - dist * visualDlead * Math.cos(aRad);
 
       const steps = Math.max(20, Math.round(dist));
       for (let s = 1; s <= steps; s++) {
-        const t  = s / steps;
-        const bx = (1 - t) * (1 - t) * x0 + 2 * (1 - t) * t * cpx + t * t * x1;
-        const by = (1 - t) * (1 - t) * y0 + 2 * (1 - t) * t * cpy + t * t * y1;
-        // Heading follows Bezier tangent (robot faces carrot), flipped 180 when reversing
-        const dtx = 2 * (1 - t) * (cpx - x0) + 2 * t * (x1 - cpx);
-        const dty = 2 * (1 - t) * (cpy - y0) + 2 * t * (y1 - cpy);
+        const t = (s / steps) * pathFrac;  // Bezier param 0..pathFrac
+        const bx = (1-t)*(1-t)*x0 + 2*(1-t)*t*cpx + t*t*x1;
+        const by = (1-t)*(1-t)*y0 + 2*(1-t)*t*cpy + t*t*y1;
+        const dtx = 2*(1-t)*(cpx-x0) + 2*t*(x1-cpx);
+        const dty = 2*(1-t)*(cpy-y0) + 2*t*(y1-cpy);
         let bh = Math.atan2(dtx, dty) * 180 / Math.PI + add;
-        push(bx, by, bh, physicsDur * t);
+        push(bx, by, bh, (s / steps) * physicsDur);
       }
-      return { x: x1, y: y1, h: h1, frames, dur };
+      // End position: on the Bezier at pathFrac (x1,y1,h1 only if no timeout cut)
+      const tf = pathFrac;
+      const endBx = pathFrac >= 1 ? x1 : (1-tf)*(1-tf)*x0 + 2*(1-tf)*tf*cpx + tf*tf*x1;
+      const endBy = pathFrac >= 1 ? y1 : (1-tf)*(1-tf)*y0 + 2*(1-tf)*tf*cpy + tf*tf*y1;
+      const dtxF = 2*(1-tf)*(cpx-x0) + 2*tf*(x1-cpx);
+      const dtyF = 2*(1-tf)*(cpy-y0) + 2*tf*(y1-cpy);
+      const endBh = pathFrac >= 1 ? h1 : Math.atan2(dtxF, dtyF) * 180 / Math.PI + add;
+      return { x: endBx, y: endBy, h: endBh, frames, dur };
     }
   }
   return { x, y, h, frames, dur: 0 };

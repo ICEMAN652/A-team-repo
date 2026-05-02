@@ -75,11 +75,51 @@ void leftside7(){
 
 //unfinished route
 void sawp(){
+//7 pins scored in 3 goals with 2 pins in 3 goals.   
+driveTo(-12.5, 450, true, 10);
+//clamp
+wait(400, msec);
+moveToPoint(-8, -2, 1, 600, false, 10);
+boomerang(-17, 0, 1, 17, 0.2, 600, true, 10);
+//clamp
+wait(950, msec);
+boomerang(-35, 10, 1, 17, 0.3, 1000, true, 10);
+//change color
+wait(100, msec);
+moveToPoint(-51, 0, -1, 600, false, 11);
+turnToAngle(-70, 400, true, 12);
+//score
+wait(400, msec);
+boomerang(-70, -20, 1, -70, 0.3, 1000, true, 10);
+//intake
+turnToAngle(197, 400, false, 12);
+moveToPoint(-65, -7, -1, 500, true, 11);
+wait(10, msec);
+turnToAngle(197, 400, true, 10);
+//score
+wait(900, msec);
+boomerang(-80, 1, 1, -18, 0.3, 1000, true, 11);
+//clamp
+wait(400, msec);
+intake1.spin(fwd, 12, volt);
+driveTo(12, 500, false, 11);
+turnToAngle(197, 400, false, 12);
+driveTo(13, 400, true, 12);
+//score
+wait(400, msec);
+boomerang(-100, -9, -1, -72, 0.3, 600, true, 12);
+wait(450, msec);
+boomerang(-114, -27, -1, 108, 0.3, 1000, true, 12);
+//change color
+wait(100, msec);
+boomerang(-93, -22.5, 1, 17, 0.3, 800, true, 12);
+//score
+wait(400, msec);
 }
 
-//regular sawp but it also bumbs our alliance off the wall if they don't have a move two inch
+
 //unfinished route
-void sawp_bumb_version(){
+void sawp_second_version(){
 
 }
 
