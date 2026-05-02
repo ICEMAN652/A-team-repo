@@ -139,21 +139,43 @@ function parseBody(rawBody) {
       continue;
     }
 
-    // turnToAngle(angle [, ...])
-    m = cl.match(/\bturnToAngle\s*\(\s*(-?[\d.]+)/);
-    if (m) { cmds.push({ t: 'turn', angle: +m[1], cmt }); continue; }
+    // turnToAngle(angle, timeout, blocking, voltage)
+    m = cl.match(/\bturnToAngle\s*\(\s*(-?[\d.]+)(?:\s*,\s*(-?[\d.]+))?(?:\s*,\s*(true|false))?(?:\s*,\s*(-?[\d.]+))?/);
+    if (m) {
+      cmds.push({ t: 'turn', angle: +m[1],
+        ...(m[2] != null ? { timeout: +m[2] } : {}),
+        ...(m[3] != null ? { blocking: m[3] === 'true' } : {}),
+        ...(m[4] != null ? { voltage: +m[4] } : {}), cmt });
+      continue;
+    }
 
-    // moveToPoint(x, y, dir [, ...])
-    m = cl.match(/\bmoveToPoint\s*\(\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)/);
-    if (m) { cmds.push({ t: 'moveToPoint', x: +m[1], y: +m[2], dir: +m[3], cmt }); continue; }
+    // moveToPoint(x, y, dir, timeout, blocking, voltage)
+    m = cl.match(/\bmoveToPoint\s*\(\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)(?:\s*,\s*(-?[\d.]+))?(?:\s*,\s*(true|false))?(?:\s*,\s*(-?[\d.]+))?/);
+    if (m) {
+      cmds.push({ t: 'moveToPoint', x: +m[1], y: +m[2], dir: +m[3],
+        ...(m[4] != null ? { timeout: +m[4] } : {}),
+        ...(m[5] != null ? { blocking: m[5] === 'true' } : {}),
+        ...(m[6] != null ? { voltage: +m[6] } : {}), cmt });
+      continue;
+    }
 
-    // turnToPoint(x, y, dir [, ...])
-    m = cl.match(/\bturnToPoint\s*\(\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)/);
-    if (m) { cmds.push({ t: 'turnToPoint', x: +m[1], y: +m[2], dir: +m[3], cmt }); continue; }
+    // turnToPoint(x, y, dir, timeout)
+    m = cl.match(/\bturnToPoint\s*\(\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)(?:\s*,\s*(-?[\d.]+))?/);
+    if (m) {
+      cmds.push({ t: 'turnToPoint', x: +m[1], y: +m[2], dir: +m[3],
+        ...(m[4] != null ? { timeout: +m[4] } : {}), cmt });
+      continue;
+    }
 
-    // boomerang(x, y, dir, angle, dlead [, ...])
-    m = cl.match(/\bboomerang\s*\(\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)\s*,\s*([\d.]+)/);
-    if (m) { cmds.push({ t: 'boomerang', x: +m[1], y: +m[2], dir: +m[3], angle: +m[4], dlead: +m[5], cmt }); continue; }
+    // boomerang(x, y, dir, angle, dlead, timeout, blocking, voltage)
+    m = cl.match(/\bboomerang\s*\(\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)\s*,\s*([\d.]+)(?:\s*,\s*(-?[\d.]+))?(?:\s*,\s*(true|false))?(?:\s*,\s*(-?[\d.]+))?/);
+    if (m) {
+      cmds.push({ t: 'boomerang', x: +m[1], y: +m[2], dir: +m[3], angle: +m[4], dlead: +m[5],
+        ...(m[6] != null ? { timeout: +m[6] } : {}),
+        ...(m[7] != null ? { blocking: m[7] === 'true' } : {}),
+        ...(m[8] != null ? { voltage: +m[8] } : {}), cmt });
+      continue;
+    }
 
     // wait(ms, msec)
     m = cl.match(/\bwait\s*\(\s*([\d.]+)\s*,\s*msec\s*\)/);
@@ -175,18 +197,23 @@ function parseBody(rawBody) {
 // ──────────────────────────────────────────────────────────────────────────────
 function lbl(base, cmt) { return base + (cmt ? '  // ' + cmt : ''); }
 
+// Returns ", key:val" for each key present on c (omits undefined/null)
+function opt(c, ...keys) {
+  return keys.filter(k => c[k] != null).map(k => `, ${k}:${c[k]}`).join('');
+}
+
 function cmdToJS(c) {
   switch (c.t) {
     case 'drive':
       return `    C('drive',       {dist:${c.dist}, voltage:${c.voltage}},  '${lbl(`driveTo(${c.dist}, ${c.voltage}V)`, c.cmt)}'),`;
     case 'turn':
-      return `    C('turn',        {angle:${c.angle}},  '${lbl(`turnToAngle(${c.angle})`, c.cmt)}'),`;
+      return `    C('turn',        {angle:${c.angle}${opt(c,'timeout','blocking','voltage')}},  '${lbl(`turnToAngle(${c.angle})`, c.cmt)}'),`;
     case 'turnToPoint':
-      return `    C('turnToPoint', {x:${c.x}, y:${c.y}, dir:${c.dir}},  '${lbl(`turnToPoint(${c.x}, ${c.y}, ${c.dir})`, c.cmt)}'),`;
+      return `    C('turnToPoint', {x:${c.x}, y:${c.y}, dir:${c.dir}${opt(c,'timeout')}},  '${lbl(`turnToPoint(${c.x}, ${c.y}, ${c.dir})`, c.cmt)}'),`;
     case 'moveToPoint':
-      return `    C('moveToPoint', {x:${c.x}, y:${c.y}, dir:${c.dir}},  '${lbl(`moveToPoint(${c.x}, ${c.y}, ${c.dir})`, c.cmt)}'),`;
+      return `    C('moveToPoint', {x:${c.x}, y:${c.y}, dir:${c.dir}${opt(c,'timeout','blocking','voltage')}},  '${lbl(`moveToPoint(${c.x}, ${c.y}, ${c.dir})`, c.cmt)}'),`;
     case 'boomerang':
-      return `    C('boomerang',   {x:${c.x}, y:${c.y}, dir:${c.dir}, angle:${c.angle}, dlead:${c.dlead}},  '${lbl(`boomerang(${c.x}, ${c.y}, ${c.dir}, ${c.angle}, ${c.dlead})`, c.cmt)}'),`;
+      return `    C('boomerang',   {x:${c.x}, y:${c.y}, dir:${c.dir}, angle:${c.angle}, dlead:${c.dlead}${opt(c,'timeout','blocking','voltage')}},  '${lbl(`boomerang(${c.x}, ${c.y}, ${c.dir}, ${c.angle}, ${c.dlead})`, c.cmt)}'),`;
     case 'wait':
       return `    C('wait',        {ms:${c.ms}},  '${lbl(`wait(${c.ms}ms)`, c.cmt)}'),`;
     default:
