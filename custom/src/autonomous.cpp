@@ -7,10 +7,42 @@
 
 
 #include "../include/autonomous.h"
+#include "../include/robot-config.h"
 #include "motor-control.h"
 
 
 double field_half_size = 72.0;
+
+// APRIL TAG HELPERS (uses VEX AI Vision Sensor)
+// Returns the ID of the first AprilTag currently visible, or -1 if none found.
+// Usage: int tag = getAprilTagId();
+int getAprilTagId() {
+    ai_vision_sensor.tagDetection(true); // must enable before each snapshot; disabled by default
+    ai_vision_sensor.takeSnapshot(aivision::ALL_TAGS);
+    if (ai_vision_sensor.objectCount > 0) {
+        return ai_vision_sensor.objects[0].id;
+    }
+    return -1;
+}
+
+// Blocks until a specific AprilTag ID is visible, then returns.
+// timeoutMs: max wait time in milliseconds before giving up (0 = wait forever).
+// Usage: waitForAprilTag(5, 3000);  // wait up to 3 sec for tag #5
+void waitForAprilTag(int tagId, int timeoutMs) {
+    ai_vision_sensor.tagDetection(true);
+    int elapsed = 0;
+    while (true) {
+        ai_vision_sensor.takeSnapshot(aivision::ALL_TAGS);
+        for (int i = 0; i < ai_vision_sensor.objectCount; i++) {
+            if (ai_vision_sensor.objects[i].id == tagId) return;
+        }
+        wait(20, msec);
+        elapsed += 20;
+        if (timeoutMs > 0 && elapsed >= timeoutMs) return;
+    }
+}
+
+
 // IMPORTANT: Remember to add respective function declarations to custom/include/autonomous.h
 // Call these functions from custom/include/user.cpp
 // Format: returnType functionName() { code }
@@ -51,7 +83,7 @@ void exampleAuton2() {
 //Change the name but this would be the for the right side quadrant -- route 1
 //unfinished route
 void rightsidepush(){
- 
+
 }
 
 //Change the name but this would be for the right side quadrant -- route 2

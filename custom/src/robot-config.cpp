@@ -51,6 +51,8 @@ distance right_sensor = distance(PORT10);
 distance back_sensor = distance(PORT8);
 distance front_sensor = distance(PORT18);
 
+aivision ai_vision_sensor = aivision(PORT4); // VEX AI Vision Sensor — change PORT4 to whichever port you plug it into
+
 
 // ============================================================================
 // USER-CONFIGURABLE PARAMETERS (CHANGE BEFORE USING THIS TEMPLATE)

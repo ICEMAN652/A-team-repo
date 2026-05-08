@@ -27,6 +27,7 @@ extern distance left_sensor;
 extern distance back_sensor;
 extern distance front_sensor;
 extern distance right_sensor;
+extern aivision ai_vision_sensor;
 
 extern motor intake1;
 extern motor intake2;
@@ -52,6 +53,7 @@ extern double left_sensor_offset;
 extern double right_sensor_offset;
 extern double front_sensor_offset;
 extern double back_sensor_offset;
+
 
 
 extern bool heading_correction;
