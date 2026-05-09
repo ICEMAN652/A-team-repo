@@ -155,11 +155,11 @@ static void mcl_motionUpdate(float dx, float dy, float dtheta) {
 //   Backward direction : (-sin(t), -cos(t))
 //   Left direction     : (-cos(t), sin(t))
 //
-// Sensor offsets (from robot-config):
-//   front_sensor_offset: sensor face is this far forward of robot center
-//   back_sensor_offset:  sensor face is this far behind robot center
-//   left_sensor_offset:  sensor face is this far to the left of robot center
-//   right_sensor_offset: sensor face is this far to the right of robot center
+// Sensor offsets (from robot-config, using *_offsetY = forward/perpendicular offset from robot center):
+//   front_sensor_offsetY: sensor face is this far forward of robot center
+//   back_sensor_offsetY:  sensor face is this far behind robot center
+//   left_sensor_offsetY:  sensor face is this far to the left of robot center
+//   right_sensor_offsetY: sensor face is this far to the right of robot center
 static void mcl_sensorUpdate() {
     // Read sensors - only use readings in valid range (20 - 2500 mm = ~0.8 - 98 in).
     float dist_f = -1.0f, dist_b = -1.0f, dist_l = -1.0f, dist_r = -1.0f;
@@ -180,10 +180,10 @@ static void mcl_sensorUpdate() {
     int valid = (dist_f > 0.0f) + (dist_b > 0.0f) + (dist_l > 0.0f) + (dist_r > 0.0f);
     if (valid == 0) return; // No usable sensor data - skip this update.
 
-    float fo = (float)front_sensor_offset;
-    float bo = (float)back_sensor_offset;
-    float lo = (float)left_sensor_offset;
-    float ro = (float)right_sensor_offset;
+    float fo = (float)front_sensor_offsetY;
+    float bo = (float)back_sensor_offsetY;
+    float lo = (float)left_sensor_offsetY;
+    float ro = (float)right_sensor_offsetY;
 
     float total_weight = 0.0f;
 

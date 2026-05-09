@@ -91,10 +91,14 @@ double vertical_tracker_dist_from_center = -0.03125;
 double horizontal_tracker_diameter = 1.975; // Diameter of the horizontal tracker wheel (in inches)
 double vertical_tracker_diameter = 1.975; // Diameter of the vertical tracker wheel (in inches)
 
-double left_sensor_offset = 5.5;
-double right_sensor_offset = 5.5;
-double back_sensor_offset = 5.5;
-double front_sensor_offset = 5.5;
+double left_sensor_offsetX  = 0.0;  // lateral offset from robot center (inches)
+double left_sensor_offsetY  = 5.5;  // forward offset from robot center to sensor face (inches)
+double right_sensor_offsetX = 0.0;
+double right_sensor_offsetY = 5.5;
+double front_sensor_offsetX = 0.0;
+double front_sensor_offsetY = 5.5;
+double back_sensor_offsetX  = 0.0;
+double back_sensor_offsetY  = 5.5;
 
 
 // ============================================================================
