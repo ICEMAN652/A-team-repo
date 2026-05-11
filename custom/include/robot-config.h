@@ -49,6 +49,7 @@ extern double horizontal_tracker_dist_from_center;
 extern double vertical_tracker_dist_from_center;
 extern double horizontal_tracker_diameter;
 extern double vertical_tracker_diameter;
+//Distance Reset Setup
 extern double left_sensor_offsetX;
 extern double left_sensor_offsetY;
 extern double right_sensor_offsetX;
