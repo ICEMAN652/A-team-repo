@@ -107,48 +107,50 @@ void leftside7(){
 
 //unfinished route
 void sawp(){
-//7 pins scored in 3 goals with 2 pins in 3 goals.   
-driveTo(-12.5, 350, true, 10);
-//clamp
-wait(300, msec);
-moveToPoint(-17, 0, 1, 700, false, 11);
-turnToAngle(17, 650, true, 12);
-//clamp
-wait(950, msec);
-boomerang(-35, 10, -1, 197, 0.3, 1200, true, 10);
-//change color
-wait(100, msec);
-moveToPoint(-51, 0, 1, 600, false, 11);
-turnToAngle(-70, 400, true, 12);
-//score
-wait(400, msec);
-boomerang(-70, -20, 1, -70, 0.3, 1200, true, 12);
-//intake
-driveTo(7, 350, false, 12);
-boomerang(-65, -7, -1, -163, 0.3, 1000, true, 11);
-//score
-wait(900, msec);
-boomerang(-80, 1, 1, -18, 0.3, 1000, true, 11);
-//clamp
-wait(300, msec);
-intake1.spin(fwd, 12, volt);
-driveTo(12, 500, false, 11);
-turnToAngle(197, 400, false, 12);
-driveTo(13, 400, true, 12);
-//score
-wait(300, msec);
-boomerang(-100, -9, 1, -72, 0.3, 1200, true, 12);
-wait(450, msec);
-boomerang(-114, -27, -1, 108, 0.3, 1100, true, 12);
-//change color
-wait(100, msec);
-boomerang(-93, -22.5, 1, 17, 0.3, 1100, true, 12);
-//score
+  //7 pins scored in 3 goals with 2 pins in 3 goals.   
+  driveTo(-12.5, 350, true, 10);
+  //clamp
+  wait(300, msec);
+  moveToPoint(-17, 0, 1, 700, false, 11);
+  turnToAngle(17, 650, true, 12);
+  //clamp
+  wait(950, msec);
+  boomerang(-34.4, 14, -1, 200, 0.3, 1300, true, 10);
+  //change color
+  wait(150, msec);
+  moveToPoint(-58, 0.4, 1, 750, false, 11);
+  turnToAngle(-73, 400, true, 12);
+  //score
+  wait(400, msec);
+  boomerang(-70, -20, 1, -70, 0.3, 1200, true, 12);
+  //intake
+  driveTo(7, 350, false, 12);
+  boomerang(-69, -7, -1, -163, 0.3, 1000, true, 11);
+  //score
+  wait(900, msec);
+  boomerang(-82.6, -1, 1, -24, 0.3, 1000, true, 11);
+  //clamp
+  wait(300, msec);
+  intake1.spin(fwd, 12, volt);
+  driveTo(12, 500, false, 11);
+  turnToAngle(197, 400, false, 12);
+  driveTo(13, 400, true, 12);
+  //score
+  wait(300, msec);
+  boomerang(-103.5, -9.3, 1, -72, 0.3, 1200, true, 12);
+  wait(450, msec);
+  boomerang(-118, -26.6, -1, 108, 0.3, 1100, true, 12);
+  //change color
+  wait(150, msec);
+  boomerang(-97.1, -22.5, 1, 17, 0.3, 1100, true, 12);
+  //score
 }
 
 
 //unfinished route
 void sawp_second_version(){
+  //change color on wall
+  moveToPoint(-20, -37, -1, 1000, true, 11);
 
 }
 
