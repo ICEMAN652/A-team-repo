@@ -168,8 +168,16 @@ input[type=range] {
       document.getElementById('timerLabelSkills').style.color = on ? '#00e5ff' : '#aaa';
       document.getElementById('timerLabelAuton').style.fontWeight = on ? 'normal' : 'bold';
       document.getElementById('timerLabelSkills').style.fontWeight = on ? 'bold' : 'normal';
+      document.getElementById('skillsMatchloaderInfo').style.display = on ? 'block' : 'none';
     });
   </script>
+
+  <div id="skillsMatchloaderInfo" style="display:none;background:#12141a;border:1px solid #2a2d3a;border-radius:3px;padding:6px 8px;font-size:10px;line-height:1.7;color:#aaa">
+    <div style="color:#666;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Matchloaders</div>
+    <div><span style="color:#ff6b6b">&#9679;</span> 3× Red/Yellow Pin</div>
+    <div><span style="color:#4da6ff">&#9679;</span> 4× Blue/Yellow Pin</div>
+    <div><span style="color:#e0e0e0">&#9711;</span> 7× Cup</div>
+  </div>
 
   <div class="hud">
     <div>x: <span id="hudX">0.0</span> in&nbsp;&nbsp;y: <span id="hudY">0.0</span> in&nbsp;&nbsp;hdg: <span id="hudH">0.0</span>°</div>
@@ -688,10 +696,14 @@ function execCmd(cmd, x, y, h, ci) {
 const canvas = document.getElementById('field');
 const ctx    = canvas.getContext('2d');
 
-// Load the Override field image from the local file
-const fieldImg = new Image();
-fieldImg.src = 'field.png';
-fieldImg.onload = () => { render(); };
+// Load both Override field images — skills and H2H
+const fieldImgSkills = new Image();
+fieldImgSkills.src = 'field.png';
+fieldImgSkills.onload = () => { render(); };
+
+const fieldImgH2H = new Image();
+fieldImgH2H.src = 'field_h2h.png';
+fieldImgH2H.onload = () => { render(); };
 
 let scale = 3, viewX = 0, viewY = 0;
 let frames = [], frameIdx = 0;
@@ -782,7 +794,8 @@ function drawField() {
   ctx.fillStyle = '#111116';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // ── Official Override field image ─────────────────────────
+  // ── Official Override field image (skills or H2H based on toggle) ───
+  const fieldImg = document.getElementById('timerSelect').checked ? fieldImgSkills : fieldImgH2H;
   if (fieldImg.complete && fieldImg.naturalWidth > 0) {
     const [x0, y0] = toCanvas(-72,  72);
     const [x1, y1] = toCanvas( 72, -72);
