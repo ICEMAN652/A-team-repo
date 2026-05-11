@@ -169,6 +169,7 @@ input[type=range] {
       document.getElementById('timerLabelAuton').style.fontWeight = on ? 'normal' : 'bold';
       document.getElementById('timerLabelSkills').style.fontWeight = on ? 'bold' : 'normal';
       document.getElementById('skillsMatchloaderInfo').style.display = on ? 'block' : 'none';
+      localStorage.setItem('sim_timer', on ? '1' : '0');
     });
   </script>
 
@@ -1283,6 +1284,7 @@ document.getElementById('btnReset').addEventListener('click', () => {
 document.getElementById('speedSlider').addEventListener('input', e => {
   speed = parseInt(e.target.value);
   document.getElementById('speedLabel').textContent = speed + '×';
+  localStorage.setItem('sim_speed', e.target.value);
 });
 
 // ============================================================
@@ -1523,10 +1525,22 @@ async function pollSync() {
   const sy = localStorage.getItem('sim_startY');
   const sh = localStorage.getItem('sim_startH');
   const sa = localStorage.getItem('sim_auton');
+  const st = localStorage.getItem('sim_timer');
+  const sp = localStorage.getItem('sim_speed');
   if (sx) document.getElementById('startX').value = sx;
   if (sy) document.getElementById('startY').value = sy;
   if (sh) { document.getElementById('startH').value = sh; document.getElementById('startHLabel').textContent = sh + '°'; }
   if (sa) document.getElementById('autonSelect').value = sa;
+  if (st === '1') {
+    const cb = document.getElementById('timerSelect');
+    cb.checked = true;
+    cb.dispatchEvent(new Event('change'));
+  }
+  if (sp) {
+    speed = parseInt(sp);
+    document.getElementById('speedSlider').value = sp;
+    document.getElementById('speedLabel').textContent = sp + '×';
+  }
 })();
 
 resizeCanvas();   // size canvas to fit the window
