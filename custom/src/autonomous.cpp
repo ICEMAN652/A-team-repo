@@ -148,9 +148,45 @@ void sawp(){
 
 
 //unfinished route
+//starting pos at -0.2, -63.7 with a heading of 180 (front to the wall)
 void sawp_second_version(){
   //change color on wall
-  moveToPoint(-20, -37, -1, 1000, true, 11);
+  moveToPoint(-20, -37, -1, 800, false, 12);
+  //clamp
+  wait(150, msec);
+  turnToAngle(150, 750, false, 12);
+  driveTo(-5, 200, true, 12);
+  //score
+  wait(650, msec)
+  moveToPoint(-0, -30, 1, 700, false, 12);
+  turnToAngle(0, 350, true, 12);
+  //clamp
+  wait(150, msec);
+  boomerang(17, -17, -1, 270, 0.2, 1250, true, 12);
+  //score
+  wait(150, msec);
+  boomerang(19, -36, 1, -225, 0.2, 900, false, 12);
+  driveTo(10, 300, false, 12);
+  moveToPoint(23, -22.4, -1, 500, true, 12);
+  //score
+  wait(650, msec);
+  driveTo(10, 400, false, 12);
+  turnToAngle(240, 600, false, 12);
+  driveTo(-25, 900, true, 12);
+  //clamp
+  wait(150, msec);
+  boomerang(38.4, -39.5, -1, 270, 0.2, 1100, true, 12);
+  //score
+  wait(150, msec);
+  boomerang(23, -59, 1, 180, 0.3, 1200, false, 12);
+  intake.spin(fwd);
+  driveTo(10, 400, false, 12);
+  boomerang(67, -63.7, 1, 90, 0.3, 2000, false, 12)
+  //change the color
+  wait(100, msec);
+  //score 
+  boomerang(46, -46, -1, 180, 0.3, 1250, true, 12);
+  wait(650, msec);
 
 }
 
