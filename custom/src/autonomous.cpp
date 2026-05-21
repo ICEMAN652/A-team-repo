@@ -157,7 +157,7 @@ void sawp_second_version(){
   turnToAngle(150, 750, false, 12);
   driveTo(-5, 200, true, 12);
   //score
-  wait(650, msec)
+  wait(650, msec);
   moveToPoint(-0, -30, 1, 700, false, 12);
   turnToAngle(0, 350, true, 12);
   //clamp
@@ -179,9 +179,9 @@ void sawp_second_version(){
   //score
   wait(150, msec);
   boomerang(23, -59, 1, 180, 0.3, 1200, false, 12);
-  intake.spin(fwd);
+  intake1.spin(fwd, 12, volt);
   driveTo(10, 400, false, 12);
-  boomerang(67, -63.7, 1, 90, 0.3, 2000, false, 12)
+  boomerang(67, -63.7, 1, 90, 0.3, 2000, false, 12);
   //change the color
   wait(100, msec);
   //score 
