@@ -101,8 +101,21 @@ void leftandmid(){
 
 //change the name but this would be for the left side quadrant -- route 2
 //unfinished route
-void leftside7(){
+void red_right(){
+ //starting pos at -0.2, -63.7 with a heading of 180 (front to the wall)
+ moveToPoint(19.4, -17.1, -1, 800, false, 12);
+ turnToAngle(-90, 800, false, 12);
+ wait(1500, msec);
+ boomerang(-0.2, -37.0, 1, -180, 0.5, 1500, true, 12);
+ boomerang(23, -21.7, 1, 0, 0.5, 1500, false, 12);
+ turnToAngle(-180, 800, false, 17);
+ driveTo(15, 800, false, 12);
+ driveTo(-15,800, false, 12);
+ moveToPoint(28.6, -28.6, 1, 800, false, 12);
+ boomerang(-0.2, 0.2, -1, -180, 0.5, 1500, true, 20);
+
  
+
 }
 
 //unfinished route

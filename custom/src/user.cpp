@@ -11,7 +11,7 @@
 
 
 void runAutonomous() {
-  int auton_selected = 8;
+  int auton_selected = 3;
   switch(auton_selected) {
     case 1:
       autonskills();
@@ -20,7 +20,7 @@ void runAutonomous() {
       leftandmid();
       break;
     case 3:
-      leftside7();
+      red_right();
       break;
     case 4:
       movetwoinch();
