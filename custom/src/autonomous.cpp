@@ -102,19 +102,26 @@ void leftandmid(){
 //change the name but this would be for the left side quadrant -- route 2
 //unfinished route
 void red_right(){
- //starting pos at -0.2, -63.7 with a heading of 180 (front to the wall)
- moveToPoint(19.4, -17.1, -1, 800, false, 12);
- turnToAngle(-90, 800, false, 12);
- wait(1500, msec);
- boomerang(-0.2, -37.0, 1, -180, 0.5, 1500, true, 12);
- boomerang(23, -21.7, 1, 0, 0.5, 1500, false, 12);
- turnToAngle(-180, 800, false, 17);
- driveTo(15, 800, false, 12);
- driveTo(-15,800, false, 12);
- moveToPoint(28.6, -28.6, 1, 800, false, 12);
- boomerang(-0.2, 0.2, -1, -180, 0.5, 1500, true, 20);
+ //starting pos at -0.2, -63.7 with a heading of 0 (back to the wall)
+ //scores 30 points total
+ moveToPoint(-19.4, 17.1, 1, 1500, false, 12);
+ turnToAngle(90, 1200, false, 12);
+ //clamp
+ wait(800, msec);
+ //score
+ boomerang(-20.8, 38.4, 1, 315, 0.3, 1300, false, 12);
+ //pickup
+ wait(2000, msec);
+ turnToAngle(225, 800, true);
+ driveTo(15, 400, true, 10);
+ boomerang(-35.4, 17.1, 1, 270, 0.2, 1500, false, 12);
+ driveTo(-9, 800, false, 10);
+ //score
 
- 
+
+
+
+
 
 }
 
