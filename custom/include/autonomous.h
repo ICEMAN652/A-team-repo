@@ -10,7 +10,7 @@ void exampleAuton2();
 void rightside();
 void leftside();
 void leftandmid();
-void leftside7();
+void left_right();
 void movetwoinch();
 void rightsidepush();
 void rightside4push();

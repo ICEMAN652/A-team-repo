@@ -113,7 +113,7 @@ void leftandmid(){
 //unfinished route
 void red_right(){
  //starting pos at -0.2, -63.7 with a heading of 0 (back to the wall)
- //scores 30 points total
+ //scores 60 points total
  moveToPoint(-19.4, 17.1, 1, 1500, false, 12);
  turnToAngle(90, 1200, false, 12);
  //clamp
@@ -127,6 +127,21 @@ void red_right(){
  boomerang(-35.4, 17.1, 1, 270, 0.2, 1500, false, 12);
  driveTo(-9, 800, false, 10);
  //score
+ driveTo(18, 800, false, 10);
+ wait(1000, msec);
+ driveTo(-18,800, false, 10);
+ wait(500, msec);
+ moveToPoint(-23.0, 8.6, 1, 1085, false, 12);
+ turnToAngle(-180, 800, true);
+ driveTo(6, 400, true, 10);
+ driveTo(-13.5, 400, false, 10);
+
+ //boomerang(-23.0, -1.4, -1, 180, 0.4, 1500, false, 12);
+ 
+
+
+
+
 
 
 
