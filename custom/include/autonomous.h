@@ -12,5 +12,5 @@ void movetwoinch();
 void rightsidepush();
 void rightside4push();
 void autonskills();
-void red_right();
+
 void SAWP();
