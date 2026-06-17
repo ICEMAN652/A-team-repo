@@ -83,6 +83,21 @@ void exampleAuton2() {
 //Change the name but this would be the for the right side quadrant -- route 1
 //unfinished route
 void rightsidepush(){
+moveToPoint(18.5,-17.2,-1,1000,false,8);
+//place pre-load pin in the goal so like use the lift
+moveToPoint(18.5,-38.0,-1,1000,false,8);
+turnToPoint(22.3,-41.8,500,true);
+moveToPoint(20.6,-39.8,-1,500,false,8);
+//intake yellow pin+cup
+turnToPoint(-19,-15,500,true);
+moveToPoint(-19,-26,-1,1500,false,8);
+
+
+// turnToAngle(220,1000,true,12);
+
+// moveToPoint(1.8,-39.2,-1,1000,false,8)
+// //intake the cup+pin
+
 
 }
 
@@ -96,17 +111,20 @@ void rightside4push(){
 //change the name but this would be for the left side quadrant -- route 1
 //unfinished route
 void leftandmid(){
-  //starting pos at -0.2, -63.7 with a heading of 180 (front to the wall)
-  moveToPoint(19.4, -17.1, -1, 800, false, 12);
-  turnToAngle(-90, 800, false, 12);
-  wait(1500, msec);
-  boomerang(-0.2, -37.0, 1, -180, 0.5, 1500, true, 12);
-  boomerang(23, -21.7, 1, 0, 0.5, 1500, false, 12);
-  turnToAngle(-180, 800, false, 17);
-  driveTo(15, 800, false, 12);
-  driveTo(-15,800, false, 12);
-  moveToPoint(28.6, -28.6, 1, 800, false, 12);
-  boomerang(-0.2, 0.2, -1, -180, 0.5, 1500, true, 20);
+turnToPoint(18.2,17.6,500,true);
+moveToPoint(18.4,16.2,-1,1000,false,8);
+wait(500,msec); //outtaking the pre-load into goal
+turnToPoint(1.1,39.0,500,true);
+driveTo(30,700,true,7);
+wait(500,msec); // intaking red pin
+driveTo(-28,700,true,7); 
+wait(500,msec); //outtaking red pin
+// turnToPoint(16.7,29.5,500,true);
+moveToPoint(21.0,39.8,-1,1000,false,8); //intake yellow pin
+moveToPoint(-19.1,19.6,-1,1000,false,8);
+wait(500,msec) //outtake yellow pin
+
+
 }
 
 //change the name but this would be for the left side quadrant -- route 2
