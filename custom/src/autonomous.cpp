@@ -122,7 +122,7 @@ wait(500,msec); //outtaking red pin
 // turnToPoint(16.7,29.5,500,true);
 moveToPoint(21.0,39.8,-1,1000,false,8); //intake yellow pin
 moveToPoint(-19.1,19.6,-1,1000,false,8);
-wait(500,msec) //outtake yellow pin
+wait(500,msec); //outtake yellow pin
 
 
 }
