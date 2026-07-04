@@ -108,8 +108,7 @@ void runDriver() {
         leftOutputScaled = f + turnModifier;
         rightOutputScaled = f - turnModifier;
 
-        // IMPORTANT: Normalize the outputs if they exceed 1.0 to preserve the turning ratio!
-       // Without this, capping at 127 kills your curve at full throttle.
+        // Normalize the outputs if they exceed 1.0 to preserve the turning ratio
        double maxOutput = fmax(fabs(leftOutputScaled), fabs(rightOutputScaled));
        if (maxOutput > 1.0) {
            leftOutputScaled /= maxOutput;
@@ -117,9 +116,9 @@ void runDriver() {
        }
     }
 
-    // 4. Convert back to motor units (-127 to 127) and constrain
-    int leftOutput = (int)(leftOutputScaled * 127);
-    int rightOutput = (int)(rightOutputScaled * 127);
+    // 4. Convert back to motor voltage units (-12V to 12V, see driveChassis)
+    double leftOutput = leftOutputScaled * 12.0;
+    double rightOutput = rightOutputScaled * 12.0;
 
     
     // 4. Move the Chassis
