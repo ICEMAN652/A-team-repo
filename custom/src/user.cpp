@@ -77,8 +77,8 @@ void runDriver() {
       button_right_arrow = controller_1.ButtonRight.pressing();
 
        // 1. Get Joystick Inputs (PROS scale: -100 to 100)
-       double forwardInput = (double)controller_1.Axis3.value();
-       double turnInput = (double)controller_1.Axis1.value();//Norrel was here
+       double forwardInput = (double)controller_1.Axis1.value();
+       double turnInput = (double)controller_1.Axis3.value();//Norrel was here
 
 
        // 2. Curvature Drive Logic
