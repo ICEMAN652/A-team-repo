@@ -76,40 +76,57 @@ void runDriver() {
       button_left_arrow = controller_1.ButtonLeft.pressing();
       button_right_arrow = controller_1.ButtonRight.pressing();
 
-       // 1. Get Joystick Inputs (PROS scale: -100 to 100)
-       double forwardInput = (double)controller_1.Axis3.value();
-       double turnInput = (double)controller_1.Axis1.value();//Norrel was here
+      // 1. Get Joystick Inputs (VEXcode scale is actually -100 to 100, but .value() maxes at 127/100 depending on setup. Assuming max 127 here)
+      // Left stick Vertical = Forward, Right stick Horizontal = Turn
+      double forwardInput = (double)controller_1.Axis1.value(); 
+      double turnInput = (double)controller_1.Axis3.value(); // Norrel was here
+
+    // 2. Normalize to [-1.0, 1.0] for cleaner math
+      double f = forwardInput / 127.0;
+      double t = turnInput / 127.0;
+
+     // === TUNING PARAMETERS ===
+    const double QUICK_TURN_GAIN = 0.8; // High sensitivity for spinning in place (1.0 is default)
+    const double CURVE_GAIN = 1.6;      // Amplifies the power difference between left and right sides during a curve 
+    
+    // 3. Curvature Drive Logic
+    // We want the turn gripping power to change based on forward speed.
+    // If stopped, we still want to be able to quick-turn (arcade style).
+    
+    
+    double leftOutputScaled, rightOutputScaled;
+
+    if (fabs(f) < 0.05) {
+        // Quick-turn logic: If not moving forward, do a standard spin-in-place
+        leftOutputScaled = t * QUICK_TURN_GAIN;
+        rightOutputScaled = -t * QUICK_TURN_GAIN;
+    } else {
+    // Curvature logic: Turn input is multiplied by forward velocity
+    // This creates a constant turning radius
+        double turnModifier = t * fabs(f) * CURVE_GAIN;
+    
+        leftOutputScaled = f + turnModifier;
+        rightOutputScaled = f - turnModifier;
+
+        // IMPORTANT: Normalize the outputs if they exceed 1.0 to preserve the turning ratio!
+       // Without this, capping at 127 kills your curve at full throttle.
+       double maxOutput = fmax(fabs(leftOutputScaled), fabs(rightOutputScaled));
+       if (maxOutput > 1.0) {
+           leftOutputScaled /= maxOutput;
+           rightOutputScaled /= maxOutput;
+       }
+    }
+
+    // 4. Convert back to motor units (-127 to 127) and constrain
+    int leftOutput = (int)(leftOutputScaled * 127);
+    int rightOutput = (int)(rightOutputScaled * 127);
+
+    
+    // 4. Move the Chassis
+    driveChassis(leftOutput,rightOutput);
 
 
-       // 2. Curvature Drive Logic
-       const double TURN_REDUCTION = 0.5;  
-       const double TURN_BOOST = 0.5;      
-
-
-       // Normalize to [-1.0, 1.0] for the math
-       double f = forwardInput / 127.0;
-       double t = turnInput / 127.0;
-
-
-       // Apply scaling (Curvature Drive)
-       double turnScale = 1.0 - (TURN_REDUCTION * fabs(t));
-       f *= turnScale;
-
-
-       double speedBoost = 1.0 + (TURN_BOOST * fabs(f));
-       t *= speedBoost;
-
-
-       // 3. Convert back to motor units (-127 to 127)
-       int leftOutput = (int)((f + t) * 127);
-       int rightOutput = (int)((f - t) * 127);
-
-
-       // 4. Move the Chassis
-       driveChassis(leftOutput,rightOutput);
-
-
-      //intake logic 
+    //intake logic 
       if(r1){
         intake1.spin(fwd,12,volt);
       } else if(r2){
