@@ -22,7 +22,7 @@ controller controller_1 = controller(primary);
 // such as driveChassis(12, 12)
 motor left_chassis1 = motor(PORT17, ratio6_1, true);
 motor left_chassis2 = motor(PORT15, ratio6_1, true);
-motor left_chassis3 = motor(PORT16, ratio6_1, true);
+motor left_chassis3 = motor(PORT13, ratio6_1, true);
 motor_group left_chassis = motor_group(left_chassis1, left_chassis2, left_chassis3);
 motor right_chassis1 = motor(PORT20, ratio6_1, true);
 motor right_chassis2 = motor(PORT19, ratio6_1, true);
