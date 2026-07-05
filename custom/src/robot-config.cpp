@@ -51,7 +51,11 @@ distance right_sensor = distance(PORT10);
 distance back_sensor = distance(PORT8);
 distance front_sensor = distance(PORT18);
 
-aivision ai_vision_sensor = aivision(PORT4); // VEX AI Vision Sensor — change PORT4 to whichever port you plug it into
+// AprilTag AI Vision Sensors, one per cardinal direction -- change ports to match wiring
+aivision front_ai_vision = aivision(PORT4);
+aivision back_ai_vision  = aivision(PORT5);
+aivision left_ai_vision  = aivision(PORT9);
+aivision right_ai_vision = aivision(PORT11);
 
 
 // ============================================================================
@@ -108,6 +112,22 @@ double front_sensor_offsetX = 0.0;
 double front_sensor_offsetY = 5.5;
 double back_sensor_offsetX  = 0.0;
 double back_sensor_offsetY  = 5.5;
+
+// AprilTag reset setup -- offset of each AI Vision Sensor from the robot's center (inches)
+double front_ai_vision_offsetX = 0.0;
+double front_ai_vision_offsetY = 0.0;
+double back_ai_vision_offsetX  = 0.0;
+double back_ai_vision_offsetY  = 0.0;
+double left_ai_vision_offsetX  = 0.0;
+double left_ai_vision_offsetY  = 0.0;
+double right_ai_vision_offsetX = 0.0;
+double right_ai_vision_offsetY = 0.0;
+
+// +1 if obj.angle increases as the robot turns clockwise, -1 if it decreases.
+// Unverified -- rotate the robot a known amount clockwise in front of a tag,
+// check which way obj.angle moves, and set this to match before trusting
+// the AprilTag heading correction.
+double APRILTAG_ANGLE_SIGN = 1.0;
 
 
 // ============================================================================

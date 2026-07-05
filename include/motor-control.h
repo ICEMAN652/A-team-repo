@@ -57,3 +57,18 @@ struct DistResetSensor {
 // xDirection: which sensor faces the x-axis wall ('F'=front, 'B'=back, 'R'=right, 'L'=left)
 // yDirection: which sensor faces the y-axis wall ('F'=front, 'B'=back, 'R'=right, 'L'=left)
 void distanceReset(char xDirection, char yDirection);
+
+// If tagId is visible to that sensor, sets x_pos/y_pos to the error between
+// where the sensor is expected to be (xOffsetIn, yOffsetIn from the tag) and
+// where the tag shows it actually is, so the rest of the routine auto-corrects
+// for drift. targetTagAngleDeg (optional) is the expected obj.angle reading
+// (the AI Vision Sensor's own rotation relative to the tag) at that pose; if
+// given, the error between it and the live reading corrects the inertial
+// sensor's heading too. Does nothing if the tag isn't visible.
+//
+// One robot-facing wrapper per mounted AI Vision Sensor -- call whichever
+// one matches the direction the tag should be visible from.
+void resetPositionWithAprilTagFront(int tagId, double xOffsetIn, double yOffsetIn, double targetTagAngleDeg = NAN);
+void resetPositionWithAprilTagBack(int tagId, double xOffsetIn, double yOffsetIn, double targetTagAngleDeg = NAN);
+void resetPositionWithAprilTagLeft(int tagId, double xOffsetIn, double yOffsetIn, double targetTagAngleDeg = NAN);
+void resetPositionWithAprilTagRight(int tagId, double xOffsetIn, double yOffsetIn, double targetTagAngleDeg = NAN);

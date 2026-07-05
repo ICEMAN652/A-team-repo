@@ -1,9 +1,6 @@
 // Format: returnType functionName();
 
-// April tag helpers — see autonomous.cpp for usage examples
-int getAprilTagId();
-void waitForAprilTag(int tagId, int timeoutMs = 0);
-
+// April tag helpers moved to motor-control.h
 
 void exampleAuton();
 void exampleAuton2();
