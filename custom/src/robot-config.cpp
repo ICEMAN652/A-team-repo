@@ -82,7 +82,7 @@ double heading_correction_kp = 0.6, heading_correction_ki = 0, heading_correctio
 
 // Enable or disable the use of tracking wheels
 bool using_horizontal_tracker = false;  // Set to true if a horizontal tracking wheel is installed and used for odometry
-bool using_vertical_tracker = false;   // Set to true if a vertical tracking wheel is installed and used for odometry
+bool using_vertical_tracker = true;   // Set to true if a vertical tracking wheel is installed and used for odometry
 
 
 // IGNORE THESE IF YOU ARE NOT USING TRACKING WHEELS
@@ -90,7 +90,7 @@ bool using_vertical_tracker = false;   // Set to true if a vertical tracking whe
 // Vertical distance from the center of the bot to the horizontal tracking wheel (in inches, positive is when the wheel is behind the center)
 double horizontal_tracker_dist_from_center = 2.71875;
 // Horizontal distance from the center of the bot to the vertical tracking wheel (in inches, positive is when the wheel is to the right of the center)
-double vertical_tracker_dist_from_center = -0.03125;
+double vertical_tracker_dist_from_center = -1;
 double horizontal_tracker_diameter = 1.975; // Diameter of the horizontal tracker wheel (in inches)
 double vertical_tracker_diameter = 1.975; // Diameter of the vertical tracker wheel (in inches)
 

@@ -24,15 +24,20 @@
 void movetwoinch(){
  wait(10000, msec);
  driveTo(6.5,3000);
+ 
+ 
 }
 //not gonna use (testing purposes)
 void exampleAuton() {
  // Use this for tuning linear and turn pid
  driveTo(60, 3000);
-
-
- turnToAngle(90, 2000);
+Brain.Screen.print("Left Side: %.1f deg | Right Side: %.1f deg", 
+                    left_chassis.position(deg), 
+                    right_chassis.position(deg)); 
  turnToAngle(135, 2000);
+ Brain.Screen.print("Left Side: %.1f deg | Right Side: %.1f deg", 
+                    left_chassis.position(deg), 
+                    right_chassis.position(deg)); 
  turnToAngle(150, 2000);
  turnToAngle(160, 2000);
  turnToAngle(165, 2000);
@@ -44,10 +49,19 @@ void exampleAuton() {
 void exampleAuton2() {
  moveToPoint(24, 24, 1, 2000, false);
  moveToPoint(48, 48, 1, 2000, true);
+ Brain.Screen.print("Left Side: %.1f deg | Right Side: %.1f deg", 
+                    left_chassis.position(deg), 
+                    right_chassis.position(deg)); 
  moveToPoint(24, 24, -1, 2000, true);
  moveToPoint(0, 0, 1, 2000, true);
+ Brain.Screen.print("Left Side: %.1f deg | Right Side: %.1f deg", 
+                    left_chassis.position(deg), 
+                    right_chassis.position(deg)); 
  correct_angle = 0;
  driveTo(24, 2000, false, 8);
+ Brain.Screen.print("Left Side: %.1f deg | Right Side: %.1f deg", 
+                    left_chassis.position(deg), 
+                    right_chassis.position(deg)); 
  turnToAngle(90, 800, false);
  turnToAngle(180, 800, true);
 }
