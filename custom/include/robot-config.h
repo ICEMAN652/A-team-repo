@@ -32,8 +32,7 @@ extern aivision back_ai_vision;
 extern aivision left_ai_vision;
 extern aivision right_ai_vision;
 
-extern motor intake1;
-extern motor intake2;
+
 
 
 
