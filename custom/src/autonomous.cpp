@@ -55,21 +55,17 @@ void exampleAuton2() {
 
 //Change the name but this would be the for the right side quadrant -- route 1
 //unfinished route
+//(-0.2,-63.7) is starting point
 void rightsidepush(){
-moveToPoint(18.5,-17.2,-1,1000,false,8);
-//place pre-load pin in the goal so like use the lift
-moveToPoint(18.5,-38.0,-1,1000,false,8);
-turnToPoint(22.3,-41.8,500,true);
-moveToPoint(20.6,-39.8,-1,500,false,8);
-//intake yellow pin+cup
-turnToPoint(-19,-15,500,true);
-moveToPoint(-19,-26,-1,1500,false,8);
-
-
-// turnToAngle(220,1000,true,12);
-
-// moveToPoint(1.8,-39.2,-1,1000,false,8)
-// //intake the cup+pin
+moveToPoint(19.6,19.5,1,2000,true);
+//score the pre-load
+turnToPoint(19.6,28.1,1,500);
+driveTo(15,1000,true,12);
+//intake pin
+wait(500,msec);
+driveTo(-7,1000,true,12);
+turnToPoint(35.6,27.1,1,500);
+moveToPoint()
 
 
 }
