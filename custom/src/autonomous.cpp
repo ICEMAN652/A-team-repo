@@ -65,7 +65,6 @@ driveTo(15,1000,true,12);
 wait(500,msec);
 driveTo(-7,1000,true,12);
 turnToPoint(35.6,27.1,1,500);
-moveToPoint()
 
 
 }
