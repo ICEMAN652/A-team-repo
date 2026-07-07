@@ -36,8 +36,7 @@ inertial inertial_sensor = inertial(PORT6);
 digital_out descore = digital_out(Brain.ThreeWirePort.C);
 digital_out midgoal = digital_out(Brain.ThreeWirePort.A);
 digital_out scraper = digital_out(Brain.ThreeWirePort.B);
-motor intake1 = motor(PORT8, ratio6_1, true); //false to true
-motor intake2 = motor(PORT2, ratio6_1, true);
+
 // Format is rotation(port, reversed)
 // just set these to random ports if you don't use tracking wheels
 rotation horizontal_tracker = rotation(PORT13, true);

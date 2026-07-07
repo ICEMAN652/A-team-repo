@@ -125,19 +125,6 @@ void runDriver() {
     driveChassis(leftOutput,rightOutput);
 
 
-    //intake logic 
-      if(r1){
-        intake1.spin(fwd,12,volt);
-      } else if(r2){
-        intake1.spin(fwd, 12,volt);
-        intake2.spin(fwd, 12,volt);
-      } else if(l2){
-        intake1.spin(reverse,12,volt);
-        intake2.spin(reverse,12,volt);
-      } else {
-        intake1.spin(fwd,0,volt);
-        intake2.spin(fwd,0,volt);
-      }
       //descore logic
       static bool descore_pressed = false;
       static bool descore_state = false;
