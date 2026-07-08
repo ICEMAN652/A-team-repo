@@ -40,7 +40,7 @@ digital_out scraper = digital_out(Brain.ThreeWirePort.B);
 // Format is rotation(port, reversed)
 // just set these to random ports if you don't use tracking wheels
 rotation horizontal_tracker = rotation(PORT13, true);
-rotation vertical_tracker = rotation(PORT19, true);
+rotation vertical_tracker = rotation(PORT10, true);
 
 
 // Distance reset sensors
