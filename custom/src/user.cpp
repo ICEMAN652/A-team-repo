@@ -11,7 +11,7 @@
 
 
 void runAutonomous() {
-  int auton_selected = 4;
+  int auton_selected = 9;
   switch(auton_selected) {
     case 1:
       autonskills();
@@ -41,7 +41,7 @@ void runAutonomous() {
       exampleAuton2();
       break;
     case 10:
-      break;    
+      break;
   }
 }
 
