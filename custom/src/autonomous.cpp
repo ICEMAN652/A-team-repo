@@ -22,9 +22,7 @@
 
 //fix this function so that it can do the roller first and then move 2 inches
 void movetwoinch(){
- dr
- 
- 
+ moveToPoint(0, 12, 1, 1000, true);
 }
 //not gonna use (testing purposes)
 void exampleAuton() {

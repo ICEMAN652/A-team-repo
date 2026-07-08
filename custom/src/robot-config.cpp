@@ -74,7 +74,7 @@ double wheel_distance_in = (48.0 / 84.0) * 4 * M_PI;
 // distance_* : Linear PID for straight driving
 // turn_*     : PID for turning in place
 // heading_correction_* : PID for heading correction during linear movement
-double distance_kp = 0.8, distance_ki = 0, distance_kd = 9; //tune p until the bot is barely 
+double distance_kp = 0.5, distance_ki = 0, distance_kd = 0; //tune p until the bot is barely 
 // oscillating, and d until the error band is centered around the target
 double turn_kp = 0.5, turn_ki = 0, turn_kd = 3.5;
 double heading_correction_kp = 0.6, heading_correction_ki = 0, heading_correction_kd = 4;
