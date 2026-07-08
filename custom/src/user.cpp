@@ -11,7 +11,7 @@
 
 
 void runAutonomous() {
-  int auton_selected = 5;
+  int auton_selected = 9;
   switch(auton_selected) {
     case 1:
       autonskills();
@@ -38,7 +38,10 @@ void runAutonomous() {
       sawp_second_version();
       break;  
     case 9:
-      break;   
+      exampleAuton2();
+      break;
+    case 10:
+      break;    
   }
 }
 

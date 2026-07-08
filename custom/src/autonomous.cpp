@@ -22,8 +22,7 @@
 
 //fix this function so that it can do the roller first and then move 2 inches
 void movetwoinch(){
- wait(10000, msec);
- driveTo(6.5,3000);
+ dr
  
  
 }
