@@ -11,7 +11,7 @@
 
 
 void runAutonomous() {
-  int auton_selected = 9;
+  int auton_selected = 4;
   switch(auton_selected) {
     case 1:
       autonskills();
