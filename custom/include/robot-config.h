@@ -14,7 +14,6 @@ extern motor left_chassis2;
 extern motor_group left_chassis;
 extern motor right_chassis1;
 extern motor right_chassis2;
-extern motor right_chassis3;
 extern motor_group right_chassis;
 extern inertial inertial_sensor;
 extern digital_out scraper;

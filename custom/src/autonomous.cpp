@@ -82,8 +82,17 @@ turnToPoint(35.6,27.1,1,500);
 
 //Change the name but this would be for the right side quadrant -- route 2
 //unfinished route
-void rightside4push(){
- 
+//starting position 0.6, -65.1 180 degrees
+void SAWP() {
+// switch toggle 
+turnToAngle(180,1200,true,12);
+driveTo(19,1500,true,12);
+turnToAngle(-90,1000,true,12);
+driveTo(15,1000,true,12);
+//outtake pre-load
+
+
+
 }
 
 

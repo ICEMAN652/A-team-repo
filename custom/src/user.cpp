@@ -28,7 +28,7 @@ void runAutonomous() {
       rightsidepush();
       break;
     case 6:
-      rightside4push();
+      SAWP();
       break;
     case 7:
       sawp();
