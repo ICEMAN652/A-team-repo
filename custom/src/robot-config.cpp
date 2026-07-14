@@ -20,9 +20,9 @@ controller controller_1 = controller(primary);
 // gearSetting is one of the following: ratio36_1(red), ratio18_1(green), ratio6_1(blue)
 // all chassis motors should be reversed appropriately so that they spin vertical when given a positive voltage input
 // such as driveChassis(12, 12)
-motor left_chassis1 = motor(PORT20, ratio6_1, true);
-motor left_chassis2 = motor(PORT19, ratio6_1, true);
-motor left_chassis3 = motor(PORT18, ratio6_1, true);
+motor left_chassis1 = motor(PORT17, ratio6_1, true);
+motor left_chassis2 = motor(PORT15, ratio6_1, true);
+motor left_chassis3 = motor(PORT13, ratio6_1, true);
 motor_group left_chassis = motor_group(left_chassis1, left_chassis2, left_chassis3);
 motor right_chassis1 = motor(PORT20, ratio6_1, false);
 motor right_chassis2 = motor(PORT19, ratio6_1, false);
@@ -72,9 +72,9 @@ double wheel_distance_in = (48.0 / 84.0) * 4 * M_PI;
 // distance_* : Linear PID for straight driving
 // turn_*     : PID for turning in place
 // heading_correction_* : PID for heading correction during linear movement
-double distance_kp = 1.61, distance_ki = 1.5, distance_kd = 3; //tune p until the bot is barely 
+double distance_kp = 0.8, distance_ki = 0, distance_kd = 9; //tune p until the bot is barely 
 // oscillating, and d until the error band is centered around the target
-double turn_kp = 0.5, turn_ki = 0, turn_kd = 3.5;
+double turn_kp = 0.9, turn_ki = 0.0, turn_kd = 0.0;
 double heading_correction_kp = 0.6, heading_correction_ki = 0, heading_correction_kd = 4;
 
 

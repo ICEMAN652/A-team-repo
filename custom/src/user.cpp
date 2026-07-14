@@ -9,7 +9,6 @@
 
 
 
-
 void runAutonomous() {
   int auton_selected = 4;
   switch(auton_selected) {
@@ -81,8 +80,8 @@ void runDriver() {
 
       // 1. Get Joystick Inputs (VEXcode scale is actually -100 to 100, but .value() maxes at 127/100 depending on setup. Assuming max 127 here)
       // Left stick Vertical = Forward, Right stick Horizontal = Turn
-      double forwardInput = (double)controller_1.Axis3.value(); 
-      double turnInput = (double)controller_1.Axis1.value(); // Norrel was here
+      double forwardInput = (double)controller_1.Axis1.value(); 
+      double turnInput = (double)controller_1.Axis3.value(); // Norrel was here
 
     // 2. Normalize to [-1.0, 1.0] for cleaner math
       double f = forwardInput / 127.0;
