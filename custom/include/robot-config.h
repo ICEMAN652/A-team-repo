@@ -11,7 +11,6 @@ extern brain Brain;
 extern controller controller_1;
 extern motor left_chassis1;
 extern motor left_chassis2;
-extern motor left_chassis3;
 extern motor_group left_chassis;
 extern motor right_chassis1;
 extern motor right_chassis2;
