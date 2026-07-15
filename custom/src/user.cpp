@@ -29,17 +29,11 @@ void runAutonomous() {
       break;
     case 6:
       SAWP();
-      break;
-    case 7:
-      sawp();
       break; 
-    case 8:
-      sawp_second_version();
-      break;  
-    case 9:
+    case 7:
       exampleAuton2();
       break;
-    case 10:
+    case 8:
       break;
   }
 }

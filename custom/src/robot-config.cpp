@@ -22,12 +22,10 @@ controller controller_1 = controller(primary);
 // such as driveChassis(12, 12)
 motor left_chassis1 = motor(PORT17, ratio6_1, true);
 motor left_chassis2 = motor(PORT15, ratio6_1, true);
-motor left_chassis3 = motor(PORT13, ratio6_1, true);
-motor_group left_chassis = motor_group(left_chassis1, left_chassis2, left_chassis3);
+motor_group left_chassis = motor_group(left_chassis1, left_chassis2);
 motor right_chassis1 = motor(PORT20, ratio6_1, false);
 motor right_chassis2 = motor(PORT19, ratio6_1, false);
-motor right_chassis3 = motor(PORT18, ratio6_1, false);
-motor_group right_chassis = motor_group(right_chassis1, right_chassis2, right_chassis3);
+motor_group right_chassis = motor_group(right_chassis1, right_chassis2);
 
 
 inertial inertial_sensor = inertial(PORT6);
