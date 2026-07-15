@@ -20,11 +20,11 @@ controller controller_1 = controller(primary);
 // gearSetting is one of the following: ratio36_1(red), ratio18_1(green), ratio6_1(blue)
 // all chassis motors should be reversed appropriately so that they spin vertical when given a positive voltage input
 // such as driveChassis(12, 12)
-motor left_chassis1 = motor(PORT17, ratio6_1, true);
-motor left_chassis2 = motor(PORT15, ratio6_1, true);
+motor left_chassis1 = motor(PORT7, ratio6_1, true);
+motor left_chassis2 = motor(PORT11, ratio6_1, false);
 motor_group left_chassis = motor_group(left_chassis1, left_chassis2);
-motor right_chassis1 = motor(PORT20, ratio6_1, false);
-motor right_chassis2 = motor(PORT19, ratio6_1, false);
+motor right_chassis1 = motor(PORT2, ratio6_1, true);
+motor right_chassis2 = motor(PORT20, ratio6_1, false);
 motor_group right_chassis = motor_group(right_chassis1, right_chassis2);
 
 
@@ -42,8 +42,8 @@ rotation vertical_tracker = rotation(PORT10, true);
 // Distance reset sensors
 // Set these to random ports if you are not using distance resets
 distance left_sensor = distance(PORT3);
-distance right_sensor = distance(PORT10);
-distance back_sensor = distance(PORT8);
+distance right_sensor = distance(PORT8);
+distance back_sensor = distance(PORT9);
 distance front_sensor = distance(PORT18);
 
 // AprilTag AI Vision Sensors, one per cardinal direction -- change ports to match wiring
@@ -72,7 +72,7 @@ double wheel_distance_in = (48.0 / 84.0) * 4 * M_PI;
 // heading_correction_* : PID for heading correction during linear movement
 double distance_kp = 0.8, distance_ki = 0, distance_kd = 9; //tune p until the bot is barely 
 // oscillating, and d until the error band is centered around the target
-double turn_kp = 0.9, turn_ki = 0.0, turn_kd = 0.0;
+double turn_kp = 0.25, turn_ki = 0.09, turn_kd = 2;
 double heading_correction_kp = 0.6, heading_correction_ki = 0, heading_correction_kd = 4;
 
 
