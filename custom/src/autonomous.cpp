@@ -22,7 +22,7 @@
 
 //fix this function so that it can do the roller first and then move 2 inches
 void movetwoinch(){
- turnToAngle(90, 700, true, 12);
+ driveTo(24,3000,true);
 }
 //not gonna use (testing purposes)
 void exampleAuton() {
