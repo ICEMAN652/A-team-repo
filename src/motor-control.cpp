@@ -1509,135 +1509,101 @@ void resetPositionFront() {
 // ANGLE-CORRECTED DISTANCE RESET
 // ============================================================================
 
-// Normalize angle (radians) to (-PI, PI]
-static float dr_sanitizeAngle(float angle) {
-    while (angle > M_PI)   angle -= 2.0f * M_PI;
-    while (angle <= -M_PI) angle += 2.0f * M_PI;
-    return angle;
-}
-
-// Acute angle between heading and nearest cardinal axis (radians), result in [0, PI/4]
-static float dr_refAngle(float angle) {
-    angle = std::fabs(angle);
-    if (angle > M_PI)         angle = 2.0f * M_PI - angle;
-    if (angle > M_PI_2)       angle = M_PI - angle;
-    if (angle > M_PI_2 / 2.0f) angle = M_PI_2 - angle;
-    return angle;
-}
-
 static float dr_mmToIn(float mm)                    { return mm / 25.4f; }
-static float dr_absMax(float a, float b)             { return (std::fabs(a) > std::fabs(b)) ? a : b; }
 static double dr_sensorDistMm(DistResetSensor* s)    { return s->sensor->objectDistance(mm); }
+
+// Rotates a local (forward, right) displacement into field-aligned (x, y)
+// axes at the given heading -- same forward/right convention used throughout
+// this file (e.g. trackNoOdomWheel, resetPositionWithSensor).
+static void rotateLocalToField(double forwardIn, double rightIn, double headingRad, double &outX, double &outY) {
+    outX = forwardIn * sin(headingRad) + rightIn * cos(headingRad);
+    outY = forwardIn * cos(headingRad) - rightIn * sin(headingRad);
+}
+
+// Projects one sensor's raw range reading into field axes using the trusted
+// inertial heading, returning the robot's measured absolute field coordinate
+// on that axis -- same rotate-into-field-axes approach as
+// resetPositionWithAprilTagSensor, just with a straight-line range reading
+// instead of a camera bearing/width fit.
+
+// isXWall: true if this sensor is facing a wall perpendicular to the field's
+//   X axis (measuring the robot's x coordinate); false for a Y-axis wall.
+// Returns NAN if no wall is in range.
+static double drMeasureAxis(DistResetSensor* s, double robotHeadingRad, bool isXWall) {
+    if (s->sensor == nullptr) return NAN;
+    double rawIn = dr_mmToIn((float)dr_sensorDistMm(s));
+    if (rawIn > 300) return NAN; // no wall detected within range
+
+    double sensorHeadingRad = robotHeadingRad + degToRad(s->headingOffsetDeg);
+
+    // Field-aligned displacement from the sensor face to the wall point it's reading.
+    double beamX, beamY;
+    rotateLocalToField(rawIn, 0.0, sensorHeadingRad, beamX, beamY);
+
+    // Sensor's mount offset, rotated into field axes, to shift from sensor face to
+    // the robot's tracking center.
+    double mountX, mountY;
+    rotateLocalToField(s->offsetY, s->offsetX, robotHeadingRad, mountX, mountY);
+
+    if (isXWall) {
+        double wallX = (sin(sensorHeadingRad) >= 0.0) ? field_half_size : -field_half_size;
+        return wallX - beamX - mountX;
+    } else {
+        double wallY = (cos(sensorHeadingRad) >= 0.0) ? field_half_size : -field_half_size;
+        return wallY - beamY - mountY;
+    }
+}
 
 /*
  * distanceReset
- * Resets the robot's x and y odometry position using distance sensors with trig correction
- * for slight robot misalignment relative to the wall. Adapted from LemLib's distanceReset.
+ * Measures the robot's field position from distance sensors and sets
+ * x_pos/y_pos to the ERROR between where you expected the robot to be
+ * (expectedX, expectedY) and where the sensors actually show it -- see the
+ * header comment for the full "expected vs measured" explanation. Trusts the
+ * inertial heading as accurate.
  *
  * xDirection / yDirection: which sensor is pointed toward that wall.
  *   'F' = front, 'B' = back, 'R' = right, 'L' = left
  *
- * Sensor layout is built from the existing robot-config sensors. If your robot has a second
- * front sensor, set drFrontRight.sensor to point to it and configure its offsets.
+ * Sensor layout is built from the existing robot-config sensors (one sensor per side).
  */
-void distanceReset(char xDirection, char yDirection) {
+void distanceReset(char xDirection, char yDirection, double expectedX, double expectedY) {
     // Build sensor descriptors from existing robot-config sensors.
     // offsetX = lateral (sideways) offset from robot center to sensor (inches).
     // offsetY = forward offset from robot center to sensor face (inches) - use sensor_offset values.
-    DistResetSensor drFrontLeft  = { &front_sensor,  front_sensor_offsetX,  front_sensor_offsetY  };
-    DistResetSensor drFrontRight = { nullptr,         0.0,                   0.0                   };  // no second front sensor by default
-    DistResetSensor drBack       = { &back_sensor,    back_sensor_offsetX,   back_sensor_offsetY   };
-    DistResetSensor drRight      = { &right_sensor,   right_sensor_offsetX,  right_sensor_offsetY  };
-    DistResetSensor drLeft       = { &left_sensor,    left_sensor_offsetX,   left_sensor_offsetY   };
+    DistResetSensor drFront = { &front_sensor, front_sensor_offsetX, front_sensor_offsetY, 0.0   };
+    DistResetSensor drRight = { &right_sensor, right_sensor_offsetX, right_sensor_offsetY, 90.0  };
+    DistResetSensor drBack  = { &back_sensor,  back_sensor_offsetX,  back_sensor_offsetY,  180.0 };
+    DistResetSensor drLeft  = { &left_sensor,  left_sensor_offsetX,  left_sensor_offsetY,  270.0 };
 
-    float rotated = 0.0f;
-    DistResetSensor* side1  = nullptr;  // primary x-wall sensor
-    DistResetSensor* side2  = nullptr;  // secondary x-wall sensor (front only)
-    DistResetSensor* front1 = nullptr;  // primary y-wall sensor
-    DistResetSensor* front2 = nullptr;  // secondary y-wall sensor (front only)
+    auto pick = [&](char dir) -> DistResetSensor* {
+        switch (dir) {
+            case 'F': return &drFront;
+            case 'R': return &drRight;
+            case 'B': return &drBack;
+            case 'L': return &drLeft;
+            default:  return nullptr;
+        }
+    };
 
-    // Assign sensors and rotation offset for x-axis wall
-    if (xDirection == 'F') {
-        side1 = &drFrontLeft; side2 = &drFrontRight; rotated = M_PI_2;
-    } else if (xDirection == 'B') {
-        side1 = &drBack; rotated = M_PI_2;
-    } else if (xDirection == 'R') {
-        side1 = &drRight;
-    } else if (xDirection == 'L') {
-        side1 = &drLeft;
-    }
+    DistResetSensor* side  = pick(xDirection);
+    DistResetSensor* front = pick(yDirection);
+    double robotHeadingRad = degToRad(getInertialHeading());
 
-    // Assign sensors and rotation offset for y-axis wall
-    if (yDirection == 'F') {
-        front1 = &drFrontLeft; front2 = &drFrontRight;
-    } else if (yDirection == 'B') {
-        front1 = &drBack;
-    } else if (yDirection == 'R') {
-        front1 = &drRight; rotated = M_PI_2;
-    } else if (yDirection == 'L') {
-        front1 = &drLeft; rotated = M_PI_2;
-    }
+    double measuredX = (side  != nullptr) ? drMeasureAxis(side,  robotHeadingRad, true)  : NAN;
+    double measuredY = (front != nullptr) ? drMeasureAxis(front, robotHeadingRad, false) : NAN;
 
-    // Invalidate sensors with no installed hardware or out-of-range readings (> 300 in = no wall detected)
-    if (side1  != nullptr && (side1->sensor  == nullptr || dr_mmToIn(dr_sensorDistMm(side1))  > 300)) side1  = nullptr;
-    if (side2  != nullptr && (side2->sensor  == nullptr || dr_mmToIn(dr_sensorDistMm(side2))  > 300)) side2  = nullptr;
-    if (front1 != nullptr && (front1->sensor == nullptr || dr_mmToIn(dr_sensorDistMm(front1)) > 300)) front1 = nullptr;
-    if (front2 != nullptr && (front2->sensor == nullptr || dr_mmToIn(dr_sensorDistMm(front2)) > 300)) front2 = nullptr;
-
-    // Abort if we have no usable sensors for either axis
-    if ((side1 == nullptr && side2 == nullptr) || (front1 == nullptr && front2 == nullptr)) {
+    if (std::isnan(measuredX) || std::isnan(measuredY)) {
         Brain.Screen.print("distanceReset: bad sensors, aborting");
         return;
     }
 
-    // Current pose - heading converted to radians for trig math
-    float curX     = (float)x_pos;
-    float curY     = (float)y_pos;
-    float thetaRad = (float)degToRad(getInertialHeading());
-
-    // Acute angle between heading and the wall's perpendicular axis, after optional 90-degree rotation.
-    // When robot is perfectly perpendicular to the wall, correctedAngle == 0 and the trig terms vanish.
-    const float correctedAngle = dr_refAngle(dr_sanitizeAngle(thetaRad - rotated));
-
-    // Sign that determines whether the lateral sensor offset adds or subtracts from the wall distance.
-    const int offsetMultiplier = (std::sin(thetaRad - rotated) >= 0.0f) ? -1 : 1;
+    x_pos = measuredX - expectedX;
+    y_pos = measuredY - expectedY;
 
     char buf[64];
-    Brain.Screen.setCursor(1, 1);
-    Brain.Screen.print("correctedAngle: %.3f", correctedAngle);
-    snprintf(buf, sizeof(buf), "%.3f, %.3f, %.3f", curX, curY, (float)getInertialHeading());
-    Brain.Screen.setCursor(2, 1);
-    Brain.Screen.print("Pose: %s", buf);
-
-    // Perpendicular distance from robot center to each wall.
-    // Formula: cos(a) * (sensorReading + tan(a) * lateralOffset * sign + forwardOffset)
-    float xPerpDistance1 = 0.0f, xPerpDistance2 = 0.0f;
-    float yPerpDistance1 = 0.0f, yPerpDistance2 = 0.0f;
-
-    if (side1  != nullptr)
-        xPerpDistance1 = cosf(correctedAngle) * (dr_mmToIn(dr_sensorDistMm(side1))  + tanf(correctedAngle) * side1->offsetX  * offsetMultiplier + side1->offsetY);
-    if (front1 != nullptr)
-        yPerpDistance1 = cosf(correctedAngle) * (dr_mmToIn(dr_sensorDistMm(front1)) + tanf(correctedAngle) * front1->offsetX * offsetMultiplier + front1->offsetY);
-    if (side2  != nullptr)
-        xPerpDistance2 = cosf(correctedAngle) * (dr_mmToIn(dr_sensorDistMm(side2))  + tanf(correctedAngle) * side2->offsetX  * offsetMultiplier + side2->offsetY);
-    else if (front2 != nullptr)
-        yPerpDistance2 = cosf(correctedAngle) * (dr_mmToIn(dr_sensorDistMm(front2)) + tanf(correctedAngle) * front2->offsetX * offsetMultiplier + front2->offsetY);
-
-    // When two front sensors are available, pick the one with the larger reading (further from wall)
-    float xPerpDistance = xPerpDistance1;
-    float yPerpDistance = yPerpDistance1;
-    if (xDirection == 'F') xPerpDistance = dr_absMax(xPerpDistance1, xPerpDistance2);
-    if (yDirection == 'F') yPerpDistance = dr_absMax(yPerpDistance1, yPerpDistance2);
-
-    // Apply resets: position = ±(halfField - perpDistance), sign matches which side of center we're on
-    if (curX > 0)       x_pos = field_half_size - xPerpDistance;
-    else if (curX < 0)  x_pos = xPerpDistance - field_half_size;
-
-    if (curY > 0)       y_pos = field_half_size - yPerpDistance;
-    else if (curY < 0)  y_pos = yPerpDistance - field_half_size;
-
     snprintf(buf, sizeof(buf), "%.3f, %.3f, %.3f", (float)x_pos, (float)y_pos, (float)getInertialHeading());
-    Brain.Screen.setCursor(3, 1);
+    Brain.Screen.setCursor(1, 1);
     Brain.Screen.print("Distance Reset: %s", buf);
 }
 
@@ -1650,26 +1616,12 @@ void distanceReset(char xDirection, char yDirection) {
 // expect (15,15) but the tag shows (14.5,15), x_pos/y_pos becomes (-0.5,0),
 // so the rest of the routine (which plans moves relative to that expected
 // point) auto-corrects for it.
-//
-// obj.angle isn't in the same frame as compass heading (its zero reference
-// is tied to the tag's own printed pattern), but since the tag doesn't move,
-// the ERROR between expected and measured obj.angle is exactly the robot's
-// heading drift in degrees -- so that error corrects the inertial sensor's
-// rotation register directly, before it's used below to place the tag.
-//
+
 // Sensor spec constants (verify against the AI Vision Sensor datasheet -- same
 // for all 4 sensors, not robot-specific).
 const double APRILTAG_SIZE_IN = 6.5;
 const double CAMERA_RES_WIDTH_PX = 320.0;
 const double CAMERA_HFOV_DEG = 61.0;
-
-// Rotates a local (forward, right) displacement into field-aligned (x, y)
-// axes at the given heading -- same forward/right convention used throughout
-// this file (e.g. trackNoOdomWheel, resetPositionWithSensor).
-static void rotateLocalToField(double forwardIn, double rightIn, double headingRad, double &outX, double &outY) {
-    outX = forwardIn * sin(headingRad) + rightIn * cos(headingRad);
-    outY = forwardIn * cos(headingRad) - rightIn * sin(headingRad);
-}
 
 // Wraps a degree value to the shortest signed difference, in (-180, 180].
 static double wrapAngleDeg(double deg) {

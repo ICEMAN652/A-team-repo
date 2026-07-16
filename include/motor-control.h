@@ -47,16 +47,29 @@ void resetPositionRight();
 // Sensor descriptor for distanceReset - configure offsetX/offsetY per your robot geometry.
 // offsetX: lateral offset from robot center, perpendicular to sensor pointing direction (inches)
 // offsetY: distance from robot center to sensor face, along sensor pointing direction (inches)
+// headingOffsetDeg: which way this sensor points relative to robot-forward
+//   (0 = front, 90 = right, 180 = back, 270 = left)
 struct DistResetSensor {
     vex::distance* sensor;  // nullptr if this sensor position is not installed
     double offsetX;
     double offsetY;
+    double headingOffsetDeg;
 };
 
-// Resets x and y position using distance sensors with angle correction for slight misalignment.
+// Measures the robot's field position from distance sensors (projecting each
+// sensor's raw range reading into field axes using the trusted inertial
+// heading) and sets x_pos/y_pos to the ERROR between where you expected the
+// robot to be (expectedX, expectedY) and where the sensors actually show it --
+// same "expected vs measured" pattern as resetPositionWithAprilTagSensor. E.g.
+// if you expect (15,15) but the sensors show (14.5,15), x_pos/y_pos becomes
+// (-0.5,0), so the rest of the routine (which plans moves relative to that
+// expected point) auto-corrects for it. Does nothing if either sensor can't
+// see a wall.
 // xDirection: which sensor faces the x-axis wall ('F'=front, 'B'=back, 'R'=right, 'L'=left)
 // yDirection: which sensor faces the y-axis wall ('F'=front, 'B'=back, 'R'=right, 'L'=left)
-void distanceReset(char xDirection, char yDirection);
+// expectedX / expectedY: the field position you expect the robot to be at
+//   right now (measured/CAD'd beforehand for whatever checkpoint you call this at)
+void distanceReset(char xDirection, char yDirection, double expectedX, double expectedY);
 
 // If tagId is visible to that sensor, sets x_pos/y_pos to the error between
 // where the sensor is expected to be (xOffsetIn, yOffsetIn from the tag) and
