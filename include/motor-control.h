@@ -56,20 +56,18 @@ struct DistResetSensor {
     double headingOffsetDeg;
 };
 
-// Measures the robot's field position from distance sensors (projecting each
-// sensor's raw range reading into field axes using the trusted inertial
-// heading) and sets x_pos/y_pos to the ERROR between where you expected the
-// robot to be (expectedX, expectedY) and where the sensors actually show it --
-// same "expected vs measured" pattern as resetPositionWithAprilTagSensor. E.g.
-// if you expect (15,15) but the sensors show (14.5,15), x_pos/y_pos becomes
-// (-0.5,0), so the rest of the routine (which plans moves relative to that
-// expected point) auto-corrects for it. Does nothing if either sensor can't
-// see a wall.
-// xDirection: which sensor faces the x-axis wall ('F'=front, 'B'=back, 'R'=right, 'L'=left)
-// yDirection: which sensor faces the y-axis wall ('F'=front, 'B'=back, 'R'=right, 'L'=left)
-// expectedX / expectedY: the field position you expect the robot to be at
-//   right now (measured/CAD'd beforehand for whatever checkpoint you call this at)
-void distanceReset(char xDirection, char yDirection, double expectedX, double expectedY);
+// Reads the raw sensor-lens-to-wall distance off each of two chosen distance
+// sensors and sets x_pos/y_pos to the ERROR between the distance you expected
+// (expectedXmm, expectedYmm) and what the sensor actually reads right now --
+// a direct raw-distance comparison, with no heading correction or field-center
+// projection applied. Does nothing if either sensor can't see a wall.
+// xDirection: which sensor to use for the X-side reading ('F'=front, 'B'=back, 'R'=right, 'L'=left)
+// yDirection: which sensor to use for the Y-side reading ('F'=front, 'B'=back, 'R'=right, 'L'=left)
+// expectedXmm / expectedYmm: the sensor-to-wall distance you expect right now,
+//   in MILLIMETERS (measured by hand beforehand) -- converted to inches
+//   internally to match x_pos/y_pos, which stay in inches like the rest of
+//   this file.
+void distanceReset(char xDirection, char yDirection, double expectedXmm, double expectedYmm);
 
 // If tagId is visible to that sensor, sets x_pos/y_pos to the error between
 // where the sensor is expected to be (xOffsetIn, yOffsetIn from the tag) and

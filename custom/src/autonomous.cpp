@@ -22,24 +22,25 @@
 
 //fix this function so that it can do the roller first and then move 2 inches
 void movetwoinch(){
- driveTo(24,3000,true);
+ driveTo(12,1200,true, 12);
+ wait(3000, msec);
+ Brain.Screen.setCursor(4, 1);
+ Brain.Screen.print("Raw R: %.1f mm | Hdg: %.1f", right_sensor.objectDistance(mm), getInertialHeading());
+ Brain.Screen.setCursor(5, 1);
+ Brain.Screen.print("Raw B: %.1f mm | installed: %d | detected: %d",
+                     back_sensor.objectDistance(mm),
+                     back_sensor.installed(),
+                     back_sensor.isObjectDetected());
+ distanceReset('R', 'B', 1316, 1059);
+ Brain.Screen.setCursor(6, 1);
+ Brain.Screen.print("X: %.2f in | Y: %.2f in", x_pos, y_pos);
+ wait(1000, msec);
+ moveToPoint(0, 24, 1, 2000, true);
 }
 //not gonna use (testing purposes)
 void exampleAuton() {
  // Use this for tuning linear and turn pid
- driveTo(60, 3000);
-Brain.Screen.print("Left Side: %.1f deg | Right Side: %.1f deg", 
-                    left_chassis.position(deg), 
-                    right_chassis.position(deg)); 
- turnToAngle(135, 2000);
- Brain.Screen.print("Left Side: %.1f deg | Right Side: %.1f deg", 
-                    left_chassis.position(deg), 
-                    right_chassis.position(deg)); 
- turnToAngle(150, 2000);
- turnToAngle(160, 2000);
- turnToAngle(165, 2000);
- turnToAngle(0, 2000);
- driveTo(-60, 3000);
+ moveToPoint(0, 24, 1, 2000, true);
 }
 
 //testing purposes

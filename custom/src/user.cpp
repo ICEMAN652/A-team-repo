@@ -10,7 +10,7 @@
 
 
 void runAutonomous() {
-  int auton_selected = 4;
+  int auton_selected = 7;
   switch(auton_selected) {
     case 1:
       autonskills();
@@ -31,7 +31,7 @@ void runAutonomous() {
       SAWP();
       break; 
     case 7:
-      exampleAuton2();
+      exampleAuton();
       break;
     case 8:
       break;

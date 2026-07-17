@@ -43,14 +43,15 @@ rotation vertical_tracker = rotation(PORT10, true);
 // Set these to random ports if you are not using distance resets
 distance left_sensor = distance(PORT3);
 distance right_sensor = distance(PORT8);
-distance back_sensor = distance(PORT9);
+distance back_sensor = distance(PORT4);
 distance front_sensor = distance(PORT18);
 
 // AprilTag AI Vision Sensors, one per cardinal direction -- change ports to match wiring
+// NOTE: left/right were PORT9/PORT11, colliding with back_sensor and left_chassis2 -- verify these against actual wiring
 aivision front_ai_vision = aivision(PORT4);
 aivision back_ai_vision  = aivision(PORT5);
-aivision left_ai_vision  = aivision(PORT9);
-aivision right_ai_vision = aivision(PORT11);
+aivision left_ai_vision  = aivision(PORT1);
+aivision right_ai_vision = aivision(PORT12);
 
 
 // ============================================================================
@@ -70,7 +71,7 @@ double wheel_distance_in = (48.0 / 84.0) * 4 * M_PI;
 // distance_* : Linear PID for straight driving
 // turn_*     : PID for turning in place
 // heading_correction_* : PID for heading correction during linear movement
-double distance_kp = 2.5, distance_ki = 2.0, distance_kd = 5; //tune p until the bot is barely 
+double distance_kp = 2.4, distance_ki = 0.1, distance_kd = 4.5; //tune p until the bot is barely 
 // oscillating, and d until the error band is centered around the target
 double turn_kp = 0.26, turn_ki = 0.09, turn_kd = 2;
 double heading_correction_kp = 0.6, heading_correction_ki = 0, heading_correction_kd = 4;
