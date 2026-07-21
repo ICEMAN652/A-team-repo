@@ -31,7 +31,7 @@ void movetwoinch(){
                      back_sensor.objectDistance(mm),
                      back_sensor.installed(),
                      back_sensor.isObjectDetected());
- distanceReset('R', 'B', 1316, 1059);
+ distanceReset('R', 'B', 699, 1059);
  Brain.Screen.setCursor(6, 1);
  Brain.Screen.print("X: %.2f in | Y: %.2f in", x_pos, y_pos);
  wait(1000, msec);
