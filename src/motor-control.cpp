@@ -1017,8 +1017,8 @@ void trackYOdomWheel() {
    double polar_radius_in = delta_local_y_in;
 
 
-   x_pos += polar_radius_in * cos(polar_angle_rad);
-   y_pos += polar_radius_in * sin(polar_angle_rad);
+   x_pos += polar_radius_in * sin(polar_angle_rad);
+   y_pos += polar_radius_in * cos(polar_angle_rad);
 
 
    prev_heading_rad = heading_rad;

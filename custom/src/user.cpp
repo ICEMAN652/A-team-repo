@@ -58,6 +58,10 @@ void runDriver() {
   heading_correction = false;
 
   while (true) {
+
+    Brain.Screen.setCursor(6, 1);
+    Brain.Screen.print("X: %.2f in | Y: %.2f in", x_pos, y_pos);
+     
       // true/false for controller button presses
       l1 = controller_1.ButtonL1.pressing();
       l2 = controller_1.ButtonL2.pressing();

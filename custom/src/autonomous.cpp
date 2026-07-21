@@ -40,7 +40,13 @@ void movetwoinch(){
 //not gonna use (testing purposes)
 void exampleAuton() {
  // Use this for tuning linear and turn pid
+ Brain.Screen.setCursor(5, 1);
+ Brain.Screen.print("X: %.2f in | Y: %.2f in", x_pos, y_pos);
+ driveTo(8, 1000, true, 12);
+ distanceReset('R', 'B', 1316, 1059);
  moveToPoint(0, 24, 1, 2000, true);
+ Brain.Screen.setCursor(6, 1);
+ Brain.Screen.print("X: %.2f in | Y: %.2f in", x_pos, y_pos);
 }
 
 //testing purposes
