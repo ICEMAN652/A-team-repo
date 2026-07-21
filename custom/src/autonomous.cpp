@@ -126,7 +126,7 @@ wait(500,msec); //outtake yellow pin
 //unfinished route
 void red_right(){
  //starting pos at -0.2, -63.7 with a heading of 0 (back to the wall)
- //scores 60 points total
+ //scores 50 points total
  moveToPoint(-19.4, 17.1, 1, 1500, false, 12);
  turnToAngle(90, 1200, false, 12);
  //clamp
@@ -141,16 +141,17 @@ void red_right(){
  driveTo(-9, 800, false, 10);
  //score
  driveTo(18, 800, false, 10);
+ //pickup
  wait(1000, msec);
  driveTo(-18,800, false, 10);
- wait(500, msec);
+ //score
+ wait(600, msec);
  moveToPoint(-23.0, 8.6, 1, 1085, false, 12);
  turnToAngle(-180, 800, true);
  driveTo(6, 400, true, 10);
+ //pickup
  driveTo(-13.5, 400, false, 10);
-
- //boomerang(-23.0, -1.4, -1, 180, 0.4, 1500, false, 12);
- 
+ //score 
 
 
 
