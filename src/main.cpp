@@ -87,6 +87,9 @@ int main() {
 
  // Prevent main from exiting with an infinite loop.
  while (true) {
+ 
+  Brain.Screen.setCursor(6, 1);
+  Brain.Screen.print("X: %.2f in | Y: %.2f in", x_pos, y_pos);
    wait(100, msec);
  }
 }

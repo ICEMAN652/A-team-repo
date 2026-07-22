@@ -40,13 +40,15 @@ void movetwoinch(){
 //not gonna use (testing purposes)
 void exampleAuton() {
  // Use this for tuning linear and turn pid
- Brain.Screen.setCursor(5, 1);
- Brain.Screen.print("X: %.2f in | Y: %.2f in", x_pos, y_pos);
+ 
  //driveTo(8, 1000, true, 12);
- //distanceReset('R', 'B', 740, 670);
- //moveToPoint(0, 24, 1, 2000, true);
- //Brain.Screen.setCursor(6, 1);
- //Brain.Screen.print("X: %.2f in | Y: %.2f in", x_pos, y_pos);
+ //distanceReset('R', 'B', 347, 380);
+ moveToPoint(0, 12, 1, 1000, false, 8);
+ 
+ moveToPoint(0, 24, 1, 1000, true, 8);
+ wait(100, msec);
+ Brain.Screen.setCursor(6, 1);
+ Brain.Screen.print("X: %.2f in | Y: %.2f in", x_pos, y_pos);
 }
 
 //testing purposes
@@ -75,14 +77,17 @@ void exampleAuton2() {
 //unfinished route
 //(-0.2,-63.7) is starting point
 void rightsidepush(){
-moveToPoint(19.6,19.5,1,2000,true);
+  driveTo(4,1000,true,12);
+  turnToAngle(-50,1000,true,12);
+// wait(200, msec);
+// driveTo(-7,1000,true,12);
+
 //score the pre-load
-turnToPoint(19.6,28.1,1,500);
-driveTo(15,1000,true,12);
+turnToAngle(, 800, , 12);
+// driveTo(45,1000,true,12);
 //intake pin
-wait(500,msec);
-driveTo(-7,1000,true,12);
-turnToPoint(35.6,27.1,1,500);
+
+
 
 
 }
