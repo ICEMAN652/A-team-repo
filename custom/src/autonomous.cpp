@@ -77,13 +77,18 @@ void exampleAuton2() {
 //unfinished route
 //(-0.2,-63.7) is starting point
 void rightsidepush(){
-  driveTo(4,1000,true,12);
-  turnToAngle(-50,1000,true,12);
-// wait(200, msec);
-// driveTo(-7,1000,true,12);
+  driveTo(8.5,500,false,12);
+  turnToAngle(-90,500,true,12);
+  driveTo(-20,1000,true,12);
+  wait(200, msec);
+  driveTo(12,500,true,12);
+  // turnToAngle(35,500,true,12);
+  boomerang(24,42,1,0.3,6,true,12,true);
+  // moveToPoint(24,42,1,500,true);
+
 
 //score the pre-load
-turnToAngle(, 800, , 12);
+
 // driveTo(45,1000,true,12);
 //intake pin
 
