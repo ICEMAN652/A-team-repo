@@ -19,7 +19,7 @@ void runAutonomous() {
       leftandmid();
       break;
     case 3:
-      red_right();
+      left_right();
       break;
     case 4:
       movetwoinch();
@@ -61,7 +61,7 @@ void runDriver() {
 
     Brain.Screen.setCursor(6, 1);
     Brain.Screen.print("X: %.2f in | Y: %.2f in", x_pos, y_pos);
-     
+
       // true/false for controller button presses
       l1 = controller_1.ButtonL1.pressing();
       l2 = controller_1.ButtonL2.pressing();
@@ -177,21 +177,21 @@ void runPreAutonomous() {
   // Calibrate inertial sensor
   inertial_sensor.calibrate();
 
-
-
+  
 
   // Wait for the Inertial Sensor to calibrate
   while (inertial_sensor.isCalibrating()) {
     wait(10, msec);
   }
-
-
-
-
+ 
+  
   double current_heading = inertial_sensor.heading();
   Brain.Screen.print(current_heading);
   // odom tracking
   resetChassis();
+
+  vertical_tracker.resetPosition();
+
   if(using_horizontal_tracker && using_vertical_tracker) {
     thread odom = thread(trackXYOdomWheel);
   } else if (using_horizontal_tracker) {
