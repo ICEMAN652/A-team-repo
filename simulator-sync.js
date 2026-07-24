@@ -180,6 +180,14 @@ function parseBody(rawBody) {
     // wait(ms, msec)
     m = cl.match(/\bwait\s*\(\s*([\d.]+)\s*,\s*msec\s*\)/);
     if (m) { cmds.push({ t: 'wait', ms: +m[1], cmt }); continue; }
+
+    // distanceReset(xDirection, yDirection, expectedXmm, expectedYmm)
+    m = cl.match(/\bdistanceReset\s*\(\s*'([FRBL])'\s*,\s*'([FRBL])'\s*,\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)\s*\)/);
+    if (m) {
+      cmds.push({ t: 'distanceReset', xDir: m[1], yDir: m[2],
+        expectedXmm: +m[3], expectedYmm: +m[4], cmt });
+      continue;
+    }
   }
 
   return cmds;
@@ -235,6 +243,10 @@ function cmdToJS(c) {
     }
     case 'wait':
       return `    C('wait',        {ms:${c.ms}},  '${lbl(`wait(${c.ms}ms)`, c.cmt)}'),`;
+    case 'distanceReset': {
+      const lbTxt = `distanceReset(\\'${c.xDir}\\', \\'${c.yDir}\\', ${c.expectedXmm}, ${c.expectedYmm})`;
+      return `    C('distanceReset', {xDir:'${c.xDir}', yDir:'${c.yDir}', expectedXmm:${c.expectedXmm}, expectedYmm:${c.expectedYmm}},  '${lbl(lbTxt, c.cmt)}'),`;
+    }
     default:
       return '';
   }
@@ -285,8 +297,9 @@ function patchCommandBlock(html, name, newBlock) {
 }
 
 function patchSelectedOption(html, name, caseNum) {
-  // Remove 'selected' from all options and strip any existing " (current)" suffix
-  html = html.replace(/(<option\s[^>]*?)(\s+selected)([^>]*>)/g, '$1$3');
+  // Remove 'selected' from all options (regardless of attribute position)
+  // and strip any existing " (current)" suffix
+  html = html.replace(/<option\b([^>]*)>/g, (_, attrs) => `<option${attrs.replace(/\s+selected\b/g, '')}>`);
   html = html.replace(/(<option[^>]*value="[^"]*">[^<]+?)\s*\(current\)/g, '$1');
 
   // Add 'selected' + "(current)" to the matching option
@@ -301,7 +314,7 @@ function patchSelectedOption(html, name, caseNum) {
     console.log(`  inserting new '${name}' option into dropdown`);
     html = html.replace(
       '</select>',
-      `  <option selected value="${name}">${name} (case ${caseNum} — current)\n    </select>`
+      `  <option selected value="${name}">${name} (case ${caseNum} — current)</option>\n    </select>`
     );
   }
   return html;

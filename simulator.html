@@ -105,15 +105,15 @@ input[type=range] {
     <div class="section-label">Autonomous</div>
     <select id="autonSelect">
       <option value="leftandmid">leftandmid </option>
-      <option value="rightsidepush">rightsidepush</option>
+      <option selected value="rightsidepush">rightsidepush (case 5 — current)</option>
       <option value="rightside4push">rightside4push</option>
       <option value="rightsidelow">rightsidelow</option>
       <option value="leftside7">leftside7</option>
       <option value="autonskills">autonskills</option>
-      <option selected value="autonskillsActual">autonskillsActual </option>
+      <option value="autonskillsActual">autonskillsActual </option>
       <option value="exampleAuton2">exampleAuton2</option>
       <option value="test">test </option>
-      <option selected value="sawp">sawp (case 7 — current)
+      <option value="sawp">sawp</option>
     </select>
   </div>
 
@@ -193,6 +193,7 @@ input[type=range] {
     <div class="legend-item"><div class="legend-dot" style="background:#b388ff"></div>turn</div>
     <div class="legend-item"><div class="legend-dot" style="background:#ffab40"></div>boomerang</div>
     <div class="legend-item"><div class="legend-dot" style="background:#555566"></div>wait</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#ffeb3b"></div>distanceReset</div>
   </div>
   <div style="font-size:10px;color:#666;line-height:1.6">
     volt bar: <span style="color:#69f0ae">■</span> 11-12V &nbsp;<span style="color:#ffab40">■</span> 8-10V &nbsp;<span style="color:#e94560">■</span> &lt;8V
@@ -289,25 +290,22 @@ const AUTONS = {
   ]},
 
   rightsidepush: { name: 'rightsidepush', commands: [
-    C('turnToPoint', {x:10,   y:33.5,  dir:1}, 'turnToPoint(10, 33.5, 1)'),
-    C('drive',       {dist:12,   voltage:5},    'driveTo(12, 5V)'),
-    C('wait',        {ms:500},                  'wait(500ms)                  // scraper down'),
-    C('drive',       {dist:2,    voltage:7},    'driveTo(2, 7V)'),
-    C('moveToPoint', {x:43.5, y:1,     dir:1}, 'moveToPoint(43.5, 1, 1)      // matchload approach'),
-    C('turnToPoint', {x:44.2, y:-10,   dir:1}, 'turnToPoint(44.2, -10, 1)'),
-    C('wait',        {ms:650},                  'wait(650ms)                  // intake unjam'),
-    C('drive',       {dist:17.5, voltage:9},    'driveTo(17.5, 9V)            // into matchload'),
-    C('wait',        {ms:350},                  'wait(350ms)                  // settle'),
-    C('moveToPoint', {x:45,   y:10.5,  dir:-1},'moveToPoint(45, 10.5, -1)    // back out'),
-    C('drive',       {dist:-10,  voltage:12},   'driveTo(-10, 12V)            // into long goal'),
-    C('wait',        {ms:2300},                 'wait(2300ms)                 // score long goal'),
-    C('drive',       {dist:15,   voltage:12},   'driveTo(15, 12V)'),
-    C('turn',        {angle:-85},               'turnToAngle(-85)'),
-    C('drive',       {dist:14.5, voltage:12},   'driveTo(14.5, 12V)'),
-    C('turn',        {angle:0},                 'turnToAngle(0)'),
-    C('drive',       {dist:36,   voltage:8},    'driveTo(36, 8V)'),
-    C('turn',        {angle:-90},               'turnToAngle(-90)'),
-    C('wait',        {ms:500},                  'wait(500ms)'),
+    C('moveToPoint', {x:0, y:8.5, dir:1, timeout:500, blocking:false, voltage:9},  'moveToPoint(0, 8.5, 1, 500ms, false, 9V)'),
+    C('turn',        {angle:-90, timeout:500, blocking:false, voltage:9},  'turnToAngle(-90, 500ms, false, 9V)  // scoring at neutral goal 4'),
+    C('drive',       {dist:-22, voltage:12},  'driveTo(-22, 12V)'),
+    C('wait',        {ms:500},  'wait(500ms)'),
+    C('drive',       {dist:12, voltage:12},  'driveTo(12, 12V)'),
+    C('boomerang',   {x:26, y:44, dir:1, angle:50, dlead:0.3, timeout:1000, blocking:true, voltage:9},  'boomerang(26, 44, 1, 50, 0.3, 1000ms, true, 9V)  // pickup pin'),
+    C('wait',        {ms:100},  'wait(100ms)'),
+    C('boomerang',   {x:22, y:22, dir:-1, angle:-90, dlead:0.2, timeout:800, blocking:true, voltage:9},  'boomerang(22, 22, -1, -90, 0.2, 800ms, true, 9V)  // going to neutral goal to score'),
+    C('wait',        {ms:500},  'wait(500ms)'),
+    C('moveToPoint', {x:4, y:42, dir:1, timeout:750, blocking:false, voltage:9},  'moveToPoint(4, 42, 1, 750ms, false, 9V)  // go to middle pin'),
+    C('turn',        {angle:0, timeout:400, blocking:false, voltage:9},  'turnToAngle(0, 400ms, false, 9V)'),
+    C('distanceReset', {xDir:'R', yDir:'B', expectedXmm:1600, expectedYmm:1130},  'distanceReset(\'R\', \'B\', 1600, 1130)'),
+    C('boomerang',   {x:-19.65, y:-23.97, dir:-1, angle:90, dlead:0.3, timeout:1000, blocking:true, voltage:11},  'boomerang(-19.65, -23.97, -1, 90, 0.3, 1000ms, true, 11V)'),
+    C('wait',        {ms:500},  'wait(500ms)'),
+    C('boomerang',   {x:-21.65, y:3, dir:1, angle:-55, dlead:0.5, timeout:1000, blocking:false, voltage:11},  'boomerang(-21.65, 3, 1, -55, 0.5, 1000ms, false, 11V)'),
+    C('moveToPoint', {x:-25.16, y:-19.86, dir:-1, timeout:600, blocking:true, voltage:12},  'moveToPoint(-25.16, -19.86, -1, 600ms, true, 12V)'),
   ]},
 
   rightside4push: { name: 'rightside4push', commands: [
@@ -487,6 +485,7 @@ const CMD_COLOR = {
   moveToPoint: '#69f0ae',
   boomerang:   '#ffab40',
   wait:        '#555566',
+  distanceReset: '#ffeb3b',
 };
 
 // ============================================================
@@ -504,13 +503,16 @@ const CMD_COLOR = {
 
 // Convert a command's absolute targets from robot-local space to field space.
 // 'drive' commands use relative distance, so they pass through unchanged.
-function transformCmd(cmd, sx, sy, sh) {
+// ox/oy is the *current* local-coordinate origin (translates on each
+// distanceReset — see buildFrames), sh is always the auton's starting
+// heading since distanceReset never touches heading, only x_pos/y_pos.
+function transformCmd(cmd, ox, oy, sh) {
   const shr = sh * Math.PI / 180;
   const cs = Math.cos(shr), sn = Math.sin(shr);
   // Rotate robot-local (rx, ry) → field (fx, fy)
   const tp = (rx, ry) => ({
-    x: sx + rx * cs + ry * sn,
-    y: sy - rx * sn + ry * cs,
+    x: ox + rx * cs + ry * sn,
+    y: oy - rx * sn + ry * cs,
   });
   switch (cmd.type) {
     case 'moveToPoint':
@@ -533,15 +535,20 @@ function buildFrames(commands, sx, sy, sh) {
   let cumT = 0;
   const frames = [{ x: sx, y: sy, h: sh, cmdIdx: -1, label: 'Start', color: '#ffffff', t: 0 }];
   let x = sx, y = sy, h = sh;
+  // Local-coordinate origin that moveToPoint/turnToPoint targets are relative
+  // to. Starts at the auton's start pose and translates each time a
+  // distanceReset command re-zeroes x_pos/y_pos (see execCmd below).
+  let ox = sx, oy = sy;
 
   for (let ci = 0; ci < commands.length; ci++) {
-    const cmd = transformCmd(commands[ci], sx, sy, sh);
+    const cmd = transformCmd(commands[ci], ox, oy, sh);
     const r = execCmd(cmd, x, y, h, ci);
     for (const f of r.frames) {
       frames.push({ ...f, t: cumT + (f.tw || 0) });
     }
     cumT += r.dur || 0;
     x = r.x; y = r.y; h = r.h;
+    if (commands[ci].type === 'distanceReset') { ox = x; oy = y; }
   }
   return frames;
 }
@@ -559,6 +566,16 @@ function execCmd(cmd, x, y, h, ci) {
       const steps = Math.max(2, Math.ceil(dur / 100));
       for (let s = 1; s <= steps; s++) push(x, y, h, dur * s / steps);
       return { x, y, h, frames, dur };
+    }
+
+    case 'distanceReset': {
+      // Real robot: reads two wall-distance sensors and sets x_pos/y_pos to
+      // the ERROR between the expected and measured distance, re-zeroing
+      // odometry at this known point. The sim has no drift to correct, so
+      // the error is 0 — the robot doesn't move, but this pose becomes the
+      // new local-coordinate origin (buildFrames updates ox/oy for it).
+      push(x, y, h, 0);
+      return { x, y, h, frames, dur: 0 };
     }
 
     case 'drive': {
@@ -1378,6 +1395,11 @@ function syncParseBody(rawBody) {
       cmds.push(C('boomerang',{x:+m[1],y:+m[2],dir:+m[3],angle:+m[4],dlead:+m[5],timeout,blocking,voltage},`boomerang(${+m[1]},${+m[2]},${+m[3]},${+m[4]},${+m[5]}, ${timeout}ms, ${blocking}, ${voltage}V)${cmt?' // '+cmt:''}`)); continue; }
     m = cl.match(/\bwait\s*\(\s*([\d.]+)\s*,\s*msec\s*\)/);
     if (m) { cmds.push(C('wait',{ms:+m[1]},`wait(${+m[1]}ms)${cmt?' // '+cmt:''}`)); continue; }
+    // distanceReset(xDirection, yDirection, expectedXmm, expectedYmm)
+    m = cl.match(/\bdistanceReset\s*\(\s*'([FRBL])'\s*,\s*'([FRBL])'\s*,\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)\s*\)/);
+    if (m) {
+      const xDir=m[1], yDir=m[2], expectedXmm=+m[3], expectedYmm=+m[4];
+      cmds.push(C('distanceReset',{xDir,yDir,expectedXmm,expectedYmm},`distanceReset('${xDir}', '${yDir}', ${expectedXmm}, ${expectedYmm})${cmt?' // '+cmt:''}`)); continue; }
   }
   return cmds;
 }
