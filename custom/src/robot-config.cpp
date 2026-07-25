@@ -41,9 +41,9 @@ rotation vertical_tracker = rotation(PORT3, true);
 
 // Distance reset sensors
 // Set these to random ports if you are not using distance resets
-distance left_sensor = distance(PORT3);
+distance left_sensor = distance(PORT4);
 distance right_sensor = distance(PORT8);
-distance back_sensor = distance(PORT4);
+distance back_sensor = distance(PORT9);
 distance front_sensor = distance(PORT18);
 
 // AprilTag AI Vision Sensors, one per cardinal direction -- change ports to match wiring

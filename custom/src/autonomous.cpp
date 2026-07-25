@@ -78,24 +78,31 @@ void exampleAuton2() {
 //(-0.2,-63.7) is starting point
 void rightsidepush(){
   // driveTo(8.5,500,false,12); 
-  moveToPoint(0,8.5,1,500,false,9);
-  turnToAngle(-90,500,false,9); //scoring at neutral goal 4
-  driveTo(-22,1000,true,12); 
+  moveToPoint(0,9,1,500,false,9);
+  turnToAngle(90,500,false,9); //scoring at alliance goal 
+  driveTo(-25,1100,true,12); 
   wait(500, msec);
   driveTo(12,500,false,12);
-  boomerang(26,44,1,50, 0.3,1000,true,9); //pickup pin
+  boomerang(18,34,1,50, 0.3,1000,true,9); //pickup pin and cup on the line
   wait(100, msec);
-  boomerang(22,22,-1,-90, 0.2, 800, true, 9); //going to neutral goal to score
+  boomerang(20,20,-1,-45, 0.2, 800, true, 9); //going to neutral goal to score
   wait(500, msec);
   moveToPoint(4,42,1,750,false,9); //go to middle pin
   turnToAngle(0, 400, false, 9);
   distanceReset('R', 'B', 1600, 1130);
   Brain.Screen.setCursor(6, 1);
   Brain.Screen.print("X: %.2f in | Y: %.2f in", x_pos, y_pos);
-  boomerang(-19.65, -23.97, -1, 90, 0.3, 1000, true,11);
+  boomerang(-19.65, -23.97, -1, 90, 0.3, 1000, true,11);//score middle pin
   wait(500, msec);
-  boomerang(-21.65, 3, 1,-55 , 0.5, 1000, false,11);
-  moveToPoint(-25.16, -19.86, -1, 600, true, 12);
+  boomerang(-25, 7, 1,-55 , 0.5, 1000, false,11);//pick up alliance line pin #1
+  turnToAngle(90, 1000, true, 10);
+  distanceReset('R', 'B', 1302, 908);
+  Brain.Screen.setCursor(6, 1);
+  Brain.Screen.print("X: %.2f in | Y: %.2f in", x_pos, y_pos);
+  moveToPoint(-18.3, 1, 1, 800, true, 12);
+  //wait(500, msec);//score alliance line pin #1
+  //driveTo(5, 300, false, 12);
+  //boomerang(-19.2, -20.22, -1, 135, 0.4, 1000, true, 11);
 //score the pre-load
 
 // driveTo(45,1000,true,12);
