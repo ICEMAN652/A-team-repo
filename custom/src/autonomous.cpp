@@ -99,7 +99,7 @@ void rightsidepush(){
   distanceReset('R', 'B', 1302, 908);
   Brain.Screen.setCursor(6, 1);
   Brain.Screen.print("X: %.2f in | Y: %.2f in", x_pos, y_pos);
-  moveToPoint(-18.3, 1, 1, 800, true, 12);
+  moveToPoint(-18.3, 1, -1, 800, true, 12);
   //wait(500, msec);//score alliance line pin #1
   //driveTo(5, 300, false, 12);
   //boomerang(-19.2, -20.22, -1, 135, 0.4, 1000, true, 11);

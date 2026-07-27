@@ -503,11 +503,14 @@ const CMD_COLOR = {
 
 // Convert a command's absolute targets from robot-local space to field space.
 // 'drive' commands use relative distance, so they pass through unchanged.
-// ox/oy is the *current* local-coordinate origin (translates on each
-// distanceReset — see buildFrames), sh is always the auton's starting
-// heading since distanceReset never touches heading, only x_pos/y_pos.
-function transformCmd(cmd, ox, oy, sh) {
-  const shr = sh * Math.PI / 180;
+// ox/oy is the *current* local-coordinate origin, rh is the *current*
+// rotation-reference heading -- both translate/update on each distanceReset
+// (see buildFrames): the reset re-zeroes x_pos/y_pos at wherever the robot
+// actually is, and re-anchors the local axes to whatever heading the robot
+// is actually pointed at that moment, matching how the real auton treats
+// coordinates written after a reset as relative to that fresh pose.
+function transformCmd(cmd, ox, oy, rh) {
+  const shr = rh * Math.PI / 180;
   const cs = Math.cos(shr), sn = Math.sin(shr);
   // Rotate robot-local (rx, ry) → field (fx, fy)
   const tp = (rx, ry) => ({
@@ -522,35 +525,64 @@ function transformCmd(cmd, ox, oy, sh) {
     }
     case 'boomerang': {
       const p = tp(cmd.x, cmd.y);
-      return { ...cmd, x: p.x, y: p.y, angle: cmd.angle + sh };
+      return { ...cmd, x: p.x, y: p.y, angle: cmd.angle + rh };
     }
     case 'turn':
-      return { ...cmd, angle: cmd.angle + sh };
+      return { ...cmd, angle: cmd.angle + rh };
     default:
       return cmd; // 'drive' is already relative — no transform needed
   }
 }
 
+// Inverse of transformCmd's tp(): field (fx, fy) → robot-local (rx, ry), i.e.
+// the x_pos/y_pos values the real robot's odometry would report, given the
+// local origin/rotation-reference (ox, oy, rh) in effect at that point.
+function fieldToLocal(fx, fy, ox, oy, rh) {
+  const shr = rh * Math.PI / 180;
+  const cs = Math.cos(shr), sn = Math.sin(shr);
+  const dx = fx - ox, dy = fy - oy;
+  return { x: cs * dx - sn * dy, y: sn * dx + cs * dy };
+}
+
 function buildFrames(commands, sx, sy, sh) {
   let cumT = 0;
-  const frames = [{ x: sx, y: sy, h: sh, cmdIdx: -1, label: 'Start', color: '#ffffff', t: 0 }];
+  const frames = [{ x: sx, y: sy, h: sh, cmdIdx: -1, label: 'Start', color: '#ffffff', t: 0, ox: sx, oy: sy, rh: sh }];
   let x = sx, y = sy, h = sh;
-  // Local-coordinate origin that moveToPoint/turnToPoint targets are relative
-  // to. Starts at the auton's start pose and translates each time a
-  // distanceReset command re-zeroes x_pos/y_pos (see execCmd below).
-  let ox = sx, oy = sy;
+  // Local-coordinate origin + rotation reference that moveToPoint/turnToPoint
+  // targets are relative to. Starts at the auton's start pose/heading and
+  // both re-anchor to the robot's current pose each time a distanceReset
+  // command re-zeroes x_pos/y_pos (see execCmd below) -- so the point given
+  // to distanceReset becomes (0,0) in whatever direction the robot is
+  // currently facing, not the direction it started the auton facing.
+  let ox = sx, oy = sy, rh = sh;
 
   for (let ci = 0; ci < commands.length; ci++) {
-    const cmd = transformCmd(commands[ci], ox, oy, sh);
+    const cmd = transformCmd(commands[ci], ox, oy, rh);
     const r = execCmd(cmd, x, y, h, ci);
     for (const f of r.frames) {
-      frames.push({ ...f, t: cumT + (f.tw || 0) });
+      frames.push({ ...f, t: cumT + (f.tw || 0), ox, oy, rh });
     }
     cumT += r.dur || 0;
     x = r.x; y = r.y; h = r.h;
-    if (commands[ci].type === 'distanceReset') { ox = x; oy = y; }
+    if (commands[ci].type === 'distanceReset') { ox = x; oy = y; rh = h; }
   }
   return frames;
+}
+
+// Real drivetrains don't stop dead at the commanded point -- momentum carries
+// the chassis a bit further, in whatever direction it was already heading,
+// before friction/braking fully arrests it. This isn't modeled by the
+// constant-speed physics above, so approximate it as a brief coast at the
+// move's speed. COAST_S is the only knob -- bump it if the drift should be
+// more/less pronounced.
+const COAST_S = 0.03;
+// travelAngleDeg is the direction of travel (not necessarily the robot's
+// facing heading -- e.g. a backward drive travels at heading+180).
+function coastOffset(travelAngleDeg, voltage) {
+  const speed = (voltage != null ? voltage : 12) / 12 * 60;
+  const dist = speed * COAST_S;
+  const ar = travelAngleDeg * Math.PI / 180;
+  return { dx: dist * Math.sin(ar), dy: dist * Math.cos(ar) };
 }
 
 function execCmd(cmd, x, y, h, ci) {
@@ -573,7 +605,9 @@ function execCmd(cmd, x, y, h, ci) {
       // the ERROR between the expected and measured distance, re-zeroing
       // odometry at this known point. The sim has no drift to correct, so
       // the error is 0 — the robot doesn't move, but this pose becomes the
-      // new local-coordinate origin (buildFrames updates ox/oy for it).
+      // new local-coordinate origin AND rotation reference: the point given
+      // to distanceReset is now (0,0), aligned to the robot's current
+      // heading (buildFrames updates ox/oy/rh for it).
       push(x, y, h, 0);
       return { x, y, h, frames, dur: 0 };
     }
@@ -584,10 +618,14 @@ function execCmd(cmd, x, y, h, ci) {
       const ny = y + cmd.dist * Math.cos(hr);
       const steps = Math.max(8, Math.abs(Math.round(cmd.dist)));
       const voltage = cmd.voltage !== undefined ? cmd.voltage : 12;
-      const rawPhysicsDur = Math.abs(cmd.dist) / ((voltage / 12) * 45) * 1000; // 45 in/sec at 12V
+      const rawPhysicsDur = Math.abs(cmd.dist) / ((voltage / 12) * 60) * 1000; // 60 in/sec at 12V
       const blocking = cmd.blocking !== false;
       const physicsDur = cmd.timeout != null ? Math.min(rawPhysicsDur, cmd.timeout) : rawPhysicsDur;
-      const dur = physicsDur;
+      // Non-blocking: the real robot's driveTo() call returns immediately and
+      // the chassis keeps drifting toward the target in the background, so
+      // the timeline advances 0ms even though the path below still draws the
+      // full physics motion (see file-header blocking/timeout comment).
+      const dur = blocking ? physicsDur : 0;
       const pathFrac = rawPhysicsDur > 0 ? physicsDur / rawPhysicsDur : 1;
       const endX = x + pathFrac * (nx - x);
       const endY = y + pathFrac * (ny - y);
@@ -595,7 +633,14 @@ function execCmd(cmd, x, y, h, ci) {
         const f = (s / steps) * pathFrac;
         frames.push({ x: x + (nx - x) * f, y: y + (ny - y) * f, h, cmdIdx: ci, label: cmd.label, color, tw: (s / steps) * physicsDur, voltage });
       }
-      return { x: endX, y: endY, h, frames, dur };
+      const coastMs = COAST_S * 1000;
+      const travelAngle = h + (cmd.dist < 0 ? 180 : 0);
+      const { dx, dy } = coastOffset(travelAngle, voltage);
+      for (let s = 1; s <= 3; s++) {
+        const f = s / 3;
+        frames.push({ x: endX + dx * f, y: endY + dy * f, h, cmdIdx: ci, label: cmd.label, color, tw: physicsDur + f * coastMs, voltage });
+      }
+      return { x: endX + dx, y: endY + dy, h, frames, dur: blocking ? physicsDur + coastMs : 0 };
     }
 
     case 'turn': {
@@ -603,11 +648,12 @@ function execCmd(cmd, x, y, h, ci) {
       while (diff >  180) diff -= 360;
       while (diff < -180) diff += 360;
       const steps = Math.max(8, Math.round(Math.abs(diff) / 4));
-      const turnSpeed = (cmd.voltage != null ? cmd.voltage : 12) / 12 * 165.0;
+      const turnSpeed = (cmd.voltage != null ? cmd.voltage : 12) / 12 * 220.0;
       const rawPhysicsDur = Math.abs(diff) / turnSpeed * 1000;
       const blocking = cmd.blocking !== false;
       const physicsDur = cmd.timeout != null ? Math.min(rawPhysicsDur, cmd.timeout) : rawPhysicsDur;
-      const dur = physicsDur;
+      // See 'drive' above: non-blocking calls don't hold up the timeline.
+      const dur = blocking ? physicsDur : 0;
       const angleFrac = rawPhysicsDur > 0 ? physicsDur / rawPhysicsDur : 1;
       const endAngle = h + diff * angleFrac;
       for (let s = 1; s <= steps; s++) {
@@ -627,7 +673,7 @@ function execCmd(cmd, x, y, h, ci) {
 
     case 'moveToPoint': {
       const add = cmd.dir === -1 ? 180 : 0;
-      const maxLinearSpeed = (cmd.voltage != null ? cmd.voltage : 12) / 12 * 45;
+      const maxLinearSpeed = (cmd.voltage != null ? cmd.voltage : 12) / 12 * 60;
       const blocking = cmd.blocking !== false;
 
       const dt = 0.02;  // 20 ms time step
@@ -636,6 +682,7 @@ function execCmd(cmd, x, y, h, ci) {
       let cx = x, cy = y, ch = h;
       let tSim = 0;
       let reachedTarget = false;
+      let lastDrivePower = 0;
 
       for (let s = 0; s < maxSteps; s++) {
         const ddx = cmd.x - cx, ddy = cmd.y - cy;
@@ -648,8 +695,9 @@ function execCmd(cmd, x, y, h, ci) {
         while (hErr < -180) hErr += 360;
 
         const drivePower = maxLinearSpeed * Math.cos(hErr * Math.PI / 180) * cmd.dir;
+        lastDrivePower = drivePower;
         const corrVoltage = Math.max(-12, Math.min(12, 0.6 * hErr));
-        ch += corrVoltage * (165 / 12) * dt;
+        ch += corrVoltage * (220 / 12) * dt;
 
         const chr = ch * Math.PI / 180;
         cx += drivePower * dt * Math.sin(chr);
@@ -660,7 +708,18 @@ function execCmd(cmd, x, y, h, ci) {
 
       // Only snap to exact target if robot actually reached it (not a timeout exit)
       if (reachedTarget) push(cmd.x, cmd.y, ch, tSim);
-      return { x: reachedTarget ? cmd.x : cx, y: reachedTarget ? cmd.y : cy, h: ch, frames, dur: tSim };
+
+      const coastMs = COAST_S * 1000;
+      const voltage = cmd.voltage != null ? cmd.voltage : 12;
+      const travelAngle = ch + (lastDrivePower < 0 ? 180 : 0);
+      const { dx, dy } = coastOffset(travelAngle, voltage);
+      const finalX = reachedTarget ? cmd.x : cx, finalY = reachedTarget ? cmd.y : cy;
+      for (let s = 1; s <= 3; s++) {
+        const f = s / 3;
+        push(finalX + dx * f, finalY + dy * f, ch, tSim + f * coastMs);
+      }
+      // See 'drive' above: non-blocking calls don't hold up the timeline.
+      return { x: finalX + dx, y: finalY + dy, h: ch, frames, dur: blocking ? tSim + coastMs : 0 };
     }
 
     case 'boomerang': {
@@ -672,11 +731,12 @@ function execCmd(cmd, x, y, h, ci) {
       const add = cmd.dir === -1 ? 180 : 0;
 
       const dist = Math.sqrt((x1 - x0) ** 2 + (y1 - y0) ** 2);
-      const boomerangSpeed = (cmd.voltage != null ? cmd.voltage : 12) / 12 * 20.0;
+      const boomerangSpeed = (cmd.voltage != null ? cmd.voltage : 12) / 12 * 27.0;
       const rawPhysicsDur = dist / boomerangSpeed * 1000;
       const blocking = cmd.blocking !== false;
       const physicsDur = cmd.timeout != null ? Math.min(rawPhysicsDur, cmd.timeout) : rawPhysicsDur;
-      const dur = physicsDur;
+      // See 'drive' above: non-blocking calls don't hold up the timeline.
+      const dur = blocking ? physicsDur : 0;
       const pathFrac = rawPhysicsDur > 0 ? physicsDur / rawPhysicsDur : 1;
 
       // Quadratic Bezier — carrot formula matches C++, dlead scaled up for visibility
@@ -702,7 +762,18 @@ function execCmd(cmd, x, y, h, ci) {
       const dtxF = 2*(1-tf)*(cpx-x0) + 2*tf*(x1-cpx);
       const dtyF = 2*(1-tf)*(cpy-y0) + 2*tf*(y1-cpy);
       const endBh = pathFrac >= 1 ? h1 : Math.atan2(dtxF, dtyF) * 180 / Math.PI + add;
-      return { x: endBx, y: endBy, h: endBh, frames, dur };
+
+      const coastMs = COAST_S * 1000;
+      const voltage = cmd.voltage != null ? cmd.voltage : 12;
+      // Coast along the curve's raw tangent (direction of travel), not endBh
+      // (which is offset by `add` to represent the robot's facing, not motion).
+      const travelAngle = Math.atan2(dtxF, dtyF) * 180 / Math.PI;
+      const { dx, dy } = coastOffset(travelAngle, voltage);
+      for (let s = 1; s <= 3; s++) {
+        const f = s / 3;
+        push(endBx + dx * f, endBy + dy * f, endBh, physicsDur + f * coastMs);
+      }
+      return { x: endBx + dx, y: endBy + dy, h: endBh, frames, dur: blocking ? physicsDur + coastMs : 0 };
     }
   }
   return { x, y, h, frames, dur: 0 };
@@ -1060,8 +1131,13 @@ function render() {
 
 function updateHUD(f) {
   if (!f) return;
-  document.getElementById('hudX').textContent    = f.x.toFixed(1);
-  document.getElementById('hudY').textContent    = f.y.toFixed(1);
+  // Show robot-local coords (x_pos/y_pos as the real robot's odometry would
+  // report them, i.e. relative to start/last distanceReset) rather than raw
+  // field/canvas coords -- so this matches what you'd see printed on the
+  // Brain screen (0,0 at the start pose, not the field-absolute position).
+  const loc = fieldToLocal(f.x, f.y, f.ox, f.oy, f.rh);
+  document.getElementById('hudX').textContent    = loc.x.toFixed(1);
+  document.getElementById('hudY').textContent    = loc.y.toFixed(1);
   document.getElementById('hudH').textContent    = f.h.toFixed(1);
   document.getElementById('hudStep').textContent = Math.min(frameIdx, frames.length - 1);
   document.getElementById('hudTotal').textContent = frames.length - 1;
