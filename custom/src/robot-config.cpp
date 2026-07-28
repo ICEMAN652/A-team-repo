@@ -100,14 +100,14 @@ double vertical_tracker_diameter = 1.975; // Diameter of the vertical tracker wh
 // double front_sensor_offsetY = 6.5;
 // For the X offset, a negative value indicates that the sensor is located on the left side of the robot, while a positive value indicates that it is on the right side. 
 
-double left_sensor_offsetX  = -5.5;
-double left_sensor_offsetY  = -1.0;  
-double right_sensor_offsetX = 5.5;
-double right_sensor_offsetY = 1.0;
+double left_sensor_offsetX  = -6.5;
+double left_sensor_offsetY  = 1.0;  
+double right_sensor_offsetX = 6;
+double right_sensor_offsetY = 1;
 double front_sensor_offsetX = 0.0;
 double front_sensor_offsetY = 5.5;
-double back_sensor_offsetX  = 0.0;
-double back_sensor_offsetY  = -4.5;
+double back_sensor_offsetX  = -0.5;
+double back_sensor_offsetY  = -2.5;
 
 // AprilTag reset setup -- offset of each AI Vision Sensor from the robot's center (inches)
 double front_ai_vision_offsetX = 0.0;
