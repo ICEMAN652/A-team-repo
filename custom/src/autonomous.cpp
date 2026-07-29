@@ -28,7 +28,6 @@ void movetwoinch(){
  resetPositionBack();
  Brain.Screen.setCursor(6, 1);
  Brain.Screen.print("X: %.2f in | Y: %.2f in", x_pos, y_pos);
- 
 }
 //not gonna use (testing purposes)
 void exampleAuton() {
