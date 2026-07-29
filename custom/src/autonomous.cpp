@@ -28,6 +28,7 @@ void movetwoinch(){
  resetPositionBack();
  Brain.Screen.setCursor(6, 1);
  Brain.Screen.print("X: %.2f in | Y: %.2f in", x_pos, y_pos);
+ 
 }
 //not gonna use (testing purposes)
 void exampleAuton() {
@@ -71,42 +72,31 @@ void exampleAuton2() {
 void rightsidepush(){
   // driveTo(8.5,500,false,12); 
   driveTo(24, 900, false, 12);
-  resetPositionBack();
-  boomerang(-19.0, -50, -1, 45, 0.3, 900, true,10);//
+  boomerang(-17.5, 17.5, -1, 45, 0.2, 900, true);
   wait(500, msec);
-  driveTo(5,500,false,12);
-  boomerang(22,-32,1,30, 0.2,1050,true,9); //pickup pin and cup on the line //
+  driveTo(10,500,false,12);
+  boomerang(20,35,1,50, 0.2,1050,true,9); //pickup pin and cup on the line
   wait(100, msec);
-  boomerang(25,-49,-1,-45, 0.25, 800, true, 10); //going to neutral goal to score //
+  boomerang(26,19,-1,-45, 0.25, 800, true, 10); //going to neutral goal to score
   wait(500, msec);
-  moveToPoint(8,-28,1,750,true,10); //go to middle pin//
+  moveToPoint(4,42,1,750,false,10); //go to middle pin
   turnToAngle(0, 400, true, 10);
   distanceReset('L', 'B', 1680 , 1130);
   Brain.Screen.setCursor(6, 1);
   Brain.Screen.print("X: %.2f in | Y: %.2f in", x_pos, y_pos);
-  boomerang(-21, -22, -1, 45, 0.3, 1000, true,10);//score middle pin
+  boomerang(-19.65, -19, -1, 45, 0.3, 1000, true,11);//score middle pin
   wait(500, msec);
   boomerang(-25, 1, 1,-55 , 0.5, 1000, true,11);//pick up alliance line pin #1
   turnToAngle(90, 1000, true, 10);
   resetPositionRight();
   Brain.Screen.setCursor(6, 1);
   Brain.Screen.print("X: %.2f in | Y: %.2f in", x_pos, y_pos);
-  moveToPoint(-40, -21, -1, 800, true, 10);
+  moveToPoint(-40, -23, -1, 800, true, 12);
   wait(500, msec);//score alliance line pin #1
-  driveTo(8, 400, false, 12);
-  boomerang(-49, -50, 1, 225 , 0.4, 1200, true,11);
-  wait(100, msec);
-  turnToAngle(180,1000,true,10);
-  resetPositionRight();
-  moveToPoint(-45, -27, -1, 800, true, 10);
-  driveTo(5, 600, false, 12);
-  turnToAngle(90, 800, true, 12);
-  distanceReset('R', 'B', 720, 763);
-  Brain.Screen.setCursor(6, 1);
-  Brain.Screen.print("X: %.2f in | Y: %.2f in", x_pos, y_pos);
-  moveToPoint(-7, 37, 1, 800, false, 10);
-  boomerang(-18, 35, -1, 0, 0.4, 1200, true, 11);
-
+  driveTo(2, 300, false, 12);
+  boomerang(-50, -46, 1, 225 , 0.5, 1000, true,11);
+  moveToPoint(-55,-26,-1,800,true,12);
+  
   
 //score the pre-load*/
 
