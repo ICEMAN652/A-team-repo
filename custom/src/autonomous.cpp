@@ -92,12 +92,17 @@ void rightsidepush(){
   Brain.Screen.print("X: %.2f in | Y: %.2f in", x_pos, y_pos);
   moveToPoint(-40, -22, -1, 700, true, 12);//score alliance line pin #1
   wait(500, msec);
-  moveToPoint(-24, 1, 1, 800, true, 12);
-  boomerang(-68.5,-2,-1,90,0.2,1500,true,12);
-  wait(300, msec);
-  turnToAngle(178, 600, true, 12);
-  moveToPoint(-50, -44, 1, 1000, true, 12);
-  moveToPoint(-49, -26, -1, 1000, true, 12);
+  moveToPoint(-24, -10, 1, 800, false, 12);
+  boomerang(-67,-2,-1,90,0.2,1100,true,12);//going to toggle
+  wait(300, msec);//toggle
+  resetPositionBack();
+  driveTo(0.5, 100, false, 12);
+  turnToAngle(184, 600, true, 12);
+  resetPositionRight();
+  driveTo(10, 300, false, 12);
+  moveToPoint(-50, -44, 1, 800, true, 12);//going to pick up second alliance pin
+  moveToPoint(-47, -26, -1, 900, true, 12);//going to scoring alliance pin
+  wait(500, msec);// score alliance pill 
 
   
 
