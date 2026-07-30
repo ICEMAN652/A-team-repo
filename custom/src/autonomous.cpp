@@ -74,7 +74,7 @@ void rightsidepush(){
   boomerang(-17.5, 17.5, -1, 45, 0.2, 900, true);
   wait(500, msec);
   driveTo(10,500,false,12);
-  boomerang(20,35,1,50, 0.2,1050,true,9); //pickup pin and cup on the line
+  boomerang(20,35,1,50, 0.2,1050,true,11); //pickup pin and cup on the line
   wait(100, msec);
   boomerang(26,19,-1,-45, 0.25, 800, true, 10); //going to neutral goal to score
   wait(500, msec);
@@ -85,16 +85,36 @@ void rightsidepush(){
   Brain.Screen.print("X: %.2f in | Y: %.2f in", x_pos, y_pos);
   boomerang(-19.65, -19, -1, 45, 0.3, 1000, true,11);//score middle pin
   wait(500, msec);
-  boomerang(-25, 1, 1,-55 , 0.5, 1000, true,11);//pick up alliance line pin #1
-  turnToAngle(90, 1000, true, 10);
+  boomerang(-25, 1, 1,-55 , 0.5, 900, true,11);//pick up alliance line pin #1
+  turnToAngle(90, 650, true, 11);
   resetPositionRight();
   Brain.Screen.setCursor(6, 1);
   Brain.Screen.print("X: %.2f in | Y: %.2f in", x_pos, y_pos);
-  moveToPoint(-40, -23, -1, 800, true, 12);
-  wait(500, msec);//score alliance line pin #1
-  driveTo(2, 300, false, 12);
-  boomerang(-50, -46, 1, 225 , 0.5, 1000, true,11);
-  moveToPoint(-55,-26,-1,800,true,12);
+  moveToPoint(-40, -22, -1, 700, true, 12);//score alliance line pin #1
+  wait(500, msec);
+  moveToPoint(-24, 1, 1, 800, true, 12);
+  boomerang(-68.5,-2,-1,90,0.2,1500,true,12);
+  wait(300, msec);
+  turnToAngle(178, 600, true, 12);
+  moveToPoint(-50, -44, 1, 1000, true, 12);
+  moveToPoint(-49, -26, -1, 1000, true, 12);
+
+  
+
+  /*driveTo(6, 400, false, 12);
+  boomerang(-50, -46, 1, 225 , 0.3, 1000, true,11);
+  moveToPoint(-51,-26,-1,700,true,12);//score second alliance pin
+  wait(500, msec);
+  driveTo(4, 300, false, 12);
+  turnToAngle(225, 700, false, 12);
+  boomerang(-65,-3,-1,90,0.6,1500, false, 12);
+  driveTo(-1, 700, true, 12);*/
+  //alt route 2 below
+  //moveToPoint(-30,-29,1,800,true,12);
+  //turnToAngle(135, 800, false, 11);
+  //boomerang(-73, -7, -1, 90 , 0.2, 1500, true,12);
+  
+
   
   
 //score the pre-load*/
