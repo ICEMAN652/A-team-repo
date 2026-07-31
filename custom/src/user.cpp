@@ -10,31 +10,25 @@
 
 
 void runAutonomous() {
-  int auton_selected = 7;
+  int auton_selected = 2;
   switch(auton_selected) {
     case 1:
-      autonskills();
+      SAWP();
       break;
     case 2:
-      leftandmid();
+      RedRight();
       break;
     case 3:
-      left_right();
+      RedLeft();
       break;
     case 4:
       movetwoinch();
       break;
     case 5:
-      rightsidepush();
+      exampleAuton();
       break;
     case 6:
-      SAWP();
-      break; 
-    case 7:
-      RedRight();
-      break;
-    case 8:
-      break;
+      break;  
   }
 }
 
@@ -125,47 +119,8 @@ void runDriver() {
     driveChassis(leftOutput,rightOutput);
 
 
-      //descore logic
-      static bool descore_pressed = false;
-      static bool descore_state = false;
-   
-   
-      if(l1 && !descore_pressed){
-        descore_state=!descore_state;
-        descore.set(descore_state);
-      }
-      descore_pressed = l1;
-   
-      //midgoal logic
-      static bool midgoal_pressed = false;
-      static bool midgoal_state=false;
-   
-      if (button_b && !midgoal_pressed){
-        //midgoal.set(false);
-        midgoal_state=!midgoal_state;
-        midgoal.set(midgoal_state);
-      }
-      midgoal_pressed = button_b;
-   
-   
-   
-   
-   
-   
-   
-      //scraper logic
-      static bool scraper_pressed = false;
-      static bool scraper_state = false;
-     
-      if (button_down_arrow && !scraper_pressed) {
-        scraper_state = !scraper_state;
-        scraper.set(scraper_state);
-      }
-      scraper_pressed = button_down_arrow;
-   
-   
-      wait(10, msec); 
-   }
+
+  }
 }
 
 
