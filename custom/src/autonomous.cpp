@@ -30,17 +30,35 @@ void movetwoinch(){
  Brain.Screen.print("X: %.2f in | Y: %.2f in", x_pos, y_pos);
 }
 //not gonna use (testing purposes)
-void exampleAuton() {
+//Starting Point: (-0.2,-63.7) back on toggle
+void RedRight() {
+  resetPositionBack();
+  driveTo(18,1200,false,12);
+  boomerang(20,-25,-1,98,0.2,2000,false,5);
+  moveToPoint(0,-36,1,1000,false,11);
+  boomerang(20,-48,-1,-45,0.2,950,false,9);//score 1st
+  moveToPoint(-15,-30,1,1200,true,10);
+  turnToAngle(137,800,true);
+  driveTo(-3, 500, true, 9);
+  moveToPoint(-5,-48,1,1000,false,10);
+  boomerang(-22,-51,-1,90,0.3,2500,false,10);
+  wait(500, msec); //score 2nd
+  // resetPositionRight();
+  // Brain.Screen.setCursor(6, 1);
+  // Brain.Screen.print("X: %.2f in | Y: %.2f in", x_pos, y_pos);
+  driveTo(20,500,true,9);
+
+
  // Use this for tuning linear and turn pid
  
  //driveTo(8, 1000, true, 12);
  //distanceReset('R', 'B', 347, 380);
- moveToPoint(0, 12, 1, 1000, false, 8);
+//  moveToPoint(0, 12, 1, 1000, false, 8);
  
- moveToPoint(0, 24, 1, 1000, true, 8);
- wait(100, msec);
- Brain.Screen.setCursor(6, 1);
- Brain.Screen.print("X: %.2f in | Y: %.2f in", x_pos, y_pos);
+//  moveToPoint(0, 24, 1, 1000, true, 8);
+//  wait(100, msec);
+//  Brain.Screen.setCursor(6, 1);
+//  Brain.Screen.print("X: %.2f in | Y: %.2f in", x_pos, y_pos);
 }
 
 //testing purposes
