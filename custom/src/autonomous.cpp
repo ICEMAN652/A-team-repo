@@ -78,17 +78,47 @@ void RedRight() {
 
 //input starting point
 void RedLeft(){
-  driveTo(18,1200,false,12);
   resetPositionBack();
-  boomerang(-20,-31,1,-55,0.2,1500,true, 12);
+  driveTo(18,1200,false,12);
+  boomerang(-23,-29,1,-45,0.3,1000,true,10);
+  wait(200, msec);
+  boomerang(-24,-46.5,-1,45,0.3,550,true,10);
   wait(500, msec);
-  boomerang(-24.5, -49, -1, 0, 0.2, 1200, true, 12);
-  /*
+  boomerang(18,-25,1,45,0.3,1000,true,10);
+  turnToAngle(0,200,false);
+  moveToPoint(18,-45,-1,1000,true,10);
   wait(500, msec);
-  boomerang(15, 38, 1, 80, 0.5, 2000, true, 12);
-  wait(500,msec);
-  boomerang(22, 20, -1, 0, 0.2, 2000, true, 12);
-  */
+  boomerang(36,-49,1,180,0.3,1000,true,10);
+  turnToAngle(90,500,true);
+  distanceReset('R', 'B', 480 , 489); 
+  Brain.Screen.setCursor(6, 1);
+  Brain.Screen.print("X: %.2f in | Y: %.2f in", x_pos, y_pos);
+  //heading at 90 here
+  driveTo(-20,500, true, 10);
+  wait(500, msec);
+  boomerang(6,-23,1,90,0.3,1200,true,8);
+  driveTo(3,500, true, 5);
+  wait(300, msec);
+  moveToPoint(0,-22.5,-1,1000,true,9);
+  //wait(200, msec);
+  //boomerang(16,-50,-1,45,0.3,1000,true,10);
+  //wait(500,msec);
+  //boomerang(12.5,-64,1,180,0.3,1200,false,10);
+  //moveToPoint(11.5,-66,1,1000,true,10);
+  //resetPositionRight();
+  //moveToPoint(11.5,-62,1,1000,true,10);
+  
+  // driveTo(18,1200,false,12);
+  // resetPositionBack();
+  // boomerang(-20,-31,1,-55,0.2,1500,true, 12);
+  // wait(500, msec);
+  // boomerang(-24.5, -49, -1, 0, 0.2, 1200, true, 12);
+  
+  // wait(500, msec);
+  // boomerang(15, 38, 1, 80, 0.5, 2000, true, 12);
+  // wait(500,msec);
+  // boomerang(22, 20, -1, 0, 0.2, 2000, true, 12);
+  
   
 }
 
@@ -129,7 +159,7 @@ void SAWP(){
   moveToPoint(-50, -44, 1, 800, true, 12);//going to pick up second alliance pin
   moveToPoint(-47, -26, -1, 900, true, 12);//going to scoring alliance pin
   wait(500, msec);// score alliance pill 
-
+  
   
 }
 
