@@ -74,15 +74,25 @@ void RedRight() {
   // Brain.Screen.print("X: %.2f in | Y: %.2f in", x_pos, y_pos);
   driveTo(20,500,true,9);
 
-
 }
 
 //input starting point
 void RedLeft(){
-  //unfinished route
+  driveTo(18,1200,false,12);
+  resetPositionBack();
+  boomerang(-20,-31,1,-55,0.2,1500,true, 12);
+  wait(500, msec);
+  boomerang(-24.5, -49, -1, 0, 0.2, 1200, true, 12);
+  /*
+  wait(500, msec);
+  boomerang(15, 38, 1, 80, 0.5, 2000, true, 12);
+  wait(500,msec);
+  boomerang(22, 20, -1, 0, 0.2, 2000, true, 12);
+  */
+  
 }
 
-//unfinished route
+//unfinished routmoveToPoint(emoveToPoint(
 //(-0.2,-63.7) is starting point
 void SAWP(){
   // driveTo(8.5,500,false,12); 
@@ -96,7 +106,7 @@ void SAWP(){
   wait(500, msec);
   moveToPoint(4,42,1,750,false,10); //go to middle pin
   turnToAngle(0, 400, true, 10);
-  distanceReset('L', 'B', 1680 , 1130);
+  distanceReset('L', 'B', 1680 , 1130);       // distance reset
   Brain.Screen.setCursor(6, 1);
   Brain.Screen.print("X: %.2f in | Y: %.2f in", x_pos, y_pos);
   boomerang(-19.65, -19, -1, 45, 0.3, 1000, true,11);//score middle pin
@@ -121,27 +131,6 @@ void SAWP(){
   wait(500, msec);// score alliance pill 
 
   
-
-  /*driveTo(6, 400, false, 12);
-  boomerang(-50, -46, 1, 225 , 0.3, 1000, true,11);
-  moveToPoint(-51,-26,-1,700,true,12);//score second alliance pin
-  wait(500, msec);
-  driveTo(4, 300, false, 12);
-  turnToAngle(225, 700, false, 12);
-  boomerang(-65,-3,-1,90,0.6,1500, false, 12);
-  driveTo(-1, 700, true, 12);*/
-  //alt route 2 below
-  //moveToPoint(-30,-29,1,800,true,12);
-  //turnToAngle(135, 800, false, 11);
-  //boomerang(-73, -7, -1, 90 , 0.2, 1500, true,12);
-  
-
-  
-  
-  //score the pre-load
-
-  // driveTo(45,1000,true,12);
-  //intake pin
 }
 
 
