@@ -6,4 +6,5 @@ void exampleAuton();
 void movetwoinch();
 void SAWP();
 void RedRight();
-void RedLeft();
+void BlueLeft();
+void BlueLeftAutonTwo();

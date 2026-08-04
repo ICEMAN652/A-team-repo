@@ -10,7 +10,7 @@
 
 
 void runAutonomous() {
-  int auton_selected = 3;
+  int auton_selected = 6;
   switch(auton_selected) {
     case 1:
       SAWP();
@@ -19,7 +19,7 @@ void runAutonomous() {
       RedRight();
       break;
     case 3:
-      RedLeft();
+      BlueLeft();
       break;
     case 4:
       movetwoinch();
@@ -28,7 +28,10 @@ void runAutonomous() {
       exampleAuton();
       break;
     case 6:
-      break;  
+      BlueLeftAutonTwo(); 
+      break;
+    case 7:
+      break;
   }
 }
 
