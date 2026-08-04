@@ -91,20 +91,29 @@ void BlueLeft(){
   boomerang(-24,-46.5,-1,45,0.3,550,true,10);
   wait(500, msec);
   boomerang(18,-25,1,45,0.3,1000,true,10);
-  turnToAngle(0,200,false);
-  moveToPoint(18,-45,-1,1000,true,10);
+  boomerang(18, -41, -1, 0, 0.4, 1000, true, 10);
   wait(500, msec);
-  boomerang(36,-49,1,180,0.3,1000,true,10);
-  turnToAngle(90,500,true);
-  distanceReset('R', 'B', 480 , 489); 
-  Brain.Screen.setCursor(6, 1);
-  Brain.Screen.print("X: %.2f in | Y: %.2f in", x_pos, y_pos);
+  resetPositionRight();
+  boomerang(46,-46,1,135,0.3,1000,true,10);
+  turnToAngle(90,400, true);
+  moveToPoint(25,-46,-1,500,true,10);
+  resetPositionRight();
+  wait(500, msec);
+  driveTo(13,500,true, 10);
+  turnToAngle(220, 400, true);
+  driveTo(3.5, 500 ,false,12);
+  driveChassis(4.5, 7);
+  wait(700, msec);
+  driveChassis(0,0);
+  wait(250, msec);
+  boomerang(24,-49.5,-1,135,0.3,1000,true,10);
+  /*turnToAngle(90,500,true);
   //heading at 90 here
   driveTo(-20,500, true, 10);
   wait(500, msec);
-  boomerang(-25.5,-23,1,180,0.3,1200,true,8);
-  driveTo(3,500, true, 5);
-  wait(300, msec);
+  boomerang(-25.5,-23,1,180,0.3,800,true,8);
+  //driveTo(3,500, true, 5);
+  //wait(300, msec);*/
   //moveToPoint(0,-22.5,-1,1000,true,9);
   
   
