@@ -100,13 +100,17 @@ void BlueLeft(){
   resetPositionRight();
   wait(500, msec);
   driveTo(13,500,true, 10);
-  turnToAngle(220, 400, true);
-  driveTo(3.5, 500 ,false,12);
-  driveChassis(4.5, 7);
-  wait(700, msec);
-  driveChassis(0,0);
+  turnToAngle(229, 600, true);
+  driveTo(7, 500 ,false,9);
+  driveChassis(4.5, 6);
   wait(250, msec);
-  boomerang(24,-49.5,-1,135,0.3,1000,true,10);
+  driveChassis(0,0);
+  wait(500,msec);
+  turnToAngle(180,600,true);
+  resetPositionLeft();
+  moveToPoint(22,-49,-1,600,true,10);
+  // wait(250, msec);
+  // boomerang(24,-49.5,-1,135,0.3,1000,true,10);
   /*turnToAngle(90,500,true);
   //heading at 90 here
   driveTo(-20,500, true, 10);
