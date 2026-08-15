@@ -58,7 +58,16 @@ void exampleAuton() {
 //(64.4,0.2) is starting point with toggle odom pod on the line, intake facing center goal
 void BlueLeftAutonTwo() {
   resetPositionBack();
-  boomerang(-23,-22,1,-45,0.3,2000,true,9);
+  boomerang(-22,-30,1,-50,0.3,2000,true,9); // intaking center left pin
+  wait(500,msec);
+  boomerang(-25,-46,-1,90,0.3,2200,true,9);
+  wait(500,msec);
+  boomerang(-6,-26,1,-115,0.2,2000,true,9);
+  turnToAngle(-129,200,false);
+  boomerang(16, -57, -1, -127, 0.2, true, 9);
+  // wait(500,msec);
+  // moveToPoint(24,-30,1,1000,true,10);
+  
 
 }
 
