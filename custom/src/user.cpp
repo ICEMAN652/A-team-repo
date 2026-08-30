@@ -116,14 +116,32 @@ void runDriver() {
     // 4. Convert back to motor voltage units (-12V to 12V, see driveChassis)
     double leftOutput = leftOutputScaled * 12.0;
     double rightOutput = rightOutputScaled * 12.0;
-
-    
+//cascade code
+    if (l1){
+      cascade.spin(fwd, 12, volt);
+    }else if(r1){
+      cascade.spin(reverse, 12, volt);
+    }else{
+      cascade.spin(fwd, 0, volt);
+    }
     // 4. Move the Chassis
     driveChassis(leftOutput,rightOutput);
 
-
+   //intake
+  if(r2){
+    intake.spin(fwd, 12,volt);
+    claw.spin(fwd, 12,volt);
+  } else if(l2){
+    intake.spin(reverse,12,volt);
+    claw.spin(reverse,12,volt);
+  } else {
+    intake.spin(fwd,0,volt);
+    claw.spin(fwd,0,volt);
+  }
 
   }
+
+  
 }
 
 
