@@ -28,7 +28,8 @@ motor right_chassis2 = motor(PORT20, ratio6_1, false);
 motor_group right_chassis = motor_group(right_chassis1, right_chassis2);
 
 motor intake = motor(PORT19, ratio6_1, false);
-motor claw = motor(PORT12, ratio18_1, true);
+motor claw_intake = motor(PORT12, ratio18_1, true);
+motor claw = motor(PORT5, ratio18_1, true);
 
 motor cascade_1 = motor(PORT10, ratio18_1, false);
 motor cascade_2 = motor(PORT17, ratio18_1, true);
@@ -36,9 +37,8 @@ motor cascade_2 = motor(PORT17, ratio18_1, true);
 motor_group cascade = motor_group(cascade_1, cascade_2);
 
 inertial inertial_sensor = inertial(PORT6);
-digital_out descore = digital_out(Brain.ThreeWirePort.C);
-digital_out midgoal = digital_out(Brain.ThreeWirePort.A);
-digital_out scraper = digital_out(Brain.ThreeWirePort.B);
+digital_out intake1 = digital_out(Brain.ThreeWirePort.C);
+digital_out intake2 = digital_out(Brain.ThreeWirePort.A);
 
 // Format is rotation(port, reversed)
 // just set these to random ports if you don't use tracking wheels

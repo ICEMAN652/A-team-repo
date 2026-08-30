@@ -46,7 +46,7 @@ bool button_up_arrow, button_down_arrow, button_left_arrow, button_right_arrow;
 int chassis_flag = 0;
 
 
-
+bool already_90;
 
 void runDriver() {
   //r1 and r2
@@ -116,7 +116,11 @@ void runDriver() {
     // 4. Convert back to motor voltage units (-12V to 12V, see driveChassis)
     double leftOutput = leftOutputScaled * 12.0;
     double rightOutput = rightOutputScaled * 12.0;
-//cascade code
+
+    // 4. Move the Chassis
+    driveChassis(leftOutput,rightOutput);
+  
+    //cascade code
     if (l1){
       cascade.spin(fwd, 12, volt);
     }else if(r1){
@@ -124,20 +128,29 @@ void runDriver() {
     }else{
       cascade.spin(fwd, 0, volt);
     }
-    // 4. Move the Chassis
-    driveChassis(leftOutput,rightOutput);
 
-   //intake
-  if(r2){
-    intake.spin(fwd, 12,volt);
-    claw.spin(fwd, 12,volt);
-  } else if(l2){
-    intake.spin(reverse,12,volt);
-    claw.spin(reverse,12,volt);
-  } else {
-    intake.spin(fwd,0,volt);
-    claw.spin(fwd,0,volt);
-  }
+    //claw
+    if (button_a){
+      if (already_90 == false){
+        claw.spinToPosition(90, degrees, false);
+        already_90 = true;
+      }else if (already_90 == true){
+        claw.spinToPosition(0, degrees, false);
+        already_90 = false;
+      }
+    }
+
+    //intake
+    if(r2){
+      intake.spin(fwd, 12,volt);
+      claw_intake.spin(fwd, 12,volt);
+    } else if(l2){
+      intake.spin(reverse,12,volt);
+      claw_intake.spin(reverse,12,volt);
+    } else {
+      intake.spin(fwd,0,volt);
+      claw_intake.spin(fwd,0,volt);
+    }
 
   }
 
