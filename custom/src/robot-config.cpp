@@ -20,14 +20,14 @@ controller controller_1 = controller(primary);
 // gearSetting is one of the following: ratio36_1(red), ratio18_1(green), ratio6_1(blue)
 // all chassis motors should be reversed appropriately so that they spin vertical when given a positive voltage input
 // such as driveChassis(12, 12)
-motor left_chassis1 = motor(PORT1, ratio6_1, true);
-motor left_chassis2 = motor(PORT11, ratio6_1, true);
+motor left_chassis1 = motor(PORT19, ratio6_1, true);
+motor left_chassis2 = motor(PORT18, ratio6_1, true);
 motor_group left_chassis = motor_group(left_chassis1, left_chassis2);
-motor right_chassis1 = motor(PORT10, ratio6_1, false);
+motor right_chassis1 = motor(PORT12, ratio6_1, false);
 motor right_chassis2 = motor(PORT20, ratio6_1, false);
 motor_group right_chassis = motor_group(right_chassis1, right_chassis2);
 
-motor intake = motor(PORT19, ratio6_1, false);
+motor intake = motor(PORT21, ratio6_1, false);
 motor claw_intake = motor(PORT12, ratio18_1, true);
 motor claw = motor(PORT5, ratio18_1, true);
 
