@@ -24,6 +24,7 @@ extern distance left_sensor;
 extern distance back_sensor;
 extern distance front_sensor;
 extern distance right_sensor;
+extern distance intake_sensor;
 extern aivision front_ai_vision;
 extern aivision back_ai_vision;
 extern aivision left_ai_vision;

@@ -46,7 +46,18 @@ bool button_up_arrow, button_down_arrow, button_left_arrow, button_right_arrow;
 int chassis_flag = 0;
 
 
-bool already_90;
+bool already_up = false;
+bool claw_zeroed = false;   // edge-trigger so the claw only auto-homes once per return to bottom
+bool cascade_up = false;
+
+// Odom position (inches) captured the moment the cascade was raised, plus the
+// auto-lower state. Once the bot has driven CASCADE_AUTO_DOWN_IN away from that
+// spot, the cascade drives itself back down to 0 degrees.
+double cascade_up_x = 0.0, cascade_up_y = 0.0;
+bool cascade_auto_home = false;
+const double CASCADE_AUTO_DOWN_IN = 18.0;
+const double CASCADE_HOME_TOL = 5.0; // degrees of slop around 0
+
 
 void runDriver() {
   //r1 and r2
@@ -120,17 +131,77 @@ void runDriver() {
     // 4. Move the Chassis
     driveChassis(leftOutput,rightOutput);
   
+    //y is intake piston up
+    if (button_y){
+      if (already_up == false){
+        intake1.set(true);
+        intake2.set(true);
+        already_up = true;
+      }else if (already_up == true){
+        intake1.set(false);
+        intake2.set(false);
+        already_up = false;
+      }
+    }
+
+    //intake code
+    if (intake_sensor.objectDistance(mm) < 260){
+      intake1.set(false);
+      intake2.set(false);
+      already_up = false;
+    }
+
+    // If the cascade is up and we've driven ~18 in (straight-line, any
+    // direction) from where it was raised, start auto-lowering it.
+    if (cascade_up) {
+      double dx = x_pos - cascade_up_x;
+      double dy = y_pos - cascade_up_y;
+      if (sqrt(dx * dx + dy * dy) >= CASCADE_AUTO_DOWN_IN) {
+        cascade_auto_home = true;
+        cascade_up = false;
+      }
+    }
+
     //cascade code
     if (l1){
+      //cascade up
+      cascade_auto_home = false;             // driver takes over
+      if (!cascade_up) {                     // rising edge: remember where we are
+        cascade_up_x = x_pos;
+        cascade_up_y = y_pos;
+      }
+      cascade_up = true;
       cascade.spin(fwd, 12, volt);
-    }else if(r1){
+      claw.spinToPosition(90, degrees, false);
+    }else if(l2){
+      //cascade down
+      cascade_auto_home = false;
+      cascade_up = false;
       cascade.spin(reverse, 12, volt);
+    }else if (cascade_auto_home){
+      //auto-lower after driving CASCADE_AUTO_DOWN_IN with the cascade raised
+      if (cascade.position(degrees) > CASCADE_HOME_TOL) {
+        cascade.spin(reverse, 12, volt);
+      } else {
+        cascade.spin(fwd, 0, volt);
+        cascade_auto_home = false;
+      }
     }else{
       cascade.spin(fwd, 0, volt);
     }
 
+    if (fabs(cascade.position(degrees)) < CASCADE_HOME_TOL) {
+      if (!claw_zeroed) {
+        claw.spinToPosition(0, degrees, false); // non-blocking so the drive loop keeps running
+        claw_zeroed = true;
+      }
+    } else {
+      claw_zeroed = false; // re-arm once the cascade has left the bottom
+    }
+
+    
     //claw
-    if (button_a){
+   /* if (button_a){
       if (already_90 == false){
         claw.spinToPosition(90, degrees, false);
         already_90 = true;
@@ -138,15 +209,19 @@ void runDriver() {
         claw.spinToPosition(0, degrees, false);
         already_90 = false;
       }
-    }
+    }*/
 
-    //intake
-    if(r2){
+    //intake code logic
+    if(r1){
+      //intake
       intake.spin(fwd, 12,volt);
       claw_intake.spin(fwd, 12,volt);
-    } else if(l2){
+    } else if(r2){
+      //outake
       intake.spin(reverse,12,volt);
       claw_intake.spin(reverse,12,volt);
+      claw.spinToPosition(125, degrees, false);
+      wait(1000, msec);
     } else {
       intake.spin(fwd,0,volt);
       claw_intake.spin(fwd,0,volt);
