@@ -145,7 +145,7 @@ void runDriver() {
     }
 
     //intake code
-    if (intake_sensor.objectDistance(mm) < 260){
+    if (intake_sensor.objectDistance(mm) < 260){ //tune value of 260 to whatever the actual number is. 
       intake1.set(false);
       intake2.set(false);
       already_up = false;
