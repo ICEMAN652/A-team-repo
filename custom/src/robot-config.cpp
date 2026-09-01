@@ -29,14 +29,14 @@ motor_group right_chassis = motor_group(right_chassis1, right_chassis2);
 
 motor intake = motor(PORT21, ratio6_1, false);
 motor claw_intake = motor(PORT17, ratio18_1, true);
-motor claw = motor(PORT3, ratio18_1, true);
+motor claw = motor(PORT10, ratio18_1, true);
 
-motor cascade_1 = motor(PORT2, ratio18_1, false); 
-motor cascade_2 = motor(PORT17, ratio18_1, true); 
+motor cascade_1 = motor(PORT3, ratio18_1, false); 
+motor cascade_2 = motor(PORT15, ratio18_1, true); 
 
 motor_group cascade = motor_group(cascade_1, cascade_2);
 
-inertial inertial_sensor = inertial(PORT6);
+inertial inertial_sensor = inertial(PORT14);
 
 digital_out intake1 = digital_out(Brain.ThreeWirePort.C);
 digital_out intake2 = digital_out(Brain.ThreeWirePort.A);
@@ -50,11 +50,11 @@ rotation vertical_tracker = rotation(PORT3, true);
 
 // Distance reset sensors
 // Set these to random ports if you are not using distance resets
-distance left_sensor = distance(PORT8);
-distance right_sensor = distance(PORT3); 
-distance back_sensor = distance(PORT9);
+distance left_sensor = distance(PORT4);
+distance right_sensor = distance(PORT16); 
+distance back_sensor = distance(PORT13);
 distance front_sensor = distance(PORT18);
-distance intake_sensor = distance(PORT7);
+distance intake_sensor = distance(PORT1);
 
 // AprilTag AI Vision Sensors, one per cardinal direction -- change ports to match wiring
 aivision front_ai_vision = aivision(PORT4);
