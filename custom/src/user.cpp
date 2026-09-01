@@ -137,19 +137,20 @@ void runDriver() {
         intake1.set(true);
         intake2.set(true);
         already_up = true;
-      }else if (already_up == true){
+      }else if (already_up == true || intake_sensor.objectDistance(mm) < 135 ){ //has intake code
         intake1.set(false);
         intake2.set(false);
         already_up = false;
       }
     }
 
-    //intake code
-    if (intake_sensor.objectDistance(mm) < 260){ //tune value of 260 to whatever the actual number is. 
+    /*intake code
+    if (intake_sensor.objectDistance(mm) < 135){ //tune value of 260 to whatever the actual number is. 
       intake1.set(false);
       intake2.set(false);
       already_up = false;
     }
+      */
 
     // If the cascade is up and we've driven ~18 in (straight-line, any
     // direction) from where it was raised, start auto-lowering it.
