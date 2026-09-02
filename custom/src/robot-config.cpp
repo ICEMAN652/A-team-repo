@@ -28,8 +28,8 @@ motor right_chassis2 = motor(PORT20, ratio6_1, false);
 motor_group right_chassis = motor_group(right_chassis1, right_chassis2);
 
 motor intake = motor(PORT21, ratio6_1, false);
-motor claw_intake = motor(PORT17, ratio18_1, true);
-motor claw = motor(PORT10, ratio18_1, true);
+motor claw_intake = motor(PORT10, ratio18_1, true);
+motor claw = motor(PORT9, ratio18_1, true);
 
 motor cascade_1 = motor(PORT3, ratio18_1, false); 
 motor cascade_2 = motor(PORT15, ratio18_1, true); 
@@ -38,8 +38,7 @@ motor_group cascade = motor_group(cascade_1, cascade_2);
 
 inertial inertial_sensor = inertial(PORT14);
 
-digital_out intake1 = digital_out(Brain.ThreeWirePort.C);
-digital_out intake2 = digital_out(Brain.ThreeWirePort.A);
+digital_out intake_pnuematics = digital_out(Brain.ThreeWirePort.B);
 
 
 // Format is rotation(port, reversed)
@@ -69,11 +68,11 @@ aivision right_ai_vision = aivision(PORT12);
 
 
 // Distance between the middles of the left and right wheels of the drive (in inches)
-double distance_between_wheels = 12.5;
+double distance_between_wheels = 10.5;
 
 
 // motor to wheel gear ratio * wheel diameter (in inches) * pi
-double wheel_distance_in = (48.0 / 84.0) * 4 * M_PI;
+double wheel_distance_in = (36 / 60) * 3.25 * M_PI;
 
 
 // PID Constants for movement
@@ -93,7 +92,7 @@ bool using_vertical_tracker = true;   // Set to true if a vertical tracking whee
 // IGNORE THESE IF YOU ARE NOT USING TRACKING WHEELS
 // These comments are in the perspective of a top down view of the robot when the robot is facing vertical
 // Vertical distance from the center of the bot to the horizontal tracking wheel (in inches, positive is when the wheel is behind the center)
-double horizontal_tracker_dist_from_center = 2.71875;
+double horizontal_tracker_dist_from_center = 2.11768;
 // Horizontal distance from the center of the bot to the vertical tracking wheel (in inches, positive is when the wheel is to the right of the center)
 double vertical_tracker_dist_from_center = -1.5;
 double horizontal_tracker_diameter = 1.975; // Diameter of the horizontal tracker wheel (in inches)
@@ -108,14 +107,14 @@ double vertical_tracker_diameter = 1.975; // Diameter of the vertical tracker wh
 // double front_sensor_offsetY = 6.5;
 // For the X offset, a negative value indicates that the sensor is located on the left side of the robot, while a positive value indicates that it is on the right side. 
 
-double left_sensor_offsetX  = -6.5;
-double left_sensor_offsetY  = 1.0;  
-double right_sensor_offsetX = 6;
-double right_sensor_offsetY = 1;
+double left_sensor_offsetX  = -5;
+double left_sensor_offsetY  = 8;  
+double right_sensor_offsetX = 6.5;
+double right_sensor_offsetY = 7.5;
 double front_sensor_offsetX = 0.0;
 double front_sensor_offsetY = 5.5;
-double back_sensor_offsetX  = -0.5;
-double back_sensor_offsetY  = -2.5;
+double back_sensor_offsetX  = -6;
+double back_sensor_offsetY  = -2;
 
 // AprilTag reset setup -- offset of each AI Vision Sensor from the robot's center (inches)
 double front_ai_vision_offsetX = 0.0;

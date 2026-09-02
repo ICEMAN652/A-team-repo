@@ -134,12 +134,10 @@ void runDriver() {
     //y is intake piston up
     if (button_y){
       if (already_up == false){
-        intake1.set(true);
-        intake2.set(true);
+        intake_pnuematics.set(true);
         already_up = true;
       }else if (already_up == true || intake_sensor.objectDistance(mm) < 135 ){ //has intake code
-        intake1.set(false);
-        intake2.set(false);
+        intake_pnuematics.set(false);
         already_up = false;
       }
     }
