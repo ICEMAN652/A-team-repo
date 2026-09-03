@@ -29,7 +29,7 @@ motor_group right_chassis = motor_group(right_chassis1, right_chassis2);
 
 motor intake = motor(PORT21, ratio6_1, false);
 motor claw_intake = motor(PORT10, ratio18_1, true);
-motor claw = motor(PORT9, ratio18_1, true);
+motor claw = motor(PORT9, ratio18_1, false);
 
 motor cascade_1 = motor(PORT3, ratio18_1, false); 
 motor cascade_2 = motor(PORT15, ratio18_1, true); 
