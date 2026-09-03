@@ -48,14 +48,7 @@ int chassis_flag = 0;
 
 bool already_up = false;
 bool claw_zeroed = false;   // edge-trigger so the claw only auto-homes once per return to bottom
-bool cascade_up = false;
 
-// Odom position (inches) captured the moment the cascade was raised, plus the
-// auto-lower state. Once the bot has driven CASCADE_AUTO_DOWN_IN away from that
-// spot, the cascade drives itself back down to 0 degrees.
-double cascade_up_x = 0.0, cascade_up_y = 0.0;
-bool cascade_auto_home = false;
-const double CASCADE_AUTO_DOWN_IN = 18.0;
 const double CASCADE_HOME_TOL = 5.0; // degrees of slop around 0
 
 
@@ -150,41 +143,14 @@ void runDriver() {
     }
       */
 
-    // If the cascade is up and we've driven ~18 in (straight-line, any
-    // direction) from where it was raised, start auto-lowering it.
-    if (cascade_up) {
-      double dx = x_pos - cascade_up_x;
-      double dy = y_pos - cascade_up_y;
-      if (sqrt(dx * dx + dy * dy) >= CASCADE_AUTO_DOWN_IN) {
-        cascade_auto_home = true;
-        cascade_up = false;
-      }
-    }
-
     //cascade code
     if (l1){
       //cascade up
-      cascade_auto_home = false;             // driver takes over
-      if (!cascade_up) {                     // rising edge: remember where we are
-        cascade_up_x = x_pos;
-        cascade_up_y = y_pos;
-      }
-      cascade_up = true;
       cascade.spin(fwd, 12, volt);
       claw.spinToPosition(90, degrees, false);
     }else if(l2){
       //cascade down
-      cascade_auto_home = false;
-      cascade_up = false;
       cascade.spin(reverse, 12, volt);
-    }else if (cascade_auto_home){
-      //auto-lower after driving CASCADE_AUTO_DOWN_IN with the cascade raised
-      if (cascade.position(degrees) > CASCADE_HOME_TOL) {
-        cascade.spin(reverse, 12, volt);
-      } else {
-        cascade.spin(fwd, 0, volt);
-        cascade_auto_home = false;
-      }
     }else{
       cascade.spin(fwd, 0, volt);
     }
@@ -200,7 +166,7 @@ void runDriver() {
 
     
     //claw
-   /* if (button_a){
+   if (button_a){
       if (already_90 == false){
         claw.spinToPosition(90, degrees, false);
         already_90 = true;
@@ -208,7 +174,7 @@ void runDriver() {
         claw.spinToPosition(0, degrees, false);
         already_90 = false;
       }
-    }*/
+    }
 
     //intake code logic
     if(r1){
