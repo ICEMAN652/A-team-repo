@@ -26,12 +26,7 @@
 
 //fix this function so that it can do the roller first and then move 2 inches
 void movetwoinch(){
- driveTo(12,1200,false, 12);
- turnToAngle(45, 800, true, 12);
- wait(100, msec);
- resetPositionBack();
- Brain.Screen.setCursor(6, 1);
- Brain.Screen.print("X: %.2f in | Y: %.2f in", x_pos, y_pos);
+ turnToAngle(90, 1000, true, 12);
 }
 
 //not gonna use (testing purposes) 
@@ -57,14 +52,12 @@ void exampleAuton() {
 }
 //(64.4,0.2) is starting point with toggle odom pod on the line, intake facing center goal
 void BlueLeftAutonTwo() {
-  resetPositionBack();
-  boomerang(-22,-30,1,-50,0.3,2000,true,9); // intaking center left pin
-  wait(500,msec);
-  boomerang(-25,-46,-1,90,0.3,2200,true,9);
-  wait(500,msec);
-  boomerang(-6,-26,1,-115,0.2,2000,true,9);
-  turnToAngle(-129,200,false);
-  boomerang(16, -57, -1, -127, 0.2, true, 9);
+  driveTo(558, 500, true, 12);
+  turnToAngle(180, 1000, true, 12);
+  driveTo(15, 1000, true, 9);
+  driveTo(-5, 500, true, 10);
+  driveTo(5, 800, true, 8);
+  driveTo(-5, 300, true, 12);
   // wait(500,msec);
   // moveToPoint(24,-30,1,1000,true,10);
   
@@ -73,22 +66,36 @@ void BlueLeftAutonTwo() {
 
 //(-0.2,-63.7) is starting point with the toggle on the back
 void RedRight() {
-  resetPositionBack();
-  driveTo(18,1200,false,12);
-  boomerang(20,-25,-1,98,0.2,2000,false,5);
-  moveToPoint(0,-36,1,1000,false,11);
-  boomerang(20,-48,-1,-45,0.2,950,false,9);//score 1st
-  moveToPoint(-15,-30,1,1200,true,10);
-  turnToAngle(137,800,true);
-  driveTo(-3, 500, true, 9);
-  moveToPoint(-5,-48,1,1000,false,10);
-  boomerang(-22,-51,-1,90,0.3,2500,false,10);
-  wait(500, msec); //score 2nd
-  // resetPositionRight();
-  // Brain.Screen.setCursor(6, 1);
-  // Brain.Screen.print("X: %.2f in | Y: %.2f in", x_pos, y_pos);
-  driveTo(20,500,true,9);
+  driveTo(558, 500, false, 12);
+  turnToAngle(180, 1000, false, 12);
+  driveTo(15, 1000, false, 9);
+  driveTo(-5, 500, false, 10);
+  driveTo(5, 800, false, 8);
+  driveTo(-5, 300, false, 12);
+  resetPositionFront();
+  intake_pnuematics.set(true);
+  claw_intake.spin(fwd,12,volt);
+  intake.spin(fwd,12,volt);
+  boomerang(-24, -25, 1, 45, 0.3, 1500, false, 10);
+  intake_pnuematics.set(false);
 
+
+  /*driveTo(1.8, 1000, true, 3);
+  wait(3000, msec);
+  driveTo(-3.5, 1000, true, 8);*/
+  //turnToAngle(50, 200, true, 5);
+  //driveTo(10, 540, true, 5);
+  //intake_pnuematics.set(false);
+  //wait(400, msec);
+  //driveTo(10, 400, true, 12);
+  //turnToAngle(0, 1000, true, 12);
+  //distanceReset('R', 'F', 334, 495);
+  //moveToPoint(-2, -20, -1, 600, true, 12);
+
+
+  
+  //moveToPoint(-5, 25, 1, 750, true, 12);
+  
 }
 
 //input starting point

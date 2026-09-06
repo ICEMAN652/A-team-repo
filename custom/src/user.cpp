@@ -10,7 +10,7 @@
 
 
 void runAutonomous() {
-  int auton_selected = 3;
+  int auton_selected = 6;
   switch(auton_selected) {
     case 1:
       SAWP();
@@ -47,9 +47,9 @@ int chassis_flag = 0;
 
 
 bool already_up = false;
-bool claw_zeroed = false;   // edge-trigger so the claw only auto-homes once per return to bottom
+//bool claw_zeroed = false;   // edge-trigger so the claw only auto-homes once per return to bottom
 
-const double CASCADE_HOME_TOL = 5.0; // degrees of slop around 0
+const double CASCADE_HOME_TOL = 15.0; // degrees of slop around 0
 
 
 void runDriver() {
@@ -127,34 +127,41 @@ void runDriver() {
     //y is intake piston up
     if (button_y){
       if (already_up == false){
-        intake_pnuematics.set(true);
-        already_up = true;
-      }else if (already_up == true || intake_sensor.objectDistance(mm) < 135 ){ //has intake code
         intake_pnuematics.set(false);
+        already_up = true;
+      }else if (already_up == true){ //has intake code
+        intake_pnuematics.set(true);
         already_up = false;
       }
     }
 
-    /*intake code
+   /* //intake distance code
     if (intake_sensor.objectDistance(mm) < 135){ //tune value of 260 to whatever the actual number is. 
-      intake1.set(false);
-      intake2.set(false);
-      already_up = false;
-    }
-      */
+      wait (500, msec);
+        if (intake_sensor.objectDistance(mm) < 135){
+          intake_pnuematics.set(true);
+          already_up = false;
+        }  
+    }*/
+      
 
     //cascade code
     if (l1){
       //cascade up
-      cascade.spin(fwd, 12, volt);
-      claw.spinToPosition(90, degrees, false);
+      cascade_1.spin(forward, 12, volt);
+      cascade_2.spin(forward, 12, volt);
+      claw.spinToPosition(-520, degrees, false);
     }else if(l2){
       //cascade down
-      cascade.spin(reverse, 12, volt);
+      cascade_1.spin(reverse, 12, volt);
+      cascade_2.spin(reverse, 12, volt);
+      //cascade.spin(reverse, 12, volt);
     }else{
-      cascade.spin(fwd, 0, volt);
+      cascade_1.spin(fwd, 0, volt);
+      cascade_2.spin(fwd, 0, volt);
     }
 
+    /*
     if (fabs(cascade.position(degrees)) < CASCADE_HOME_TOL) {
       if (!claw_zeroed) {
         claw.spinToPosition(0, degrees, false); // non-blocking so the drive loop keeps running
@@ -163,17 +170,26 @@ void runDriver() {
     } else {
       claw_zeroed = false; // re-arm once the cascade has left the bottom
     }
+      */
 
     
     //claw
    if (button_a){
-      if (already_90 == false){
-        claw.spinToPosition(90, degrees, false);
-        already_90 = true;
-      }else if (already_90 == true){
         claw.spinToPosition(0, degrees, false);
-        already_90 = false;
-      }
+      
+    }
+
+    if (button_x){
+      claw_intake.spinFor(reverse, 300, degrees, false);
+      intake.spin(reverse,12,volt);
+      wait(1500, msec);
+    }else{
+      claw_intake.spin(reverse,0,volt);
+      intake.spin(reverse,0,volt);
+    }
+
+    if (button_b){
+      claw.spinToPosition(-360, degrees, false);
     }
 
     //intake code logic
@@ -183,16 +199,29 @@ void runDriver() {
       claw_intake.spin(fwd, 12,volt);
     } else if(r2){
       //outake
+      claw.spinToPosition(-360, degrees, false);
+      wait(500, msec);
       intake.spin(reverse,12,volt);
-      claw_intake.spin(reverse,12,volt);
-      claw.spinToPosition(125, degrees, false);
-      wait(1000, msec);
+      claw_intake.spin(reverse,3,volt);
+  
+      wait(500, msec);
+      cascade_1.spin(fwd, 12, volt);
+      cascade_2.spin(fwd, 12, volt);
+      wait(300, msec);
+      cascade_1.spin(fwd, 0, volt);
+      cascade_2.spin(fwd, 0, volt);
+      claw.spinToPosition(-520, degrees, false);
+
+
     } else {
       intake.spin(fwd,0,volt);
-      claw_intake.spin(fwd,0,volt);
+      claw_intake.spin(fwd,4,volt);
     }
 
   }
+  
+
+  
 
   
 }
