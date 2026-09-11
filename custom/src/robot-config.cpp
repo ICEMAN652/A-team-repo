@@ -31,8 +31,8 @@ motor intake = motor(PORT21, ratio6_1, false);
 motor claw_intake = motor(PORT12, ratio18_1, true);
 motor claw = motor(PORT17, ratio18_1, false); 
 
-motor cascade_1 = motor(PORT11, ratio18_1, true);  
-motor cascade_2 = motor(PORT18, ratio18_1, false); 
+motor cascade_1 = motor(PORT11, ratio18_1, false);  
+motor cascade_2 = motor(PORT18, ratio18_1, true); 
 
 //motor_group cascade = motor_group(cascade_1, cascade_2);
 
