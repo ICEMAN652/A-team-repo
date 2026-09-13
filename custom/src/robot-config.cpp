@@ -20,46 +20,46 @@ controller controller_1 = controller(primary);
 // gearSetting is one of the following: ratio36_1(red), ratio18_1(green), ratio6_1(blue)
 // all chassis motors should be reversed appropriately so that they spin vertical when given a positive voltage input
 // such as driveChassis(12, 12)
-motor left_chassis1 = motor(PORT1, ratio6_1, true); 
-motor left_chassis2 = motor(PORT5, ratio6_1, true); 
+motor left_chassis1 = motor(PORT8, ratio6_1, true); 
+motor left_chassis2 = motor(PORT1, ratio6_1, true); 
 motor_group left_chassis = motor_group(left_chassis1, left_chassis2);
-motor right_chassis1 = motor(PORT8, ratio6_1, false); //right front 
-motor right_chassis2 = motor(PORT19, ratio6_1, false); //right back //recremp
+motor right_chassis1 = motor(PORT12, ratio6_1, false); //right front 
+motor right_chassis2 = motor(PORT6, ratio6_1, false); //right back //recremp
 motor_group right_chassis = motor_group(right_chassis1, right_chassis2);
 
-motor intake = motor(PORT21, ratio6_1, false); 
-motor claw_intake = motor(PORT12, ratio18_1, true);
-motor claw = motor(PORT17, ratio18_1, false); 
+motor chain_bar_1 = motor(PORT10, ratio18_1, false); 
+motor chain_bar_2 = motor(PORT16, ratio18_1, true);
 
-motor cascade_1 = motor(PORT11, ratio18_1, false);  
-motor cascade_2 = motor(PORT18, ratio18_1, true); 
+motor_group chain_bar = motor_group(chain_bar_1, chain_bar_2);    
 
-//motor_group cascade = motor_group(cascade_1, cascade_2);
+motor cascade_1 = motor(PORT5, ratio18_1, true);  
+motor cascade_2 = motor(PORT18, ratio18_1, false); 
+
+motor_group cascade = motor_group(cascade_1, cascade_2);
 
 inertial inertial_sensor = inertial(PORT4);
 
-digital_out intake_pnuematics = digital_out(Brain.ThreeWirePort.A);
+digital_out chain_bar_pnuematics = digital_out(Brain.ThreeWirePort.C);
 
 
 // Format is rotation(port, reversed)
 // just set these to random ports if you don't use tracking wheels
-rotation horizontal_tracker = rotation(PORT13, true);
+rotation horizontal_tracker = rotation(PORT14, true);
 rotation vertical_tracker = rotation(PORT15, false);
 
 
 // Distance reset sensors
 // Set these to random ports if you are not using distance resets
-distance left_sensor = distance(PORT13);
-distance right_sensor = distance(PORT7); 
-distance back_sensor = distance(PORT1);
-distance front_sensor = distance(PORT9);
-distance intake_sensor = distance(PORT2);
+distance left_sensor = distance(PORT3);
+distance right_sensor = distance(PORT4); 
+distance back_sensor = distance(PORT14);
+distance front_sensor = distance(PORT20);
 
 // AprilTag AI Vision Sensors, one per cardinal direction -- change ports to match wiring
-aivision front_ai_vision = aivision(PORT4);
-aivision back_ai_vision  = aivision(PORT5);
-aivision left_ai_vision  = aivision(PORT1);
-aivision right_ai_vision = aivision(PORT12);
+aivision front_ai_vision = aivision(PORT3);
+aivision back_ai_vision  = aivision(PORT2);
+aivision left_ai_vision  = aivision(PORT20);
+aivision right_ai_vision = aivision(PORT13);
 
 
 // ============================================================================

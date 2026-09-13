@@ -47,9 +47,10 @@ int chassis_flag = 0;
 
 
 bool already_up = false;
+bool r1_prev = false;
 //bool claw_zeroed = false;   // edge-trigger so the claw only auto-homes once per return to bottom
 
-const double CASCADE_HOME_TOL = 15.0; // degrees of slop around 0
+//const double CASCADE_HOME_TOL = 15.0; // degrees of slop around 0 
 
 
 void runDriver() {
@@ -59,7 +60,7 @@ void runDriver() {
   heading_correction = false;
 
   while (true) {
-
+    
     Brain.Screen.setCursor(6, 1);
     Brain.Screen.print("X: %.2f in | Y: %.2f in", x_pos, y_pos);
 
@@ -123,100 +124,42 @@ void runDriver() {
 
     // 4. Move the Chassis
     driveChassis(leftOutput,rightOutput);
-  
-    //y is intake piston up
-    if (button_y){
-      if (already_up == false){
-        intake_pnuematics.set(false);
-        already_up = true;
-      }else if (already_up == true){ //has intake code
-        intake_pnuematics.set(true);
-        already_up = false;
-      }
-    }
-
-   /* //intake distance code
-    if (intake_sensor.objectDistance(mm) < 135){ //tune value of 260 to whatever the actual number is. 
-      wait (500, msec);
-        if (intake_sensor.objectDistance(mm) < 135){
-          intake_pnuematics.set(true);
-          already_up = false;
-        }  
-    }*/
-      
-
-    //cascade code
-    if (l1){
-      //cascade up
-      cascade_1.spin(forward, 12, volt);
-      cascade_2.spin(forward, 12, volt);
-      claw.spinToPosition(-520, degrees, false);
-    }else if(l2){
-      //cascade down
-      cascade_1.spin(reverse, 12, volt);
-      cascade_2.spin(reverse, 12, volt);
-      //cascade.spin(reverse, 12, volt);
-    }else{
-      cascade_1.spin(fwd, 0, volt);
-      cascade_2.spin(fwd, 0, volt);
-    }
-
-    /*
-    if (fabs(cascade.position(degrees)) < CASCADE_HOME_TOL) {
-      if (!claw_zeroed) {
-        claw.spinToPosition(0, degrees, false); // non-blocking so the drive loop keeps running
-        claw_zeroed = true;
-      }
-    } else {
-      claw_zeroed = false; // re-arm once the cascade has left the bottom
-    }
-      */
-
     
-    //claw
-   if (button_a){
-        claw.spinToPosition(0, degrees, false);
-      
+    if (r1) {
+      chain_bar_pnuematics.set(false);
+    }  
+
+    if (button_a){
+      chain_bar_pnuematics.set(true);
+    }
+    
+    
+
+    if (l1) {
+      cascade.spinToPosition(1500, degrees, 89, velocityUnits::pct, false);
+    }
+
+    if (r2) {
+      chain_bar.spinToPosition(625, degrees, 80, velocityUnits::pct, false);
+    }
+
+
+    if (l2) {
+      chain_bar.spinToPosition(625, degrees, 80, velocityUnits::pct, false);
+      cascade.spinToPosition(1500, degrees, 90, velocityUnits::pct, false);
+    }
+
+    if (button_y){
+      chain_bar.spinToPosition(0, degrees, 80, velocityUnits::pct, false);
+      cascade.spinToPosition(0, degrees, 80, velocityUnits::pct, false);
     }
 
     if (button_x){
-      claw_intake.spinFor(reverse, 300, degrees, false);
-      intake.spin(reverse,12,volt);
-      wait(1500, msec);
-    }else{
-      claw_intake.spin(reverse,0,volt);
-      intake.spin(reverse,0,volt);
+      cascade.spinToPosition(360, degrees, 90, velocityUnits::pct, false);
+      chain_bar.spinToPosition(0, degrees, 80, velocityUnits::pct, false);
     }
 
-    if (button_b){
-      claw.spinToPosition(-360, degrees, false);
-    }
-
-    //intake code logic
-    if(r1){
-      //intake
-      intake.spin(fwd, 12,volt);
-      claw_intake.spin(fwd, 12,volt);
-    } else if(r2){
-      //outake
-      claw.spinToPosition(-360, degrees, false);
-      wait(500, msec);
-      intake.spin(reverse,12,volt);
-      claw_intake.spin(reverse,3,volt);
-  
-      wait(500, msec);
-      cascade_1.spin(fwd, 12, volt);
-      cascade_2.spin(fwd, 12, volt);
-      wait(300, msec);
-      cascade_1.spin(fwd, 0, volt);
-      cascade_2.spin(fwd, 0, volt);
-      claw.spinToPosition(-520, degrees, false);
-
-
-    } else {
-      intake.spin(fwd,0,volt);
-      claw_intake.spin(fwd,4,volt);
-    }
+    wait(20, msec);
 
   }
   
@@ -249,6 +192,8 @@ void runPreAutonomous() {
   resetChassis();
 
   vertical_tracker.resetPosition();
+  cascade.resetPosition();
+  chain_bar.resetPosition();
 
   if(using_horizontal_tracker && using_vertical_tracker) {
     thread odom = thread(trackXYOdomWheel);

@@ -16,24 +16,23 @@ extern motor right_chassis1;
 extern motor right_chassis2;
 extern motor_group right_chassis;
 extern inertial inertial_sensor;
-extern digital_out intake_pnuematics;
+extern digital_out chain_bar_pnuematics;
 extern rotation horizontal_tracker;
 extern rotation vertical_tracker;
 extern distance left_sensor;
 extern distance back_sensor;
 extern distance front_sensor;
 extern distance right_sensor;
-extern distance intake_sensor;
 extern aivision front_ai_vision;
 extern aivision back_ai_vision;
 extern aivision left_ai_vision;
 extern aivision right_ai_vision;
-extern motor intake;
-extern motor claw_intake;
-extern motor claw;
+extern motor chain_bar_2;
+extern motor chain_bar_1;
 extern motor cascade_1;
 extern motor cascade_2;
-//extern motor_group cascade;
+extern motor_group cascade;
+extern motor_group chain_bar;
 
 
 
