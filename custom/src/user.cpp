@@ -44,6 +44,8 @@ bool l1, l2, r1, r2;
 bool button_a, button_b, button_x, button_y;
 bool button_up_arrow, button_down_arrow, button_left_arrow, button_right_arrow;
 int chassis_flag = 0;
+bool claw_toggle = false;
+bool r1_last_state = false;
 
 
 bool already_up = false;
@@ -125,15 +127,14 @@ void runDriver() {
     // 4. Move the Chassis
     driveChassis(leftOutput,rightOutput);
     
-    if (r1) {
-      chain_bar_pnuematics.set(false);
-    }  
-
-    if (button_a){
-      chain_bar_pnuematics.set(true);
+    // Check if R1 is pressed NOW, but was not pressed in the previous loop
+    if (r1 && !r1_last_state) {
+        claw_toggle = !claw_toggle;
+        chain_bar_pnuematics.set(claw_toggle);
     }
     
-    
+    // Save the current state for the next loop iteration
+    r1_last_state = r1; 
 
     if (l1) {
       cascade.spinToPosition(1500, degrees, 89, velocityUnits::pct, false);
