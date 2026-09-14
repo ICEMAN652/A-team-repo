@@ -39,7 +39,7 @@ motor_group cascade = motor_group(cascade_1, cascade_2);
 
 inertial inertial_sensor = inertial(PORT4);
 
-digital_out chain_bar_pnuematics = digital_out(Brain.ThreeWirePort.C);
+digital_out chain_bar_pnuematics = digital_out(Brain.ThreeWirePort.B);
 
 
 // Format is rotation(port, reversed)

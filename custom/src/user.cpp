@@ -129,6 +129,9 @@ void runDriver() {
     
     // Check if R1 is pressed NOW, but was not pressed in the previous loop
     if (r1 && !r1_last_state) {
+        if(claw_toggle){
+          cascade.spinToPosition(220, degrees, 90, velocityUnits::pct, false);
+        } 
         claw_toggle = !claw_toggle;
         chain_bar_pnuematics.set(claw_toggle);
     }
@@ -137,7 +140,7 @@ void runDriver() {
     r1_last_state = r1; 
 
     if (l1) {
-      cascade.spinToPosition(1500, degrees, 89, velocityUnits::pct, false);
+      cascade.spinToPosition(1650, degrees, 90, velocityUnits::pct, false);
     }
 
     if (r2) {
@@ -147,12 +150,12 @@ void runDriver() {
 
     if (l2) {
       chain_bar.spinToPosition(625, degrees, 80, velocityUnits::pct, false);
-      cascade.spinToPosition(1500, degrees, 90, velocityUnits::pct, false);
+      cascade.spinToPosition(1650, degrees, 90, velocityUnits::pct, false);
     }
 
     if (button_y){
       chain_bar.spinToPosition(0, degrees, 80, velocityUnits::pct, false);
-      cascade.spinToPosition(0, degrees, 80, velocityUnits::pct, false);
+      cascade.spinToPosition(0, degrees, 90, velocityUnits::pct, false);
     }
 
     if (button_x){
