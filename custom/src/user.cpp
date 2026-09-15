@@ -140,17 +140,17 @@ void runDriver() {
     r1_last_state = r1; 
 
     if (l1) {
-      cascade.spinToPosition(1650, degrees, 90, velocityUnits::pct, false);
+      cascade.spinToPosition(1625, degrees, 90, velocityUnits::pct, false);
     }
 
     if (r2) {
-      chain_bar.spinToPosition(625, degrees, 80, velocityUnits::pct, false);
+      chain_bar.spinToPosition(650, degrees, 80, velocityUnits::pct, false);
     }
 
 
     if (l2) {
-      chain_bar.spinToPosition(625, degrees, 80, velocityUnits::pct, false);
-      cascade.spinToPosition(1650, degrees, 90, velocityUnits::pct, false);
+      chain_bar.spinToPosition(650, degrees, 80, velocityUnits::pct, false);
+      cascade.spinToPosition(1625, degrees, 90, velocityUnits::pct, false);
     }
 
     if (button_y){
@@ -160,7 +160,11 @@ void runDriver() {
 
     if (button_x){
       cascade.spinToPosition(360, degrees, 90, velocityUnits::pct, false);
-      chain_bar.spinToPosition(0, degrees, 80, velocityUnits::pct, false);
+      //chain_bar.spinToPosition(0, degrees, 80, velocityUnits::pct, false);
+    }
+
+    if (button_a){
+      chain_bar.spinToPosition(60, degrees, 80, velocityUnits::pct, false);
     }
 
     wait(20, msec);

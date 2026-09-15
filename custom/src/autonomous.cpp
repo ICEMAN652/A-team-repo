@@ -26,7 +26,8 @@
 
 //fix this function so that it can do the roller first and then move 2 inches
 void movetwoinch(){
- turnToAngle(90, 1000, true, 12);
+  driveTo(24, 1300, true, 12);
+ //turnToAngle(90, 1000, true, 12);
 }
 
 //not gonna use (testing purposes) 
@@ -73,11 +74,7 @@ void RedRight() {
   driveTo(5, 800, false, 8);
   driveTo(-5, 300, false, 12);
   resetPositionFront();
-  intake_pnuematics.set(true);
-  claw_intake.spin(fwd,12,volt);
-  intake.spin(fwd,12,volt);
   boomerang(-24, -25, 1, 45, 0.3, 1500, false, 10);
-  intake_pnuematics.set(false);
 
 
   /*driveTo(1.8, 1000, true, 3);
