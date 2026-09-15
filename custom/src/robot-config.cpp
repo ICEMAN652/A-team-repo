@@ -45,7 +45,7 @@ digital_out chain_bar_pnuematics = digital_out(Brain.ThreeWirePort.B);
 // Format is rotation(port, reversed)
 // just set these to random ports if you don't use tracking wheels
 rotation horizontal_tracker = rotation(PORT17, true);
-rotation vertical_tracker = rotation(PORT18, true);
+rotation vertical_tracker = rotation(PORT7, true);
 
 
 // Distance reset sensors\
@@ -81,7 +81,7 @@ double wheel_distance_in = (36 / 60) * 3.25 * M_PI;
 // distance_* : Linear PID for straight driving
 // turn_*     : PID for turning in place
 // heading_correction_* : PID for heading correction during linear movement
-double distance_kp = 1, distance_ki = 0, distance_kd = 100; //tune p until the bot is barely 
+double distance_kp = 0.5, distance_ki = 0, distance_kd = 3; //tune p until the bot is barely 
 // oscillating, and d until the error band is centered around the target
 double turn_kp = 0.36, turn_ki = 0.09, turn_kd = 3;
 double heading_correction_kp = 0.6, heading_correction_ki = 0, heading_correction_kd = 4;
