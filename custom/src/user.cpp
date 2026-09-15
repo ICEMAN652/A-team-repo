@@ -10,7 +10,7 @@
 
 
 void runAutonomous() {
-  int auton_selected = 6;
+  int auton_selected = 4;
   switch(auton_selected) {
     case 1:
       SAWP();
@@ -130,6 +130,7 @@ void runDriver() {
     // Check if R1 is pressed NOW, but was not pressed in the previous loop
     if (r1 && !r1_last_state) {
         if(claw_toggle){
+          wait(500,msec);
           cascade.spinToPosition(220, degrees, 90, velocityUnits::pct, false);
         } 
         claw_toggle = !claw_toggle;
@@ -140,17 +141,19 @@ void runDriver() {
     r1_last_state = r1; 
 
     if (l1) {
-      cascade.spinToPosition(1625, degrees, 90, velocityUnits::pct, false);
+      chain_bar.spinToPosition(50, degrees,80, velocityUnits::pct, false);
+      cascade.spinToPosition(1500, degrees, 90, velocityUnits::pct, false);
     }
 
     if (r2) {
       chain_bar.spinToPosition(650, degrees, 80, velocityUnits::pct, false);
+
     }
 
 
     if (l2) {
-      chain_bar.spinToPosition(650, degrees, 80, velocityUnits::pct, false);
-      cascade.spinToPosition(1625, degrees, 90, velocityUnits::pct, false);
+      chain_bar.spinToPosition(665, degrees, 80, velocityUnits::pct, false);
+      cascade.spinToPosition(1500, degrees, 90, velocityUnits::pct, false);
     }
 
     if (button_y){
@@ -164,7 +167,8 @@ void runDriver() {
     }
 
     if (button_a){
-      chain_bar.spinToPosition(60, degrees, 80, velocityUnits::pct, false);
+      chain_bar.spinToPosition(67, degrees, 80, velocityUnits::pct, false);
+      
     }
 
     wait(20, msec);

@@ -26,7 +26,7 @@
 
 //fix this function so that it can do the roller first and then move 2 inches
 void movetwoinch(){
-  driveTo(24, 1300, true, 12);
+  driveTo(12, 1500, true, 12);
  //turnToAngle(90, 1000, true, 12);
 }
 
