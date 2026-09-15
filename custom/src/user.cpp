@@ -129,12 +129,12 @@ void runDriver() {
     
     // Check if R1 is pressed NOW, but was not pressed in the previous loop
     if (r1 && !r1_last_state) {
-        if(claw_toggle){
-          wait(500,msec);
-          cascade.spinToPosition(220, degrees, 90, velocityUnits::pct, false);
-        } 
         claw_toggle = !claw_toggle;
         chain_bar_pnuematics.set(claw_toggle);
+        if(claw_toggle == false){
+          wait(250,msec);
+          cascade.spinToPosition(220, degrees, 90, velocityUnits::pct, false);
+        } 
     }
     
     // Save the current state for the next loop iteration
