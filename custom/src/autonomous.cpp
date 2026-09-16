@@ -26,8 +26,8 @@
 
 //fix this function so that it can do the roller first and then move 2 inches
 void movetwoinch(){
-  driveTo(24, 1500, true, 12);
- //turnToAngle(90, 1000, true, 12);
+  //driveTo(24, 1500, true, 12);
+  turnToAngle(90, 1200, true, 12);
 }
 
 //not gonna use (testing purposes) 
@@ -139,41 +139,33 @@ void BlueLeft(){
 //unfinished routmoveToPoint(emoveToPoint(
 //(-0.2,-63.7) is starting point
 void SAWP(){
-  // driveTo(8.5,500,false,12); 
-  driveTo(24, 900, false, 12);
-  boomerang(-17.5, 17.5, -1, 45, 0.2, 900, true);
-  wait(500, msec);
-  driveTo(10,500,false,12);
-  boomerang(20,35,1,50, 0.2,1050,true,11); //pickup pin and cup on the line
-  wait(100, msec);
-  boomerang(26,19,-1,-45, 0.25, 800, true, 10); //going to neutral goal to score
-  wait(500, msec);
-  moveToPoint(4,42,1,750,false,10); //go to middle pin
-  turnToAngle(0, 400, true, 10);
-  distanceReset('L', 'B', 1680 , 1130);       // distance reset
-  Brain.Screen.setCursor(6, 1);
-  Brain.Screen.print("X: %.2f in | Y: %.2f in", x_pos, y_pos);
-  boomerang(-19.65, -19, -1, 45, 0.3, 1000, true,11);//score middle pin
-  wait(500, msec);
-  boomerang(-25, 1, 1,-55 , 0.5, 900, true,11);//pick up alliance line pin #1
-  turnToAngle(90, 650, true, 11);
-  resetPositionRight();
-  Brain.Screen.setCursor(6, 1);
-  Brain.Screen.print("X: %.2f in | Y: %.2f in", x_pos, y_pos);
-  moveToPoint(-40, -22, -1, 700, true, 12);//score alliance line pin #1
-  wait(500, msec);
-  moveToPoint(-24, -10, 1, 800, false, 12);
-  boomerang(-67,-2,-1,90,0.2,1100,true,12);//going to toggle
-  wait(300, msec);//toggle
   resetPositionBack();
-  driveTo(0.5, 100, false, 12);
-  turnToAngle(184, 600, true, 12);
+  //moveToPoint(0, -6, 1, 400, true, 12);
+  driveTo(-6, 400, true, 12);//toggle #1
+  driveTo(6, 300, true, 12);
+  driveTo(-9, 450, true, 12);//toggle #2
+  driveTo(5, 400, true, 12);
+  resetPositionBack();
+
+  chain_bar_1.spinToPosition(45, degrees, 80, velocityUnits::pct, false);
+  boomerang(21, -51, 1, 90, 0.3, 1300, true, 8);//drive to alliance goal
   resetPositionRight();
-  driveTo(10, 300, false, 12);
-  moveToPoint(-50, -44, 1, 800, true, 12);//going to pick up second alliance pin
-  moveToPoint(-47, -26, -1, 900, true, 12);//going to scoring alliance pin
-  wait(500, msec);// score alliance pill 
-  
+  wait(100, msec);
+  chain_bar_pnuematics.set(true);//drop preload in alliance goal
+  wait(400, msec);
+  driveTo(-10, 800, false, 10);//back out of allaince goal
+  chain_bar_1.spinToPosition(0, degrees, 80, velocityUnits::pct, false);
+  boomerang(22, -30, 1, 30, 0.3, 1100, true, 6);//drive to the first pin stack and align
+  driveTo(10.2, 700, true, 6);//drive into it
+  wait(100, msec);
+  chain_bar_pnuematics.set(false);//got the first pin stack on allaiance line
+  wait(300, msec);
+  cascade.spinToPosition(620, degrees, 90, velocityUnits::pct, false);
+  turnToAngle(135, 800, false, 12);
+  boomerang(24, -48, 1, 180, 0.4, 1000, true, 9);//drive back to allaicne goal
+  cascade.spinToPosition(1500, degrees, 90, velocityUnits::pct, true);
+  chain_bar_pnuematics.set(true);//score the pin stack on allaince goal
+
   
 }
 

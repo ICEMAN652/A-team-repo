@@ -70,7 +70,7 @@ aivision right_ai_vision = aivision(PORT15);
 
 
 // Distance between the middles of the left and right wheels of the drive (in inches)
-double distance_between_wheels = 10.5;
+double distance_between_wheels = 10.25;
 
 
 // motor to wheel gear ratio * wheel diameter (in inches) * pi
@@ -81,9 +81,9 @@ double wheel_distance_in = (36.0 / 60) * 3.25 * M_PI;
 // distance_* : Linear PID for straight driving
 // turn_*     : PID for turning in place
 // heading_correction_* : PID for heading correction during linear movement
-double distance_kp = 1.1, distance_ki = 0.2, distance_kd = 8.5; //tune p until the bot is barely 
+double distance_kp = 1.0, distance_ki = 0.15, distance_kd = 8.5; //tune p until the bot is barely 
 // oscillating, and d until the error band is centered around the target
-double turn_kp = 0.36, turn_ki = 0.09, turn_kd = 3;
+double turn_kp = 0.58, turn_ki = 0.14, turn_kd = 4.0;
 double heading_correction_kp = 0.6, heading_correction_ki = 0, heading_correction_kd = 4;
 
 
@@ -96,7 +96,7 @@ bool using_vertical_tracker = true;   // Set to true if a vertical tracking whee
 // Vertical distance from the center of the bot to the horizontal tracking wheel (in inches, positive is when the wheel is behind the center)
 double horizontal_tracker_dist_from_center = 2.11768;
 // Horizontal distance from the center of the bot to the vertical tracking wheel (in inches, positive is when the wheel is to the right of the center)
-double vertical_tracker_dist_from_center = -1.5;
+double vertical_tracker_dist_from_center = -1.0;
 double horizontal_tracker_diameter = 1.975; // Diameter of the horizontal tracker wheel (in inches)
 double vertical_tracker_diameter = 1.975; // Diameter of the vertical tracker wheel (in inches)
 
@@ -109,14 +109,14 @@ double vertical_tracker_diameter = 1.975; // Diameter of the vertical tracker wh
 // double front_sensor_offsetY = 6.5;
 // For the X offset, a negative value indicates that the sensor is located on the left side of the robot, while a positive value indicates that it is on the right side. 
 
-double left_sensor_offsetX  = -5;
-double left_sensor_offsetY  = 8;  
+double left_sensor_offsetX  = -4.75;
+double left_sensor_offsetY  = -0.5;  
 double right_sensor_offsetX = 6.5;
-double right_sensor_offsetY = 7.5;
-double front_sensor_offsetX = 0.0;
-double front_sensor_offsetY = 5.5;
-double back_sensor_offsetX  = -6;
-double back_sensor_offsetY  = -2;
+double right_sensor_offsetY = -0.5;
+double front_sensor_offsetX = 3.5;
+double front_sensor_offsetY = 4.5;
+double back_sensor_offsetX  = 4.0;
+double back_sensor_offsetY  = -2.5;
 
 // AprilTag reset setup -- offset of each AI Vision Sensor from the robot's center (inches)
 double front_ai_vision_offsetX = 0.0;
