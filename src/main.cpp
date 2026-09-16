@@ -83,9 +83,7 @@ int main() {
 
  // Run the pre-autonomous function.
   pre_auton();
-  vertical_tracker.resetPosition();
-  cascade.resetPosition();
-  chain_bar_1.resetPosition();
+  
 
 
  // Prevent main from exiting with an infinite loop.

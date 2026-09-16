@@ -61,9 +61,7 @@ void runDriver() {
   stopChassis(coast);
   heading_correction = false;
 
-  vertical_tracker.resetPosition();
-  cascade.resetPosition();
-  chain_bar_1.resetPosition();
+  
 
   while (true) {
     
