@@ -28,9 +28,9 @@ motor right_chassis2 = motor(PORT6, ratio6_1, false); //right back //recremp
 motor_group right_chassis = motor_group(right_chassis1, right_chassis2);
 
 motor chain_bar_1 = motor(PORT10, ratio18_1, false); 
-motor chain_bar_2 = motor(PORT16, ratio18_1, true);
+//motor chain_bar_2 = motor(PORT16, ratio18_1, true);
 
-motor_group chain_bar = motor_group(chain_bar_1, chain_bar_2);    
+//motor_group chain_bar = motor_group(chain_bar_1, chain_bar_2);    
 
 motor cascade_1 = motor(PORT5, ratio18_1, true);  
 motor cascade_2 = motor(PORT13, ratio18_1, false); 
@@ -45,7 +45,7 @@ digital_out chain_bar_pnuematics = digital_out(Brain.ThreeWirePort.B);
 // Format is rotation(port, reversed)
 // just set these to random ports if you don't use tracking wheels
 rotation horizontal_tracker = rotation(PORT17, true);
-rotation vertical_tracker = rotation(PORT7, true);
+rotation vertical_tracker = rotation(PORT18, true);
 
 
 // Distance reset sensors\

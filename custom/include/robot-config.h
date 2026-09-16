@@ -27,12 +27,12 @@ extern aivision front_ai_vision;
 extern aivision back_ai_vision;
 extern aivision left_ai_vision;
 extern aivision right_ai_vision;
-extern motor chain_bar_2;
+//extern motor chain_bar_2;
 extern motor chain_bar_1;
 extern motor cascade_1;
 extern motor cascade_2;
 extern motor_group cascade;
-extern motor_group chain_bar;
+//extern motor_group chain_bar;
 
 
 

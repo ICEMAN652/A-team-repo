@@ -82,7 +82,10 @@ int main() {
 
 
  // Run the pre-autonomous function.
- pre_auton();
+  pre_auton();
+  vertical_tracker.resetPosition();
+  cascade.resetPosition();
+  chain_bar_1.resetPosition();
 
 
  // Prevent main from exiting with an infinite loop.
@@ -90,7 +93,7 @@ int main() {
  
   Brain.Screen.setCursor(6, 1);
   Brain.Screen.print("X: %.2f in | Y: %.2f in", x_pos, y_pos);
-   wait(100, msec);
+   //wait(100, msec);
  }
 }
 

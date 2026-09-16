@@ -61,6 +61,10 @@ void runDriver() {
   stopChassis(coast);
   heading_correction = false;
 
+  vertical_tracker.resetPosition();
+  cascade.resetPosition();
+  chain_bar_1.resetPosition();
+
   while (true) {
     
     Brain.Screen.setCursor(6, 1);
@@ -141,23 +145,23 @@ void runDriver() {
     r1_last_state = r1; 
 
     if (l1) {
-      chain_bar.spinToPosition(50, degrees,80, velocityUnits::pct, false);
+      //chain_bar_1.spinToPosition(50, degrees,80, velocityUnits::pct, false);
       cascade.spinToPosition(1500, degrees, 90, velocityUnits::pct, false);
     }
 
     if (r2) {
-      chain_bar.spinToPosition(650, degrees, 80, velocityUnits::pct, false);
+      chain_bar_1.spinToPosition(650, degrees, 80, velocityUnits::pct, false);
 
     }
 
 
     if (l2) {
-      chain_bar.spinToPosition(665, degrees, 80, velocityUnits::pct, false);
+      chain_bar_1.spinToPosition(665, degrees, 80, velocityUnits::pct, false);
       cascade.spinToPosition(1500, degrees, 90, velocityUnits::pct, false);
     }
 
     if (button_y){
-      chain_bar.spinToPosition(0, degrees, 80, velocityUnits::pct, false);
+      chain_bar_1.spinToPosition(0, degrees, 80, velocityUnits::pct, false);
       cascade.spinToPosition(0, degrees, 90, velocityUnits::pct, false);
     }
 
@@ -167,7 +171,7 @@ void runDriver() {
     }
 
     if (button_a){
-      chain_bar.spinToPosition(67, degrees, 80, velocityUnits::pct, false);
+      chain_bar_1.spinToPosition(320, degrees, 80, velocityUnits::pct, false);
       
     }
 
@@ -185,19 +189,21 @@ void runDriver() {
 
 
 void runPreAutonomous() {
+  double t0 = Brain.timer(msec);
+
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
+  double t1 = Brain.timer(msec);
+
   // Calibrate inertial sensor
   inertial_sensor.calibrate();
-
-  
 
   // Wait for the Inertial Sensor to calibrate
   while (inertial_sensor.isCalibrating()) {
     wait(10, msec);
   }
- 
-  
+  double t2 = Brain.timer(msec);
+
   double current_heading = inertial_sensor.heading();
   Brain.Screen.print(current_heading);
   // odom tracking
@@ -205,7 +211,8 @@ void runPreAutonomous() {
 
   vertical_tracker.resetPosition();
   cascade.resetPosition();
-  chain_bar.resetPosition();
+  chain_bar_1.resetPosition();
+  double t3 = Brain.timer(msec);
 
   if(using_horizontal_tracker && using_vertical_tracker) {
     thread odom = thread(trackXYOdomWheel);
@@ -216,6 +223,19 @@ void runPreAutonomous() {
   } else {
     thread odom = thread(trackNoOdomWheel);
   }
+  double t4 = Brain.timer(msec);
+
+  // TEMP DIAGNOSTIC: prints how long each pre-auton stage took (ms)
+  Brain.Screen.setCursor(1, 1);
+  Brain.Screen.print("vexcodeInit: %.0f", t1 - t0);
+  Brain.Screen.setCursor(2, 1);
+  Brain.Screen.print("imu calib:   %.0f", t2 - t1);
+  Brain.Screen.setCursor(3, 1);
+  Brain.Screen.print("resets:      %.0f", t3 - t2);
+  Brain.Screen.setCursor(4, 1);
+  Brain.Screen.print("odom thread: %.0f", t4 - t3);
+  Brain.Screen.setCursor(5, 1);
+  Brain.Screen.print("total:       %.0f", t4 - t0);
 }
 
 
