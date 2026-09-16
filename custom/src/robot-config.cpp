@@ -74,7 +74,7 @@ double distance_between_wheels = 10.5;
 
 
 // motor to wheel gear ratio * wheel diameter (in inches) * pi
-double wheel_distance_in = (36 / 60) * 3.25 * M_PI;
+double wheel_distance_in = (36.0 / 60) * 3.25 * M_PI;
 
 
 // PID Constants for movement
