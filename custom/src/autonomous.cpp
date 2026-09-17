@@ -147,23 +147,25 @@ void SAWP(){
   driveTo(5, 400, true, 12);
   resetPositionBack();
 
-  chain_bar_1.spinToPosition(45, degrees, 80, velocityUnits::pct, false);
-  boomerang(21, -51, 1, 90, 0.3, 1300, true, 8);//drive to alliance goal
+  chain_bar_1.spinToPosition(40, degrees, 80, velocityUnits::pct, false);
+  boomerang(20.5, -51, 1, 90, 0.3, 1300, true, 8);//drive to alliance goal
   resetPositionRight();
   wait(100, msec);
   chain_bar_pnuematics.set(true);//drop preload in alliance goal
   wait(400, msec);
   driveTo(-10, 800, false, 10);//back out of allaince goal
   chain_bar_1.spinToPosition(0, degrees, 80, velocityUnits::pct, false);
-  boomerang(22, -30, 1, 30, 0.3, 1100, true, 6);//drive to the first pin stack and align
-  driveTo(10.2, 700, true, 6);//drive into it
-  wait(100, msec);
+  boomerang(21.3, -30, 1, 30, 0.3, 1100, true, 7);//drive to the first pin stack and align
+  driveTo(5, 800, true, 3);//drive into it
+  //wait(100, msec);
   chain_bar_pnuematics.set(false);//got the first pin stack on allaiance line
+  cascade.spinToPosition(1220, degrees, 90, velocityUnits::pct, false);
   wait(300, msec);
-  cascade.spinToPosition(620, degrees, 90, velocityUnits::pct, false);
-  turnToAngle(135, 800, false, 12);
-  boomerang(24, -48, 1, 180, 0.4, 1000, true, 9);//drive back to allaicne goal
-  cascade.spinToPosition(1500, degrees, 90, velocityUnits::pct, true);
+  turnToAngle(135, 1000, false, 9);
+  boomerang(22, -50, 1, 180, 0.4, 1000, true, 9);//drive back to allaicne goal
+  wait(100, msec);
+  cascade.spinToPosition(1300, degrees, 90, velocityUnits::pct, true);
+  chain_bar_1.spinToPosition(40, degrees, 80, velocityUnits::pct, false);
   chain_bar_pnuematics.set(true);//score the pin stack on allaince goal
 
   
