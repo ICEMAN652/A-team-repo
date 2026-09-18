@@ -66,6 +66,7 @@ void BlueLeftAutonTwo() {
 }
 
 //(-0.2,-63.7) is starting point with the toggle on the back
+
 void RedRight() {
   driveTo(558, 500, false, 12);
   turnToAngle(180, 1000, false, 12);
