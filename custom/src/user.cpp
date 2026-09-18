@@ -46,6 +46,8 @@ bool button_up_arrow, button_down_arrow, button_left_arrow, button_right_arrow;
 int chassis_flag = 0;
 bool claw_toggle = false;
 bool r1_last_state = false;
+bool claw_up = false;
+bool r2_last_state = false;
 
 
 bool already_up = false;
@@ -143,20 +145,32 @@ void runDriver() {
     r1_last_state = r1; 
 
     if (l1) {
-      //chain_bar_1.spinToPosition(50, degrees,80, velocityUnits::pct, false);
-      cascade.spinToPosition(1500, degrees, 90, velocityUnits::pct, false);
+    cascade.spin(forward, 90, velocityUnits::pct);
+    }
+    else if (l2) {
+    cascade.spin(reverse, 90, velocityUnits::pct);
+    }
+    else {
+    cascade.stop(hold);
     }
 
-    if (r2) {
-      chain_bar_1.spinToPosition(650, degrees, 80, velocityUnits::pct, false);
+    if (r2 && !r2_last_state) {
+      claw_up = !claw_up;
 
+      if (claw_up) {
+        // UP
+        chain_bar_1.spinToPosition(665, degrees, 80, velocityUnits::pct, false);
+      }
+      else {
+        // DOWN
+        chain_bar_1.spinToPosition(0, degrees, 80, velocityUnits::pct, false);
+      }
     }
 
+    r2_last_state = r2;
 
-    if (l2) {
-      chain_bar_1.spinToPosition(665, degrees, 80, velocityUnits::pct, false);
-      cascade.spinToPosition(1500, degrees, 90, velocityUnits::pct, false);
-    }
+
+
 
     if (button_y){
       chain_bar_1.spinToPosition(0, degrees, 80, velocityUnits::pct, false);
