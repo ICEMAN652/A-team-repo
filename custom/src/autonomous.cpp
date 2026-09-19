@@ -199,21 +199,21 @@ void SAWP(){
   driveTo(5, 400, true, 12);
   resetPositionBack();
 
-  chain_bar_1.spinToPosition(55, degrees, 80, velocityUnits::pct, false);
-  boomerang(20.5, -49.25, 1, 90, 0.4, 1200, true, 7);//drive to alliance goal
+  chain_bar_1.spinToPosition(57, degrees, 80, velocityUnits::pct, false);
+  boomerang(21.5, -50.25, 1, 90, 0.4, 1200, true, 7);//drive to alliance goal
   resetPositionRight();
   wait(400, msec);
   chain_bar_pnuematics.set(true);//drop preload in alliance goal
-  wait(300, msec);
-  driveTo(-10, 800, true, 12);//back out of allaince goal
+  wait(200, msec);
+  driveTo(-10, 700, true, 12);//back out of allaince goal
   chain_bar_1.spinToPosition(0, degrees, 80, velocityUnits::pct, false);
-  boomerang(19.4, -29.5, 1, 30, 0.3, 1100, true, 7);//drive to the first pin stack and align
+  boomerang(19, -29.5, 1, 30, 0.3, 1100, true, 7);//drive to the first pin stack and align
   driveTo(6, 750, false, 3);//drive into it
   //wait(100, msec);
   chain_bar_pnuematics.set(false);//got the first pin stack on allaiance line
   driveTo(1.7, 250, true, 3);//drive into it
   wait(300, msec);
-  cascade.spinToPosition(1220, degrees, 90, velocityUnits::pct, false);
+  cascade.spinToPosition(1420, degrees, 90, velocityUnits::pct, false);
   wait(300, msec);
   turnToAngle(135, 1000, false, 9);
   boomerang(23, -47, 1, 180, 0.4, 1000, true, 7);//drive back to allaicne goal
@@ -232,16 +232,20 @@ void SAWP(){
   resetPositionLeft();
   driveTo(-5, 350, false, 12);
   boomerang(44, -44, 1, 134, 0.3, 1000, true, 8);
-  driveTo(1, 700, false, 2.5);//drive into it
+  //driveTo(1, 300, false, 2);//drive into it
   chain_bar_pnuematics.set(false);//pick up pin
-  driveTo(0.5, 200, true, 2);//drive into it
+  driveTo(1.5, 200, true, 2);//drive into it
   wait(100, msec);
   cascade.spinToPosition(800, degrees, 90, velocityUnits::pct, false);
-  moveToPoint(27, -23, -1, 800, true, 12);
-  moveToPoint(-18, -60, -1, 1000, true, 9);
-  turnToAngle(90, 200, true, 12);
-  
-  //boomerang(12, -55, -1, -180, 1, 1000, true, 12);
+  moveToPoint(17, -13, -1, 800, true, 12);
+  //moveToPoint(-18, -60, 1, 1000, false, 12);
+  //turnToAngle(-90, 200, true, 12);
+  cascade.spinToPosition(1100, degrees, 90, velocityUnits::pct, false);
+  boomerang(-24, -55, 1, 270, 2000, true, 12);
+  cascade.spinToPosition(600, degrees, 90, velocityUnits::pct, true); //lower b4 score
+  chain_bar_pnuematics.set(true);//pick up pin
+
+
 
   
 

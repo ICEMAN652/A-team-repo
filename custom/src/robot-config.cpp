@@ -39,7 +39,7 @@ motor_group cascade = motor_group(cascade_1, cascade_2);
 
 inertial inertial_sensor = inertial(PORT16);
 
-digital_out chain_bar_pnuematics = digital_out(Brain.ThreeWirePort.B);
+digital_out chain_bar_pnuematics = digital_out(Brain.ThreeWirePort.C);
 
 
 // Format is rotation(port, reversed)
@@ -48,7 +48,7 @@ rotation horizontal_tracker = rotation(PORT17, true);
 rotation vertical_tracker = rotation(PORT18, true);
 
 
-// Distance reset sensors\
+// Distance reset sensors
 
 
 // Set these to random ports if you are not using distance resets
