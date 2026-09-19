@@ -68,14 +68,39 @@ void BlueLeftAutonTwo() {
 //(-0.2,-63.7) is starting point with the toggle on the back
 
 void RedRight() {
-  driveTo(558, 500, false, 12);
-  turnToAngle(180, 1000, false, 12);
-  driveTo(15, 1000, false, 9);
-  driveTo(-5, 500, false, 10);
-  driveTo(5, 800, false, 8);
-  driveTo(-5, 300, false, 12);
-  resetPositionFront();
-  boomerang(-24, -25, 1, 45, 0.3, 1500, false, 10);
+  resetPositionBack();
+  driveTo(-6, 400, true, 12);//toggle #1
+  driveTo(6, 300, true, 12);
+  driveTo(-9, 450, true, 12);//toggle #2
+  driveTo(5, 400, true, 12);
+  resetPositionBack();
+  chain_bar_1.spinToPosition(55, degrees, 80, velocityUnits::pct, false);
+  boomerang(-24, -49, 1, 90, 0.4, 1200, true, 7);//drive to alliance goal
+  // resetPositionRight();
+  wait(400, msec);
+  chain_bar_pnuematics.set(true); //drop preload in alliance goal
+  wait(300, msec);
+  driveTo(-10, 800, true, 12); //back out of alliance goal
+  boomerang(-20,-80,-1,120,0.3,1200,true,12);
+
+  
+
+  
+  // chain_bar_1.spinToPosition(0, degrees, 80, velocityUnits::pct, false);
+  // boomerang(-41, 16, 1, 30, 0.3, 1100, true, 7);
+  
+  // turnToAngle(180,100,true,12);
+  // chain_bar_1.spinToPosition(0, degrees, 80, velocityUnits::pct, false);
+  
+
+  // driveTo(558, 500, false, 12);
+  // turnToAngle(180, 1000, false, 12);
+  // driveTo(15, 1000, false, 9);
+  // driveTo(-5, 500, false, 10);
+  // driveTo(5, 800, false, 8);
+  // driveTo(-5, 300, false, 12);
+  // resetPositionFront();
+  // boomerang(-24, -25, 1, 45, 0.3, 1500, false, 10);
 
 
   /*driveTo(1.8, 1000, true, 3);
