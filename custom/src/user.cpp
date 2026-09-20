@@ -197,7 +197,7 @@ void runDriver() {
     }
 
     if (button_x){
-      chain_bar_1.spinToPosition(200, degrees, 80, velocityUnits::pct, false);
+      chain_bar_1.spinToPosition(200, degrees, 250, velocityUnits::pct, false);
 
     }
 
