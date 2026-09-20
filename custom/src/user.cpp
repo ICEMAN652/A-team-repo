@@ -10,7 +10,7 @@
 
 
 void runAutonomous() {
-  int auton_selected = 1;
+  int auton_selected = 3;
   switch(auton_selected) {
     case 1:
       SAWP();
@@ -48,6 +48,7 @@ bool claw_toggle = false;
 bool r1_last_state = false;
 bool claw_up = false;
 bool r2_last_state = false;
+bool cascade_auto_moving = false;
 
 
 bool already_up = false;
@@ -138,7 +139,8 @@ void runDriver() {
         if(claw_toggle == false){
           wait(350,msec);
           cascade.spinToPosition(220, degrees, 90, velocityUnits::pct, false);
-        } 
+          cascade_auto_moving = true;
+        }
     }
     
     // Save the current state for the next loop iteration
@@ -157,7 +159,14 @@ void runDriver() {
     else if (button_y){
       chain_bar_1.spinToPosition(0, degrees, 80, velocityUnits::pct, false);
       cascade.spinToPosition(0, degrees, 90, velocityUnits::pct, true);
-    }else{
+    }
+    else if (cascade_auto_moving){
+      if (fabs(cascade.position(degrees) - 220) < 5) {
+        cascade_auto_moving = false;
+        cascade.stop(hold);
+      }
+    }
+    else{
       cascade.spin(fwd, 0, volt);
     }
     
@@ -180,14 +189,16 @@ void runDriver() {
 
 
 
-    if (button_x){
-      cascade.spinToPosition(360, degrees, 90, velocityUnits::pct, false);
-      //chain_bar.spinToPosition(0, degrees, 80, velocityUnits::pct, false);
-    }
+    
 
     if (button_a){
       chain_bar_1.spinToPosition(70, degrees, 80, velocityUnits::pct, false);
       
+    }
+
+    if (button_x){
+      chain_bar_1.spinToPosition(200, degrees, 80, velocityUnits::pct, false);
+
     }
 
     wait(20, msec);
