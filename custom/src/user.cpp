@@ -138,7 +138,7 @@ void runDriver() {
         chain_bar_pnuematics.set(claw_toggle);
         if(claw_toggle == false){
           wait(350,msec);
-          cascade.spinToPosition(220, degrees, 90, velocityUnits::pct, false);
+          cascade.spinToPosition(235, degrees, 90, velocityUnits::pct, false);
           cascade_auto_moving = true;
         }
     }
