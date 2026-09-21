@@ -138,7 +138,7 @@ void runDriver() {
         chain_bar_pnuematics.set(claw_toggle);
         if(claw_toggle == false){
           wait(350,msec);
-          cascade.spinToPosition(235, degrees, 90, velocityUnits::pct, false);
+          //cascade.spinToPosition(235, degrees, 90, velocityUnits::pct, false);
           cascade_auto_moving = true;
         }
     }
@@ -147,27 +147,15 @@ void runDriver() {
     r1_last_state = r1; 
 
     if (l1) {
-      if (cascade.position(degrees) < 1500) {
-        cascade.spin(forward, 90, velocityUnits::pct);
-      } else {
-        cascade.stop(hold);
-      }
+      chain_bar_1.spin(forward, 90, velocityUnits::pct);
     }else if (l2) {
-      cascade.spin(reverse, 90, velocityUnits::pct);
-      chain_bar_1.spinToPosition(57, degrees, 80, velocityUnits::pct, false);
+      chain_bar_1.spin(reverse, 90, velocityUnits::pct);
     }
     else if (button_y){
       chain_bar_1.spinToPosition(0, degrees, 80, velocityUnits::pct, false);
-      cascade.spinToPosition(0, degrees, 90, velocityUnits::pct, true);
-    }
-    else if (cascade_auto_moving){
-      if (fabs(cascade.position(degrees) - 220) < 5) {
-        cascade_auto_moving = false;
-        cascade.stop(hold);
-      }
     }
     else{
-      cascade.spin(fwd, 0, volt);
+      chain_bar_1.stop(hold);
     }
     
 
