@@ -39,6 +39,7 @@ void runAutonomous() {
 
 
 // controller_1 input variables (snake_case)
+//don't touch
 int ch1, ch2, ch3, ch4;
 bool l1, l2, r1, r2;
 bool button_a, button_b, button_x, button_y;
@@ -49,6 +50,7 @@ bool r1_last_state = false;
 bool claw_up = false;
 bool r2_last_state = false;
 bool cascade_auto_moving = false;
+bool lift_homing = false; // true while Y is driving the lift down to 0 
 
 
 bool already_up = false;
@@ -132,47 +134,32 @@ void runDriver() {
     // 4. Move the Chassis
     driveChassis(leftOutput,rightOutput);
     
-    // Check if R1 is pressed NOW, but was not pressed in the previous loop
-    if (r1 && !r1_last_state) {
-        claw_toggle = !claw_toggle;
-        chain_bar_pnuematics.set(claw_toggle);
-        if(claw_toggle == false){
-          wait(350,msec);
-          //cascade.spinToPosition(235, degrees, 90, velocityUnits::pct, false);
-          cascade_auto_moving = true;
-        }
-    }
-    
-    // Save the current state for the next loop iteration
-    r1_last_state = r1; 
 
     if (l1) {
-      chain_bar_1.spin(forward, 90, velocityUnits::pct);
+      lift_homing = false; // manual input cancels the Y auto-down
+      lift.spin(forward, 50, velocityUnits::pct);
     }else if (l2) {
-      chain_bar_1.spin(reverse, 90, velocityUnits::pct);
+      lift_homing = false;
+      lift.spin(reverse, 50, velocityUnits::pct);
     }
-    else if (button_y){
-      chain_bar_1.spinToPosition(0, degrees, 80, velocityUnits::pct, false);
+    else if (button_y && !lift_homing){
+      // start the move once; it keeps running after Y is released
+      lift_homing = true;
+      lift.spinToPosition(0, degrees, 50, velocityUnits::pct, false);
+    }
+    else if (lift_homing){
+      // let spinToPosition finish, then fall through to hold
+      if (fabs(lift.position(degrees)) < 5) {
+        lift_homing = false;
+        lift.stop(hold);
+      }
     }
     else{
-      chain_bar_1.stop(hold);
+      lift.stop(hold);
     }
+  
     
 
-    if (r2 && !r2_last_state) {
-      claw_up = !claw_up;
-
-      if (claw_up) {
-        // UP
-        chain_bar_1.spinToPosition(665, degrees, 80, velocityUnits::pct, false);
-      }
-      else {
-        // DOWN
-        chain_bar_1.spinToPosition(0, degrees, 80, velocityUnits::pct, false);
-      }
-    }
-
-    r2_last_state = r2;
 
 
 
@@ -224,7 +211,7 @@ void runPreAutonomous() {
   resetChassis();
 
   vertical_tracker.resetPosition();
-  cascade.resetPosition();
+  lift.resetPosition();
   chain_bar_1.resetPosition();
   double t3 = Brain.timer(msec);
 

@@ -32,10 +32,10 @@ motor chain_bar_1 = motor(PORT10, ratio18_1, false);
 
 //motor_group chain_bar = motor_group(chain_bar_1, chain_bar_2);    
 
-motor cascade_1 = motor(PORT5, ratio18_1, true);  
-motor cascade_2 = motor(PORT13, ratio18_1, false); 
+motor lift_1 = motor(PORT3, ratio18_1, false);  
+motor lift_2 = motor(PORT11, ratio18_1, true); 
 
-motor_group cascade = motor_group(cascade_1, cascade_2);
+motor_group lift = motor_group(lift_1, lift_2);
 
 inertial inertial_sensor = inertial(PORT16);
 
