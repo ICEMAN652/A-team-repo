@@ -75,11 +75,11 @@ void RedRight() {
   driveTo(-9, 450, true, 12);//toggle #2
   driveTo(5, 400, true, 12);
   resetPositionBack();
-  chain_bar_1.spinToPosition(50, degrees, 80, velocityUnits::pct, false);
+  //chain_bar_1.spinToPosition(50, degrees, 80, velocityUnits::pct, false);
   boomerang(-23.4, -49.2, 1, 90, 0.4, 1400, true, 8);//drive to alliance goal
   // resetPositionRight();
   wait(800, msec);
-  chain_bar_pnuematics.set(true); //drop preload in alliance goal
+  //chain_bar_pnuematics.set(true); //drop preload in alliance goal
   resetPositionLeft();
   wait(400, msec);
 
@@ -158,11 +158,11 @@ void BlueLeft(){
   driveTo(5, 400, true, 12);
   resetPositionBack();
 
-  chain_bar_1.spinToPosition(52, degrees, 80, velocityUnits::pct, false);
+  //chain_bar_1.spinToPosition(52, degrees, 80, velocityUnits::pct, false);
   boomerang(22.2, -48.5, 1, 90, 0.4, 1500, true, 6);//drive to alliance goal
   resetPositionRight();
   wait(700, msec);
-  chain_bar_pnuematics.set(true);//drop preload in alliance goal
+  //chain_bar_pnuematics.set(true);//drop preload in alliance goal
   wait(400, msec);
   driveTo(-10, 700, true, 12);//back out of allaince goal
   resetPositionRight();
@@ -170,21 +170,21 @@ void BlueLeft(){
   turnToAngle(90, 200, true, 12);
   resetPositionRight();
   driveTo(13, 800, true, 12);
-  chain_bar_1.spinToPosition(0, degrees, 80, velocityUnits::pct, false);
+  //chain_bar_1.spinToPosition(0, degrees, 80, velocityUnits::pct, false);
   driveChassis(3, 12);
   wait(350, msec);
   driveChassis(0,0);
   turnToAngle(38.5, 500, true, 12);
   driveTo(5, 700, false, 2);//drive into it
-  chain_bar_pnuematics.set(false);//pick up pin
+  //chain_bar_pnuematics.set(false);//pick up pin
   driveTo(3.2, 300, true, 2);//drive into it
   wait(200, msec);
   //cascade.spinToPosition(1400, degrees, 90, velocityUnits::pct, true); //lift
-  chain_bar_1.spinToPosition(300, degrees, 50, velocityUnits::pct, false);
+  //chain_bar_1.spinToPosition(300, degrees, 50, velocityUnits::pct, false);
   boomerang(30, -45, 1, -90, 0.3, 2500, true, 6);
   //cascade.spinToPosition(600, degrees, 70, velocityUnits::pct, true); //lift
-  chain_bar_1.spinToPosition(150, degrees, 50, velocityUnits::pct, true);
-  chain_bar_pnuematics.set(true);
+  //chain_bar_1.spinToPosition(150, degrees, 50, velocityUnits::pct, true);
+  //chain_bar_pnuematics.set(true);
   wait(1000, msec);
   driveTo(-17, 1800, false, 12);
   turnToAngle(180, 1000, true, 12);
@@ -209,54 +209,54 @@ void SAWP(){
   driveTo(5, 400, true, 12);
   resetPositionBack();
 
-  chain_bar_1.spinToPosition(50, degrees, 80, velocityUnits::pct, false);
+  //chain_bar_1.spinToPosition(50, degrees, 80, velocityUnits::pct, false);
   boomerang(21.5, -50, 1, 90, 0.4, 1400, true, 6);//drive to alliance goal
   resetPositionRight();
   wait(700, msec);
-  chain_bar_pnuematics.set(true);//drop preload in alliance goal
+  //chain_bar_pnuematics.set(true);//drop preload in alliance goal
   wait(400, msec);
   driveTo(-10, 700, true, 12);//back out of allaince goal
   resetPositionRight();
-  chain_bar_1.spinToPosition(0, degrees, 80, velocityUnits::pct, false);
+  //chain_bar_1.spinToPosition(0, degrees, 80, velocityUnits::pct, false);
   boomerang(18.3, -29.5, 1, 30, 0.3, 1400, true, 7);//drive to the first pin stack and align
   driveTo(6, 750, false, 3);//drive into it
   //wait(100, msec);
-  chain_bar_pnuematics.set(false);//got the first pin stack on allaiance line
+  //chain_bar_pnuematics.set(false);//got the first pin stack on allaiance line
   driveTo(2, 250, true, 3);//drive into it
   wait(300, msec);
-  cascade.spinToPosition(1420, degrees, 90, velocityUnits::pct, false);
+  //cascade.spinToPosition(1420, degrees, 90, velocityUnits::pct, false);
   wait(300, msec);
   turnToAngle(135, 1000, false, 9);
   boomerang(23, -46.5, 1, 180, 0.4, 1000, true, 7);//drive back to allaicne goal
-  chain_bar_1.spinToPosition(50, degrees, 80, velocityUnits::pct, false);
+  //chain_bar_1.spinToPosition(50, degrees, 80, velocityUnits::pct, false);
   wait(400, msec);
-  cascade.spinToPosition(550, degrees, 90, velocityUnits::pct, true); //lower b4 score
-  chain_bar_pnuematics.set(true);//score the pin stack on allaince goal
+  //cascade.spinToPosition(550, degrees, 90, velocityUnits::pct, true); //lower b4 score
+  //chain_bar_pnuematics.set(true);//score the pin stack on allaince goal
   wait(70, msec);
-  cascade.spinToPosition(1220, degrees, 90, velocityUnits::pct, false);
+  //cascade.spinToPosition(1220, degrees, 90, velocityUnits::pct, false);
   wait(300, msec);
 
   driveTo(-3, 200, false, 10);
-  cascade.spinToPosition(0, degrees, 90, velocityUnits::pct, false);
-  chain_bar_1.spinToPosition(0, degrees, 90, velocityUnits::pct, false);
+  //cascade.spinToPosition(0, degrees, 90, velocityUnits::pct, false);
+  //chain_bar_1.spinToPosition(0, degrees, 90, velocityUnits::pct, false);
   turnToAngle(180, 200, true, 12);
   resetPositionLeft();
   driveTo(-5, 350, false, 12);
   boomerang(41.4, -41, 1, 134, 0.3, 1600, true, 7);
   wait(200, msec);
   driveTo(4.2, 700, false, 2);//drive into it
-  chain_bar_pnuematics.set(false);//pick up pin
+  //chain_bar_pnuematics.set(false);//pick up pin
   driveTo(3.2, 300, true, 2);//drive into it
-  cascade.spinToPosition(800, degrees, 90, velocityUnits::pct, false);
+  //cascade.spinToPosition(800, degrees, 90, velocityUnits::pct, false);
   wait(100, msec);
   moveToPoint(17, -13, -1, 800, false, 12);
   //moveToPoint(-18, -60, 1, 1000, false, 12);
   //turnToAngle(-90, 200, true, 12);
-  cascade.spinToPosition(1450, degrees, 90, velocityUnits::pct, false);
-  chain_bar_1.spinToPosition(60, degrees, 100, velocityUnits::pct, false);
+  //cascade.spinToPosition(1450, degrees, 90, velocityUnits::pct, false);
+  //chain_bar_1.spinToPosition(60, degrees, 100, velocityUnits::pct, false);
   boomerang(-21, -43.5, 1, 270, 0.3, 2000, true, 12);
-  cascade.spinToPosition(800, degrees, 100, velocityUnits::pct, true); //lower b4 score
-  chain_bar_pnuematics.set(true);//pick up pin
+  //cascade.spinToPosition(800, degrees, 100, velocityUnits::pct, true); //lower b4 score
+  //chain_bar_pnuematics.set(true);//pick up pin
 
 
 

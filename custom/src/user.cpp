@@ -160,21 +160,19 @@ void runDriver() {
   
     
 
-
+    if (r1){
+      claw.spin(fwd, 12, volt);
+    }else if (r2){
+      claw.spin(reverse, 12, volt);
+    }else{
+      claw.spin(fwd, 0, volt);
+    }
 
 
 
     
 
-    if (button_a){
-      chain_bar_1.spinToPosition(70, degrees, 80, velocityUnits::pct, false);
-      
-    }
-
-    if (button_x){
-      chain_bar_1.spinToPosition(200, degrees, 135, velocityUnits::pct, false);
-
-    }
+    
 
     wait(20, msec);
 
@@ -212,7 +210,7 @@ void runPreAutonomous() {
 
   vertical_tracker.resetPosition();
   lift.resetPosition();
-  chain_bar_1.resetPosition();
+  //chain_bar_1.resetPosition();
   double t3 = Brain.timer(msec);
 
   if(using_horizontal_tracker && using_vertical_tracker) {
