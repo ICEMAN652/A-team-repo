@@ -50,7 +50,8 @@ bool r1_last_state = false;
 bool claw_up = false;
 bool r2_last_state = false;
 bool cascade_auto_moving = false;
-bool lift_homing = false; // true while Y is driving the lift down to 0 
+bool lift_homing = false; // true while Y is driving the lift down to 0
+const double LIFT_MAX_DEG = 620.0; // top limit for L1, in motor degrees (360 = 1 rotation). 
 
 
 bool already_up = false;
@@ -72,6 +73,8 @@ void runDriver() {
     
     Brain.Screen.setCursor(6, 1);
     Brain.Screen.print("X: %.2f in | Y: %.2f in", x_pos, y_pos);
+    Brain.Screen.setCursor(7, 1);
+    Brain.Screen.print("Lift: %.0f deg     ", lift.position(degrees));
 
       // true/false for controller button presses
       l1 = controller_1.ButtonL1.pressing();
@@ -137,7 +140,12 @@ void runDriver() {
 
     if (l1) {
       lift_homing = false; // manual input cancels the Y auto-down
-      lift.spin(forward, 50, velocityUnits::pct);
+      // software hard stop: don't let the lift go past LIFT_MAX_DEG
+      if (lift.position(degrees) < LIFT_MAX_DEG) {
+        lift.spin(forward, 100, velocityUnits::pct);
+      } else {
+        lift.stop(hold);
+      }
     }else if (l2) {
       lift_homing = false;
       lift.spin(reverse, 50, velocityUnits::pct);
