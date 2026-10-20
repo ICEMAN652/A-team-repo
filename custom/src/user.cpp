@@ -51,7 +51,7 @@ bool claw_up = false;
 bool r2_last_state = false;
 bool cascade_auto_moving = false;
 bool lift_homing = false; // true while Y is driving the lift down to 0
-const double LIFT_MAX_DEG = 620.0; // top limit for L1, in motor degrees (360 = 1 rotation). 
+const double LIFT_MAX_DEG = 1020.0; // top limit for L1, in motor degrees (360 = 1 rotation). 
 
 
 bool already_up = false;
@@ -142,7 +142,7 @@ void runDriver() {
       lift_homing = false; // manual input cancels the Y auto-down
       // software hard stop: don't let the lift go past LIFT_MAX_DEG
       if (lift.position(degrees) < LIFT_MAX_DEG) {
-        lift.spin(forward, 100, velocityUnits::pct);
+        lift.spin(forward, 80, velocityUnits::pct);
       } else {
         lift.stop(hold);
       }

@@ -20,11 +20,11 @@ controller controller_1 = controller(primary);
 // gearSetting is one of the following: ratio36_1(red), ratio18_1(green), ratio6_1(blue)
 // all chassis motors should be reversed appropriately so that they spin vertical when given a positive voltage input
 // such as driveChassis(12, 12)
-motor left_chassis1 = motor(PORT8, ratio6_1, true); 
-motor left_chassis2 = motor(PORT1, ratio6_1, true); 
+motor left_chassis1 = motor(PORT15, ratio6_1, true); 
+motor left_chassis2 = motor(PORT14, ratio6_1, true); 
 motor_group left_chassis = motor_group(left_chassis1, left_chassis2);
-motor right_chassis1 = motor(PORT12, ratio6_1, false); //right front 
-motor right_chassis2 = motor(PORT6, ratio6_1, false); //right back //recremp
+motor right_chassis1 = motor(PORT13, ratio6_1, false); //right front 
+motor right_chassis2 = motor(PORT4, ratio6_1, false); //right back //recremp
 motor_group right_chassis = motor_group(right_chassis1, right_chassis2);
 
 motor claw = motor(PORT10, ratio6_1, false); 
@@ -32,8 +32,8 @@ motor claw = motor(PORT10, ratio6_1, false);
 
 //motor_group chain_bar = motor_group(chain_bar_1, chain_bar_2);    
 
-motor lift_1 = motor(PORT3, ratio18_1, false);  
-motor lift_2 = motor(PORT11, ratio18_1, true); 
+motor lift_1 = motor(PORT12, ratio18_1, true);  
+motor lift_2 = motor(PORT11, ratio18_1, false); 
 
 motor_group lift = motor_group(lift_1, lift_2);
 
@@ -58,10 +58,10 @@ distance back_sensor = distance(PORT14);
 distance front_sensor = distance(PORT20);
 
 // AprilTag AI Vision Sensors, one per cardinal direction -- change ports to match wiring
-aivision front_ai_vision = aivision(PORT4);
-aivision back_ai_vision  = aivision(PORT2);
+aivision front_ai_vision = aivision(PORT18);
+aivision back_ai_vision  = aivision(PORT19);
 aivision left_ai_vision  = aivision(PORT21);
-aivision right_ai_vision = aivision(PORT15);
+aivision right_ai_vision = aivision(PORT20);
 
 
 // ============================================================================
