@@ -51,7 +51,7 @@ bool claw_up = false;
 bool r2_last_state = false;
 bool cascade_auto_moving = false;
 bool lift_homing = false; // true while Y is driving the lift down to 0
-const double LIFT_MAX_DEG = 1020.0; // top limit for L1, in motor degrees (360 = 1 rotation). 
+const double LIFT_MAX_DEG = 1100.0; // top limit for L1, in motor degrees (360 = 1 rotation). 
 
 
 bool already_up = false;
