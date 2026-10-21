@@ -11,6 +11,14 @@
 #include "motor-control.h"
 #include "../include/field-resets.h"
 
+// Adding a new auton:
+// 1. Write the function in this file.
+// 2. Declare it in custom/include/autonomous.h (e.g. void MyNewAuton();).
+// 3. Add it to the selector in runPreAutonomous() in custom/src/user.cpp,
+//    before startAutonSelector(): addAuton("My New Auton", MyNewAuton);
+// Notes: the selector holds up to 12 autons, names fit in about 14 characters,
+// and field-position autons should start with setPose() at the real start spot.
+// Test in the simulator with: sh sim/run-sim.sh "My New Auton"
 
 
 
