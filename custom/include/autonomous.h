@@ -1,6 +1,6 @@
 // Format: returnType functionName();
 
-// April tag helpers moved to motor-control.h
+// April tag and distanceReset helpers are in custom/include/field-resets.h
 
 void exampleAuton();
 void movetwoinch();

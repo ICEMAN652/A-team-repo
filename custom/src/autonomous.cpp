@@ -9,11 +9,12 @@
 #include "../include/autonomous.h"
 #include "../include/robot-config.h"
 #include "motor-control.h"
+#include "../include/field-resets.h"
 
 
 
 
-// AprilTag helpers now in motor-control.cpp, alongside the other position-tracking/reset functions
+// AprilTag and distanceReset helpers are in custom/src/field-resets.cpp
 
 
 // IMPORTANT: Remember to add respective function declarations to custom/include/autonomous.h
