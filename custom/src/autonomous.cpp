@@ -14,7 +14,7 @@
 
 
 
-// AprilTag and distanceReset helpers are in custom/src/field-resets.cpp
+// distanceReset helpers are in custom/src/field-resets.cpp
 
 
 // IMPORTANT: Remember to add respective function declarations to custom/include/autonomous.h

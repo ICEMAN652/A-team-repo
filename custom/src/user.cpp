@@ -134,7 +134,8 @@ void runDriver() {
     else if (button_y && !lift_homing){
       // start the move once; it keeps running after Y is released
       lift_homing = true;
-      lift.spinToPosition(0, degrees, 50, velocityUnits::pct, false);
+      lift.setVelocity(50, velocityUnits::pct);
+      lift.spinToPosition(0, degrees, false);
     }
     else if (lift_homing){
       // let spinToPosition finish, then fall through to hold

@@ -23,10 +23,6 @@ extern distance left_sensor;
 extern distance back_sensor;
 extern distance front_sensor;
 extern distance right_sensor;
-extern aivision front_ai_vision;
-extern aivision back_ai_vision;
-extern aivision left_ai_vision;
-extern aivision right_ai_vision;
 //extern motor chain_bar_2;
 extern motor claw;
 extern motor lift_1;
@@ -62,22 +58,6 @@ extern double front_sensor_offsetX;
 extern double front_sensor_offsetY;
 extern double back_sensor_offsetX;
 extern double back_sensor_offsetY;
-
-// AprilTag Reset Setup -- offset of each AI Vision Sensor from the robot's center
-extern double front_ai_vision_offsetX;
-extern double front_ai_vision_offsetY;
-extern double back_ai_vision_offsetX;
-extern double back_ai_vision_offsetY;
-extern double left_ai_vision_offsetX;
-extern double left_ai_vision_offsetY;
-extern double right_ai_vision_offsetX;
-extern double right_ai_vision_offsetY;
-
-// +1 if obj.angle increases as the robot turns clockwise, -1 if it decreases.
-// Unverified -- rotate the robot a known amount clockwise in front of a tag,
-// check which way obj.angle moves, and set this to match before trusting
-// the AprilTag heading correction.
-extern double APRILTAG_ANGLE_SIGN;
 
 
 
