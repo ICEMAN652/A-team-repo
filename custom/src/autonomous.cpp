@@ -14,7 +14,7 @@
 
 
 
-// AprilTag and distanceReset helpers are in custom/src/field-resets.cpp
+// distanceReset helpers are in custom/src/field-resets.cpp
 
 
 // IMPORTANT: Remember to add respective function declarations to custom/include/autonomous.h
@@ -70,6 +70,7 @@ void BlueLeftAutonTwo() {
 
 void RedRight() {
  //double matchloader
+  setPose(-0.2, -63.7, 0);
   resetPositionBack();
   driveTo(-6, 400, true, 12);//toggle #1
   driveTo(6, 300, true, 12);
@@ -148,8 +149,9 @@ void RedRight() {
   
 }
 
-//input starting point
+//(-0.2,-63.7) is starting point with the toggle on the back
 void BlueLeft(){
+  setPose(-0.2, -63.7, 0);
   resetPositionBack();
   //resetPositionLeft();
   //moveToPoint(0, -6, 1, 400, true, 12);
@@ -201,6 +203,7 @@ void BlueLeft(){
 //unfinished routmoveToPoint(emoveToPoint(
 //(-0.2,-63.7) is starting point
 void SAWP(){
+  setPose(-0.2, -63.7, 0);
   resetPositionBack();
   //resetPositionLeft();
   //moveToPoint(0, -6, 1, 400, true, 12);
