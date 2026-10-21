@@ -1,5 +1,6 @@
 #include "vex.h"
 #include "motor-control.h"
+#include "auton-selector.h"
 #include "../custom/include/autonomous.h"
 
 
@@ -10,29 +11,9 @@
 
 
 void runAutonomous() {
-  int auton_selected = 3;
-  switch(auton_selected) {
-    case 1:
-      SAWP();
-      break;
-    case 2:
-      RedRight();
-      break;
-    case 3:
-      BlueLeft();
-      break;
-    case 4:
-      movetwoinch();
-      break;
-    case 5:
-      exampleAuton();
-      break;
-    case 6:
-      BlueLeftAutonTwo(); 
-      break;
-    case 7:
-      break;
-  }
+  // Runs the routine picked on the Brain screen (or with the controller arrows while disabled).
+  // Add routines to the list in runPreAutonomous() below.
+  runSelectedAuton();
 }
 
 
@@ -195,11 +176,8 @@ void runDriver() {
 
 
 void runPreAutonomous() {
-  double t0 = Brain.timer(msec);
-
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
-  double t1 = Brain.timer(msec);
 
   // Calibrate inertial sensor
   inertial_sensor.calibrate();
@@ -208,40 +186,29 @@ void runPreAutonomous() {
   while (inertial_sensor.isCalibrating()) {
     wait(10, msec);
   }
-  double t2 = Brain.timer(msec);
 
-  double current_heading = inertial_sensor.heading();
-  Brain.Screen.print(current_heading);
-  // odom tracking
   resetChassis();
 
   vertical_tracker.resetPosition();
   lift.resetPosition();
   //chain_bar_1.resetPosition();
-  double t3 = Brain.timer(msec);
 
-  if(using_horizontal_tracker && using_vertical_tracker) {
-    thread odom = thread(trackXYOdomWheel);
-  } else if (using_horizontal_tracker) {
-    thread odom = thread(trackXOdomWheel);
-  } else if (using_vertical_tracker) {
-    thread odom = thread(trackYOdomWheel);
-  } else {
-    thread odom = thread(trackNoOdomWheel);
-  }
-  double t4 = Brain.timer(msec);
+  // odom tracking (picks the setup from using_horizontal_tracker / using_vertical_tracker)
+  startOdometry();
 
-  // TEMP DIAGNOSTIC: prints how long each pre-auton stage took (ms)
-  Brain.Screen.setCursor(1, 1);
-  Brain.Screen.print("vexcodeInit: %.0f", t1 - t0);
-  Brain.Screen.setCursor(2, 1);
-  Brain.Screen.print("imu calib:   %.0f", t2 - t1);
-  Brain.Screen.setCursor(3, 1);
-  Brain.Screen.print("resets:      %.0f", t3 - t2);
-  Brain.Screen.setCursor(4, 1);
-  Brain.Screen.print("odom thread: %.0f", t4 - t3);
-  Brain.Screen.setCursor(5, 1);
-  Brain.Screen.print("total:       %.0f", t4 - t0);
+  // Optional: MCL uses the distance sensors to keep odometry from drifting while driving.
+  // Needs field-centered coordinates, so start each auton with setPose() at the real field position.
+  // startMcl();
+
+  // Autonomous routines for the selector, in the order they appear on the Brain screen.
+  // The first one is picked by default (until a choice is saved on the SD card).
+  addAuton("Blue Left", BlueLeft);
+  addAuton("Blue Left 2", BlueLeftAutonTwo);
+  addAuton("Red Right", RedRight);
+  addAuton("SAWP", SAWP);
+  addAuton("Move 2 in", movetwoinch);
+  addAuton("Example", exampleAuton);
+  startAutonSelector();
 }
 
 

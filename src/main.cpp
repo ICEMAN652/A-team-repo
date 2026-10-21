@@ -7,20 +7,16 @@
 /*                                                                            */
 /*----------------------------------------------------------------------------*/
 
-
 #include "vex.h"
 #include "motor-control.h"
 #include "math.h"
 #include "../custom/include/autonomous.h"
 #include "../custom/include/user.h"
 
-
 using namespace vex;
-
 
 // A global instance of competition
 competition Competition;
-
 
 /*---------------------------------------------------------------------------*/
 /*                          Pre-Autonomous Functions                         */
@@ -32,11 +28,9 @@ competition Competition;
 /*  not every time that the robot is disabled.                               */
 /*---------------------------------------------------------------------------*/
 
-
 void pre_auton(void) {
- runPreAutonomous();
+  runPreAutonomous();
 }
-
 
 /*---------------------------------------------------------------------------*/
 /*                                                                           */
@@ -50,11 +44,9 @@ void pre_auton(void) {
 /*-------------------------------
 --------------------------------------------*/
 
-
 void autonomous(void) {
- runAutonomous();
+  runAutonomous();
 }
-
 
 /*---------------------------------------------------------------------------*/
 /*                                                                           */
@@ -66,34 +58,23 @@ void autonomous(void) {
 /*  You must modify the code to add your own robot specific commands here.   */
 /*---------------------------------------------------------------------------*/
 
-
 void usercontrol(void) {
- runDriver();
+  runDriver();
 }
-
 
 //
 // Main will set up the competition functions and callbacks.
 //
 int main() {
- // Set up callbacks for autonomous and driver control periods.
- Competition.autonomous(autonomous);
- Competition.drivercontrol(usercontrol);
+  // Set up callbacks for autonomous and driver control periods.
+  Competition.autonomous(autonomous);
+  Competition.drivercontrol(usercontrol);
 
-
- // Run the pre-autonomous function.
+  // Run the pre-autonomous function.
   pre_auton();
-  
 
-
- // Prevent main from exiting with an infinite loop.
- while (true) {
- 
-  Brain.Screen.setCursor(6, 1);
-  Brain.Screen.print("X: %.2f in | Y: %.2f in", x_pos, y_pos);
-   //wait(100, msec);
- }
+  // Prevent main from exiting with an infinite loop.
+  while (true) {
+    wait(100, msec);
+  }
 }
-
-
-
