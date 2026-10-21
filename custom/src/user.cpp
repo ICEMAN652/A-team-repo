@@ -166,7 +166,6 @@ void runDriver() {
       lift.stop(hold);
     }
   
-    
 
     if (r1){
       claw.spin(fwd, 12, volt);
