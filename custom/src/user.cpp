@@ -152,7 +152,7 @@ void runDriver() {
     if (r1){
       claw.spin(fwd, 12, volt);
     }else if (r2){
-      claw.spin(reverse, 12, volt);
+      claw.spin(reverse, 5, volt);
     }else{
       claw.spin(fwd, 0, volt);
     }
@@ -203,11 +203,11 @@ void runPreAutonomous() {
 
   // Autonomous routines for the selector, in the order they appear on the Brain screen.
   // The first one is picked by default (until a choice is saved on the SD card).
+  addAuton("SAWP", SAWP);
   addAuton("Move 2 in", movetwoinch);
   addAuton("Blue Left", BlueLeft);
   addAuton("Blue Left 2", BlueLeftAutonTwo);
   addAuton("Red Right", RedRight);
-  addAuton("SAWP", SAWP);
   addAuton("Example", exampleAuton);
   startAutonSelector();
 }
