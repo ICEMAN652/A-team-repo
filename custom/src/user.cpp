@@ -203,11 +203,11 @@ void runPreAutonomous() {
 
   // Autonomous routines for the selector, in the order they appear on the Brain screen.
   // The first one is picked by default (until a choice is saved on the SD card).
+  addAuton("Move 2 in", movetwoinch);
   addAuton("Blue Left", BlueLeft);
   addAuton("Blue Left 2", BlueLeftAutonTwo);
   addAuton("Red Right", RedRight);
   addAuton("SAWP", SAWP);
-  addAuton("Move 2 in", movetwoinch);
   addAuton("Example", exampleAuton);
   startAutonSelector();
 }

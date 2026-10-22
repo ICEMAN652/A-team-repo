@@ -37,7 +37,7 @@ motor lift_2 = motor(PORT11, ratio18_1, false);
 
 motor_group lift = motor_group(lift_1, lift_2);
 
-inertial inertial_sensor = inertial(PORT16);
+inertial inertial_sensor = inertial(PORT10);
 
 //digital_out chain_bar_pnuematics = digital_out(Brain.ThreeWirePort.C);
 
@@ -45,7 +45,7 @@ inertial inertial_sensor = inertial(PORT16);
 // Format is rotation(port, reversed)
 // just set these to random ports if you don't use tracking wheels
 rotation horizontal_tracker = rotation(PORT17, true);
-rotation vertical_tracker = rotation(PORT18, true);
+rotation vertical_tracker = rotation(PORT5, false);
 
 
 // Distance reset sensors
@@ -77,7 +77,7 @@ double wheel_distance_in = (36.0 / 60) * 3.25 * M_PI;
 // heading_correction_* : PID for heading correction during linear movement
 double distance_kp = 1.0, distance_ki = 0.15, distance_kd = 8.5; //tune p until the bot is barely 
 // oscillating, and d until the error band is centered around the target
-double turn_kp = 0.58, turn_ki = 0.14, turn_kd = 4.0;
+double turn_kp = 0.33, turn_ki = 0.15, turn_kd = 2.5;
 double heading_correction_kp = 0.6, heading_correction_ki = 0, heading_correction_kd = 4;
 
 
@@ -103,14 +103,14 @@ double vertical_tracker_diameter = 1.975; // Diameter of the vertical tracker wh
 // double front_sensor_offsetY = 6.5;
 // For the X offset, a negative value indicates that the sensor is located on the left side of the robot, while a positive value indicates that it is on the right side. 
 
-double left_sensor_offsetX  = -4.75;
-double left_sensor_offsetY  = -0.5;  
-double right_sensor_offsetX = 6.5;
+double left_sensor_offsetX  = -5.25;
+double left_sensor_offsetY  = -0.4;  
+double right_sensor_offsetX = 4.5;
 double right_sensor_offsetY = -0.5;
-double front_sensor_offsetX = 3.5;
-double front_sensor_offsetY = 4.5;
-double back_sensor_offsetX  = 4.0;
-double back_sensor_offsetY  = -2.5;
+double front_sensor_offsetX = 5;
+double front_sensor_offsetY = 1.25;
+double back_sensor_offsetX  = -6.5;
+double back_sensor_offsetY  = -1;
 
 
 // ============================================================================
