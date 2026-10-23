@@ -81,41 +81,50 @@ void RedRight() {
   setPose(-0.2, -63.7, 0);
   // startMcl();
   resetPositionBack();
+  lift.setVelocity(100, velocityUnits::pct);
+  lift.spinToPosition(200, degrees, true);
+  wait(100, msec);
+  lift.spinToPosition(0, degrees, true);
   driveTo(-6, 400, true, 12);//toggle #1
   driveTo(6, 300, true, 12);
   driveTo(-9, 450, true, 12);//toggle #2
   driveTo(5, 400, true, 12);
-  resetPositionBack();
-  //chain_bar_1.spinToPosition(50, degrees, 80, velocityUnits::pct, false);
-  boomerang(-23.4, -49.2, 1, 90, 0.4, 1400, true, 8);//drive to alliance goal
-  // resetPositionRight();
-  wait(800, msec);
-  //chain_bar_pnuematics.set(true); //drop preload in alliance goal
-  resetPositionLeft();
-  wait(400, msec);
+  lift.spinToPosition(240, degrees, false);
+  wait(200, msec);
 
-  /*moveToPoint(0, -59, -1, 700, false, 11.5); //drive back to prepare
+  //resetPositionBack();
+  //chain_bar_1.spinToPosition(50, degrees, 80, velocityUnits::pct, false);
+  driveTo(12, 800, true, 12);
+  turnToAngle(-90, 800,true,12);
+  boomerang(-20.5, -47.5, 1, 90, 0.4, 1400, true, 7);//drive to alliance goal
+  // resetPositionRight();
+  lift.setVelocity(50, velocityUnits::pct);
+  lift.spinToPosition(45, degrees, true);
+  claw.spin(reverse, 4, volt);
+  lift.spinToPosition(100, degrees, true);
+  wait(1000, msec);
+  //chain_bar_pnuematics.set(true); //drop preload in alliance goal
   //resetPositionLeft();
+
+ moveToPoint(0, -58.4, -1, 1000, false, 9); //drive back to prepare
+ lift.spinToPosition(0, degrees, false);
   turnToAngle(-90,500,true,12); //straighten out
-  resetPositionFront();
+  resetPositionLeft();
+  claw.spin(fwd, 12, volt);
   //boomerang(-0, -63.5, -1, 90, -0.6, 1200, true, 10);//drive to alliance goal
-  chain_bar_1.spinToPosition(0, degrees, 80, velocityUnits::pct, false);
   boomerang(-58.8, -61.7, 1, 90, 0.8, 1100, true, 6.5);//drive to pin
   turnToAngle(-46, 700, true, 12); //turn to righ to orientation for pin
 
 
   driveTo(10, 900, false, 2.6);//drive into pin
-  chain_bar_pnuematics.set(false);//pick up pin
-  driveTo(2.5, 500, true, 2);//drive into it
+  driveTo(5, 500, true, 4);//drive into it
   wait(200, msec);
-  cascade.spinToPosition(1200, degrees, 90, velocityUnits::pct, true); //lift
-  chain_bar_1.spinToPosition(55, degrees, 20, velocityUnits::pct, true);
-  turnToAngle(92, 700, true, 2.5); //turn to righ to orientation for pin
+  lift.spinToPosition(450, degrees, false);
+  turnToAngle(94, 700, true, 2.5); //turn to righ to orientation for pin
   //resetPositionRight();
-  driveTo(19.2, 1200, true, 7);
+  driveTo(23, 1200, true, 7);
+  lift.spinToPosition(0, degrees, true);
   wait(100, msec);
-  cascade.spinToPosition(550, degrees, 90, velocityUnits::pct, true); //lower
-  chain_bar_pnuematics.set(true);//set down up pin
 
   //driveTo(-10, 800, true, 12); //back out of alliance goal
   //boomerang(-20,-80,-1,120,0.3,1200,true,12);
@@ -140,9 +149,7 @@ void RedRight() {
   // boomerang(-24, -25, 1, 45, 0.3, 1500, false, 10);
 
 
-  driveTo(1.8, 1000, true, 3);
-  wait(3000, msec);
-  driveTo(-3.5, 1000, true, 8);
+ 
   //turnToAngle(50, 200, true, 5);
   //driveTo(10, 540, true, 5);
   //intake_pnuematics.set(false);
@@ -152,7 +159,7 @@ void RedRight() {
   //distanceReset('R', 'F', 334, 495);
   //moveToPoint(-2, -20, -1, 600, true, 12);
 
-*/
+
   
   //moveToPoint(-5, 25, 1, 750, true, 12);
   
@@ -161,6 +168,10 @@ void RedRight() {
 //(-0.2,-63.7) is starting point with the toggle on the back
 void BlueLeft(){
   setPose(-0.2, -63.7, 0);
+  lift.setVelocity(100, velocityUnits::pct);
+  lift.spinToPosition(200, degrees, true);
+  wait(100, msec);
+  lift.spinToPosition(0, degrees, true);
   // startMcl();
   resetPositionBack();
   //resetPositionLeft();
@@ -170,18 +181,22 @@ void BlueLeft(){
   driveTo(-9, 450, true, 12);//toggle #2
   driveTo(5, 400, true, 12);
   resetPositionBack();
+  lift.spinToPosition(250, degrees, false);
+
 
   //chain_bar_1.spinToPosition(52, degrees, 80, velocityUnits::pct, false);
   boomerang(22.2, -48.5, 1, 90, 0.4, 1500, true, 6);//drive to alliance goal
   resetPositionRight();
-  wait(700, msec);
+  lift.spinToPosition(0, degrees, true);
+  claw.spin(reverse, 12, volt);
   //chain_bar_pnuematics.set(true);//drop preload in alliance goal
-  wait(400, msec);
+  wait(100, msec);
   driveTo(-10, 700, true, 12);//back out of allaince goal
   resetPositionRight();
   boomerang(19, -56.5, 1, 90, 0.4, 1300, true, 10);
   turnToAngle(90, 200, true, 12);
   resetPositionRight();
+  claw.spin(fwd, 12, volt);
   driveTo(13, 800, true, 12);
   //chain_bar_1.spinToPosition(0, degrees, 80, velocityUnits::pct, false);
   driveChassis(3, 12);
@@ -194,11 +209,14 @@ void BlueLeft(){
   wait(200, msec);
   //cascade.spinToPosition(1400, degrees, 90, velocityUnits::pct, true); //lift
   //chain_bar_1.spinToPosition(300, degrees, 50, velocityUnits::pct, false);
+  lift.spinToPosition(450, degrees, false);
   boomerang(30, -45, 1, -90, 0.3, 2500, true, 6);
+  wait(300, msec);
   //cascade.spinToPosition(600, degrees, 70, velocityUnits::pct, true); //lift
   //chain_bar_1.spinToPosition(150, degrees, 50, velocityUnits::pct, true);
   //chain_bar_pnuematics.set(true);
-  wait(1000, msec);
+  lift.spinToPosition(0, degrees, true);
+  wait(300, msec);
   driveTo(-17, 1800, false, 12);
   turnToAngle(180, 1000, true, 12);
 
