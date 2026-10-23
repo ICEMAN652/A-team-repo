@@ -37,7 +37,7 @@ motor lift_2 = motor(PORT13, ratio18_1, false);
 
 motor_group lift = motor_group(lift_1, lift_2);
 
-inertial inertial_sensor = inertial(PORT10);
+inertial inertial_sensor = inertial(PORT9);
 
 //digital_out chain_bar_pnuematics = digital_out(Brain.ThreeWirePort.C);
 
