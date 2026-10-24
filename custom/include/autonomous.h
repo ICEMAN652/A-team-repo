@@ -7,4 +7,5 @@ void movetwoinch();
 void SAWP();
 void RedRight();
 void BlueLeft();
-void BlueLeftAutonTwo();
+void elims();
+void elims_2();
