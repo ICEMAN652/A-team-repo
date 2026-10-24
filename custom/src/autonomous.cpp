@@ -63,6 +63,7 @@ void exampleAuton() {
 //(64.4,0.2) is starting point with toggle odom pod on the line, intake facing center goal
 void elims() {
   lift.setVelocity(100, velocityUnits::pct);
+  driveTo( 6, 400, true, 12);//toggle #1
   setPose(-0.2, -62.7, 0);
   //lift.spinToPosition(220, degrees, true);
   //claw.spin(fwd, 6, volt);
@@ -98,10 +99,11 @@ void elims() {
 void elims_2() {
   lift.setVelocity(100, velocityUnits::pct);
   setPose(-0.2, -62.7, 0);
-  lift.spinToPosition(220, degrees, true);
+  lift.spinToPosition(320, degrees, true);
   //claw.spin(fwd, 6, volt);
   wait(100, msec);
   lift.spinToPosition(0, degrees, true);
+  wait(400, msec);
   // startMcl();
   resetPositionBack();
   //resetPositionRight();

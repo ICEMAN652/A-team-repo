@@ -220,8 +220,9 @@ void runPreAutonomous() {
   // Autonomous routines for the selector, in the order they appear on the Brain screen.
   // The first one is picked by default (until a choice is saved on the SD card).
   
-  addAuton("elims_2", elims_2);
   addAuton("elims", elims);
+  addAuton("elims_2", elims_2);
+  //addAuton("elims", elims);
 
   addAuton("SAWP", SAWP);
 
