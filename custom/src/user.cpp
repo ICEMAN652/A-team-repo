@@ -30,6 +30,7 @@ bool claw_toggle = false;
 bool r1_last_state = false;
 bool claw_up = false;
 bool r2_last_state = false;
+bool claw_reversing = false; // latched on by R2, off by the next R1/R2 press
 bool cascade_auto_moving = false;
 bool lift_homing = false; // true while Y is driving the lift down to 0
 const double LIFT_MAX_DEG = 1000.0; // top limit for L1, in motor degrees (360 = 1 rotation). 
@@ -149,12 +150,27 @@ void runDriver() {
     }
   
 
-    if (r1){
-      claw.spin(fwd, 12, volt);
-    }else if (r2){
+    // edge detect so a single press toggles, not every loop while held
+    bool r1_pressed = r1 && !r1_last_state;
+    bool r2_pressed = r2 && !r2_last_state;
+    r1_last_state = r1;
+    r2_last_state = r2;
+
+    if (claw_reversing) {
+      // R2 latches reverse on; the next R1 or R2 press turns it off
+      if (r1_pressed || r2_pressed) {
+        claw_reversing = false;
+      }
+    } else if (r2_pressed) {
+      claw_reversing = true;
+    }
+
+    if (claw_reversing){
       claw.spin(reverse, 12, volt);
+    }else if (r1){
+      claw.spin(fwd, 12, volt);
     }else{
-      claw.spin(fwd, 0, volt);
+      claw.stop(hold); // hold the cup in place when R1 is released
     }
 
 
@@ -203,8 +219,9 @@ void runPreAutonomous() {
 
   // Autonomous routines for the selector, in the order they appear on the Brain screen.
   // The first one is picked by default (until a choice is saved on the SD card).
-  addAuton("Red Right", RedRight);
   addAuton("SAWP", SAWP);
+  addAuton("Blue Left", BlueLeft);
+  addAuton("Red Right", RedRight);
   addAuton("Move 2 in", movetwoinch);
   addAuton("Blue Left", BlueLeft);
   addAuton("Blue Left 2", BlueLeftAutonTwo);
