@@ -57,6 +57,13 @@ void runDriver() {
     Brain.Screen.print("X: %.2f in | Y: %.2f in", x_pos, y_pos);
     Brain.Screen.setCursor(7, 1);
     Brain.Screen.print("Lift: %.0f deg     ", lift.position(degrees));
+    // lift motor diagnostics: connected?, temp (C), current (A), own encoder (deg)
+    Brain.Screen.setCursor(8, 1);
+    Brain.Screen.print("P12: %s %.0fC %.1fA %.0fdeg   ", lift_1.installed() ? "OK" : "DC",
+                       lift_1.temperature(celsius), lift_1.current(amp), lift_1.position(degrees));
+    Brain.Screen.setCursor(9, 1);
+    Brain.Screen.print("P13: %s %.0fC %.1fA %.0fdeg   ", lift_2.installed() ? "OK" : "DC",
+                       lift_2.temperature(celsius), lift_2.current(amp), lift_2.position(degrees));
 
       // true/false for controller button presses
       l1 = controller_1.ButtonL1.pressing();
@@ -122,12 +129,12 @@ void runDriver() {
 
     if (l1) {
       lift_homing = false; // manual input cancels the Y auto-down
-      // software hard stop: don't let the lift go past LIFT_MAX_DEG
-      if (lift.position(degrees) < LIFT_MAX_DEG) {
-        lift.spin(forward, 80, velocityUnits::pct);
-      } else {
-        lift.stop(hold);
-      }
+      // software hard stop disabled: lift no longer stops at LIFT_MAX_DEG
+      // if (lift.position(degrees) < LIFT_MAX_DEG) {
+        lift.spin(forward, 100, velocityUnits::pct);
+      // } else {
+      //   lift.stop(hold);
+      // }
     }else if (l2) {
       lift_homing = false;
       lift.spin(reverse, 50, velocityUnits::pct);
