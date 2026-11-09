@@ -32,8 +32,8 @@ motor claw = motor(PORT3, ratio6_1, true);
 
 //motor_group chain_bar = motor_group(chain_bar_1, chain_bar_2);    
 
-motor lift_1 = motor(PORT12, ratio18_1, true);  
-motor lift_2 = motor(PORT13, ratio18_1, false); 
+motor lift_1 = motor(PORT12, ratio36_1, true);  
+motor lift_2 = motor(PORT13, ratio36_1, false); 
 
 motor_group lift = motor_group(lift_1, lift_2);
 
