@@ -27,6 +27,7 @@ extern distance right_sensor;
 extern motor claw;
 extern motor lift_1;
 extern motor lift_2;
+extern motor active_toggle;
 extern motor_group lift;
 //extern motor_group chain_bar;
 

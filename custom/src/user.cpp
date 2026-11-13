@@ -30,10 +30,12 @@ bool claw_toggle = false;
 bool r1_last_state = false;
 bool claw_up = false;
 bool r2_last_state = false;
+bool b_last_state = false;
+bool toggle_b_moving = false; // true while B's 360 degree turn is running
 bool claw_reversing = false; // latched on by R2, off by the next R1/R2 press
 bool cascade_auto_moving = false;
 bool lift_homing = false; // true while Y is driving the lift down to 0
-const double LIFT_MAX_DEG = 975.0; // top limit for L1, in motor degrees (360 = 1 rotation). 
+//const double LIFT_MAX_DEG = 975.0; // top limit for L1, in motor degrees (360 = 1 rotation). 
 
 
 bool already_up = false;
@@ -129,15 +131,10 @@ void runDriver() {
 
     if (l1) {
       lift_homing = false; // manual input cancels the Y auto-down
-      // software hard stop: once the lift reaches LIFT_MAX_DEG it holds and won't go higher
-      if (lift.position(degrees) < LIFT_MAX_DEG) {
-        lift.spin(forward, 50, velocityUnits::pct);
-      } else {
-        lift.stop(hold);
-      }
+      lift.spin(forward, 100, velocityUnits::pct);
     }else if (l2) {
       lift_homing = false;
-      lift.spin(reverse, 50, velocityUnits::pct);
+      lift.spin(reverse, 100, velocityUnits::pct);
     }
     else if (button_y && !lift_homing){
       // start the move once; it keeps running after Y is released
@@ -185,6 +182,28 @@ void runDriver() {
     
 
     
+
+    // Active toggle (independent of the claw/lift logic):
+    //   R1 held -> spins continuously, stops (hold) as soon as R1 is released
+    //   B press -> one 360 degree turn, then holds
+    bool b_pressed = button_b && !b_last_state;
+    b_last_state = button_b;
+
+    if (r1) {
+      toggle_b_moving = false; // holding R1 overrides/cancels a B turn
+      active_toggle.spin(fwd, 12, volt);
+    } else if (b_pressed && !toggle_b_moving) {
+      toggle_b_moving = true;
+      active_toggle.setStopping(hold);
+      active_toggle.spinFor(forward, 360, degrees, 100, velocityUnits::pct, false); // false = don't block the drive loop
+    } else if (toggle_b_moving) {
+      // let the 360 finish; the motor holds on its own when done
+      if (active_toggle.isDone()) {
+        toggle_b_moving = false;
+      }
+    } else {
+      active_toggle.stop(hold);
+    }
 
     wait(20, msec);
 

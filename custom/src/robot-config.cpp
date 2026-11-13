@@ -20,20 +20,21 @@ controller controller_1 = controller(primary);
 // gearSetting is one of the following: ratio36_1(red), ratio18_1(green), ratio6_1(blue)
 // all chassis motors should be reversed appropriately so that they spin vertical when given a positive voltage input
 // such as driveChassis(12, 12)
-motor left_chassis1 = motor(PORT17, ratio6_1, true); 
-motor left_chassis2 = motor(PORT14, ratio6_1, true); 
+motor left_chassis1 = motor(PORT12, ratio6_1, true); 
+motor left_chassis2 = motor(PORT18, ratio6_1, true); 
 motor_group left_chassis = motor_group(left_chassis1, left_chassis2);
 motor right_chassis1 = motor(PORT16, ratio6_1, false); //right front 
-motor right_chassis2 = motor(PORT4, ratio6_1, false); //right back //recremp
+motor right_chassis2 = motor(PORT19, ratio6_1, false); //right back //recremp
 motor_group right_chassis = motor_group(right_chassis1, right_chassis2);
 
-motor claw = motor(PORT3, ratio6_1, true); 
+motor claw = motor(PORT1, ratio6_1, true); 
+motor active_toggle=motor(PORT13, ratio18_1, true);
 //motor chain_bar_2 = motor(PORT16, ratio18_1, true);
 
 //motor_group chain_bar = motor_group(chain_bar_1, chain_bar_2);    
 
-motor lift_1 = motor(PORT12, ratio36_1, true);  
-motor lift_2 = motor(PORT13, ratio36_1, false); 
+motor lift_1 = motor(PORT15, ratio36_1, true);  
+motor lift_2 = motor(PORT14, ratio36_1, false); 
 
 motor_group lift = motor_group(lift_1, lift_2);
 
@@ -44,8 +45,8 @@ inertial inertial_sensor = inertial(PORT9);
 
 // Format is rotation(port, reversed)
 // just set these to random ports if you don't use tracking wheels
-rotation horizontal_tracker = rotation(PORT17, true);
-rotation vertical_tracker = rotation(PORT5, false);
+rotation horizontal_tracker = rotation(PORT1, true);
+rotation vertical_tracker = rotation(PORT17, false);
 
 
 // Distance reset sensors
