@@ -27,18 +27,18 @@ motor right_chassis1 = motor(PORT16, ratio6_1, false); //right front
 motor right_chassis2 = motor(PORT19, ratio6_1, false); //right back //recremp
 motor_group right_chassis = motor_group(right_chassis1, right_chassis2);
 
-motor claw = motor(PORT1, ratio6_1, true); 
+motor claw = motor(PORT1, ratio18_1, true); 
 motor active_toggle=motor(PORT13, ratio18_1, true);
 //motor chain_bar_2 = motor(PORT16, ratio18_1, true);
 
 //motor_group chain_bar = motor_group(chain_bar_1, chain_bar_2);    
 
-motor lift_1 = motor(PORT15, ratio36_1, true);  
+motor lift_1 = motor(PORT3, ratio36_1, true);  
 motor lift_2 = motor(PORT14, ratio36_1, false); 
 
 motor_group lift = motor_group(lift_1, lift_2);
 
-inertial inertial_sensor = inertial(PORT9);
+inertial inertial_sensor = inertial(PORT5);
 
 //digital_out chain_bar_pnuematics = digital_out(Brain.ThreeWirePort.C);
 
@@ -53,10 +53,10 @@ rotation vertical_tracker = rotation(PORT17, false);
 
 
 // Set these to random ports if you are not using distance resets
-distance left_sensor = distance(PORT1);
-distance right_sensor = distance(PORT11); 
-distance back_sensor = distance(PORT15);
-distance front_sensor = distance(PORT20);
+distance left_sensor = distance(PORT9);
+distance right_sensor = distance(PORT8); 
+distance back_sensor = distance(PORT4);
+distance front_sensor = distance(PORT15);
 
 
 // ============================================================================
@@ -105,13 +105,13 @@ double vertical_tracker_diameter = 1.975; // Diameter of the vertical tracker wh
 // For the X offset, a negative value indicates that the sensor is located on the left side of the robot, while a positive value indicates that it is on the right side. 
 
 double left_sensor_offsetX  = -5.25;
-double left_sensor_offsetY  = -0.4;  
-double right_sensor_offsetX = 4.5;
-double right_sensor_offsetY = -0.5;
-double front_sensor_offsetX = 5;
-double front_sensor_offsetY = 1.25;
-double back_sensor_offsetX  = -6.5;
-double back_sensor_offsetY  = -1;
+double left_sensor_offsetY  = -5;  
+double right_sensor_offsetX = 5.5;
+double right_sensor_offsetY = -5;
+double front_sensor_offsetX = 7;
+double front_sensor_offsetY = -1.25;
+double back_sensor_offsetX  = 7;
+double back_sensor_offsetY  = -5;
 
 
 // ============================================================================
