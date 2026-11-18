@@ -9,3 +9,4 @@ void RedRight();
 void BlueLeft();
 void elims();
 void elims_2();
+void SKILLS();

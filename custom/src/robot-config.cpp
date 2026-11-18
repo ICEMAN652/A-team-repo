@@ -20,11 +20,11 @@ controller controller_1 = controller(primary);
 // gearSetting is one of the following: ratio36_1(red), ratio18_1(green), ratio6_1(blue)
 // all chassis motors should be reversed appropriately so that they spin vertical when given a positive voltage input
 // such as driveChassis(12, 12)
-motor left_chassis1 = motor(PORT12, ratio6_1, true); 
+motor left_chassis1 = motor(PORT20, ratio6_1, true); 
 motor left_chassis2 = motor(PORT18, ratio6_1, true); 
 motor_group left_chassis = motor_group(left_chassis1, left_chassis2);
 motor right_chassis1 = motor(PORT16, ratio6_1, false); //right front 
-motor right_chassis2 = motor(PORT19, ratio6_1, false); //right back //recremp
+motor right_chassis2 = motor(PORT9, ratio6_1, false); //right back //recremp
 motor_group right_chassis = motor_group(right_chassis1, right_chassis2);
 
 motor claw = motor(PORT1, ratio18_1, true); 
@@ -35,7 +35,7 @@ motor active_toggle=motor(PORT13, ratio18_1, true);
 
 motor lift_1 = motor(PORT3, ratio18_1, true);  
 motor lift_2 = motor(PORT14, ratio18_1, false); 
-motor lift_3 = motor(PORT9, ratio18_1, false);
+motor lift_3 = motor(PORT8, ratio18_1, false);
 
 motor_group lift = motor_group(lift_1, lift_2, lift_3);
 
@@ -47,15 +47,15 @@ inertial inertial_sensor = inertial(PORT5);
 // Format is rotation(port, reversed)
 // just set these to random ports if you don't use tracking wheels
 rotation horizontal_tracker = rotation(PORT1, true);
-rotation vertical_tracker = rotation(PORT17, false);
+rotation vertical_tracker = rotation(PORT17, true);
 
 
 // Distance reset sensors
 
 
 // Set these to random ports if you are not using distance resets
-distance left_sensor = distance(PORT9);
-distance right_sensor = distance(PORT8); 
+distance left_sensor = distance(PORT10);
+distance right_sensor = distance(PORT19); 
 distance back_sensor = distance(PORT4);
 distance front_sensor = distance(PORT15);
 
@@ -77,9 +77,9 @@ double wheel_distance_in = (36.0 / 60) * 3.25 * M_PI;
 // distance_* : Linear PID for straight driving
 // turn_*     : PID for turning in place
 // heading_correction_* : PID for heading correction during linear movement
-double distance_kp = 1.0, distance_ki = 0.15, distance_kd = 8.5; //tune p until the bot is barely 
+double distance_kp = 1.0, distance_ki = 0.14, distance_kd = 8.5; //tune p until the bot is barely 
 // oscillating, and d until the error band is centered around the target
-double turn_kp = 0.33, turn_ki = 0.15, turn_kd = 2.5;
+double turn_kp = 0.30, turn_ki = 0.15, turn_kd = 2;
 double heading_correction_kp = 0.6, heading_correction_ki = 0, heading_correction_kd = 4;
 
 
@@ -128,7 +128,7 @@ bool dir_change_start = true;   // Less accel/decel due to expecting direction c
 bool dir_change_end = true;     // Less accel/decel due to expecting direction change at end of movement
 
 
-double min_output = 10; // Minimum output voltage to motors while chaining movements
+double min_output = 6; // Minimum output voltage to motors while chaining movements
 
 
 // Maximum allowed change in voltage output per 10 msec during movement
