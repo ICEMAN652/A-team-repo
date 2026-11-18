@@ -33,10 +33,11 @@ motor active_toggle=motor(PORT13, ratio18_1, true);
 
 //motor_group chain_bar = motor_group(chain_bar_1, chain_bar_2);    
 
-motor lift_1 = motor(PORT3, ratio36_1, true);  
-motor lift_2 = motor(PORT14, ratio36_1, false); 
+motor lift_1 = motor(PORT3, ratio18_1, true);  
+motor lift_2 = motor(PORT14, ratio18_1, false); 
+motor lift_3 = motor(PORT9, ratio18_1, false);
 
-motor_group lift = motor_group(lift_1, lift_2);
+motor_group lift = motor_group(lift_1, lift_2, lift_3);
 
 inertial inertial_sensor = inertial(PORT5);
 
