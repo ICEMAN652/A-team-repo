@@ -247,17 +247,7 @@ void runPreAutonomous() {
   // The first one is picked by default (until a choice is saved on the SD card).
   //addAuton("Move 2 in", movetwoinch); pid  addAuton("Move 2 in", movetwoinch);
   addAuton("SKILLS", SKILLS);
-  addAuton("SAWP", SAWP);
-  addAuton("elims", elims);
-  addAuton("elims_2", elims_2);
-  //addAuton("elims", elims);
-
-  addAuton("SAWP", SAWP);
-
-  addAuton("Red Right", RedRight);
-
-  addAuton("Blue Left", BlueLeft);
-  addAuton("Move 2 in", movetwoinch);
+  addAuton("close_side_auto", close_side_auto);
   addAuton("Blue Left", BlueLeft);
   addAuton("Example", exampleAuton);
   startAutonSelector();

@@ -34,6 +34,7 @@
 
 
 //fix this function so that it can do the roller first and then move 2 inches
+//PID
 void movetwoinch(){
   driveTo(24, 1500, true, 12);
   //turnToAngle(90, 1300, true, 12);
@@ -60,78 +61,6 @@ void exampleAuton() {
   turnToAngle(90, 800, false);
   turnToAngle(180, 800, true);
 }
-//(64.4,0.2) is starting point with toggle odom pod on the line, intake facing center goal
-void elims() {
-  lift.setVelocity(100, velocityUnits::pct);
-  driveTo( 6, 400, true, 12);//toggle #1
-  setPose(-0.2, -62.7, 0);
-  //lift.spinToPosition(220, degrees, true);
-  //claw.spin(fwd, 6, volt);
-  wait(100, msec);
-  lift.spinToPosition(0, degrees, true);
-  // startMcl();
-  resetPositionBack();
-  //resetPositionRight();
-  //resetPositionLeft();
-  //moveToPoint(0, -6, 1, 400, true, 12);
-  driveTo(-6, 400, true, 12);//toggle #1
-  driveTo(6, 300, true, 12);
-  driveTo(-9, 450, true, 12);//toggle #2
-  driveTo(5, 400, true, 12);
-  lift.spinToPosition(310, degrees, false);
-  resetPositionBack();
-
-  //chain_bar_1.spinToPosition(50, degrees, 80, velocityUnits::pct, false);
-  boomerang(19, -48, 1, 90, 0.4, 1300, true, 10);//drive to alliance goal
-  claw.spin(fwd, 0, volt);
-  resetPositionRight();
-  lift.setVelocity(50, velocityUnits::pct);
-  lift.spinToPosition(30, degrees, true);
-  claw.spin(reverse, 12, volt);
-  wait(300, msec);
-  driveTo(-10, 700, true, 12);//back out of allaince goal
-  resetPositionRight();
-  lift.setVelocity(100, velocityUnits::pct);
-  
-
-}
-
-void elims_2() {
-  lift.setVelocity(100, velocityUnits::pct);
-  setPose(-0.2, -62.7, 0);
-  lift.spinToPosition(320, degrees, true);
-  //claw.spin(fwd, 6, volt);
-  wait(100, msec);
-  lift.spinToPosition(0, degrees, true);
-  wait(400, msec);
-  // startMcl();
-  resetPositionBack();
-  //resetPositionRight();
-  //resetPositionLeft();
-  //moveToPoint(0, -6, 1, 400, true, 12);
-  driveTo(-6, 400, true, 12);//toggle #1
-  driveTo(6, 300, true, 12);
-  driveTo(-9, 450, true, 12);//toggle #2
-  driveTo(5, 400, true, 12);
-  lift.spinToPosition(310, degrees, false);
-  resetPositionBack();
-
-  //chain_bar_1.spinToPosition(50, degrees, 80, velocityUnits::pct, false);
-  boomerang(19, -48, 1, 90, 0.4, 1300, true, 10);//drive to alliance goal
-  claw.spin(fwd, 0, volt);
-  resetPositionRight();
-  lift.setVelocity(50, velocityUnits::pct);
-  lift.spinToPosition(30, degrees, true);
-  claw.spin(reverse, 12, volt);
-  wait(300, msec);
-  driveTo(-10, 700, true, 12);//back out of allaince goal
-  resetPositionRight();
-  lift.setVelocity(100, velocityUnits::pct);
-  
-
-}
-
-//(-0.2,-63.7) is starting point with the toggle on the back
 
 void RedRight() {
  //double matchloader
@@ -297,118 +226,7 @@ void BlueLeft(){
 
 //unfinished routmoveToPoint(emoveToPoint(
 //(-0.2,-63.7) is starting point
-void SAWP(){
-  lift.setVelocity(100, velocityUnits::pct);
-  lift.spinToPosition(30, degrees, false);
-  setPose(-0.2, -62.7, 0);
-  //lift.spinToPosition(220, degrees, true);
-  //claw.spin(fwd, 6, volt);
-  //wait(100, msec);
-  //lift.spinToPosition(0, degrees, true);
-  // startMcl();
-  resetPositionBack();
-  //resetPositionRight();
-  //resetPositionLeft();
-  //moveToPoint(0, -6, 1, 400, true, 12);
-  active_toggle.spin(fwd,12,volt);
-  wait(460, msec);
-  lift.spinToPosition(210, degrees, false);
-  //resetPositionBack();
-
-  //chain_bar_1.spinToPosition(50, degrees, 80, velocityUnits::pct, false);
-  //boomerang(22, -49, 1, 90, 0.4, 1400, true, 8);//drive to alliance goal
-  driveTo(10, 800, false, 12);
-  turnToAngle(90, 700, false, 12);
-  driveTo(22, 1000, true, 12);
-  claw.spin(fwd, 0, volt);
-  resetPositionRight();
-  lift.setVelocity(50, velocityUnits::pct);
-  lift.spinToPosition(0, degrees, true);
-  wait(200,msec);
-  claw.spin(reverse, 12, volt);
-  wait(100, msec);
-  lift.spinToPosition(90, degrees, false);
-  driveTo(-12, 800, true, 12);//back out of allaince goal
-  lift.spinToPosition(0, degrees, false);
-  resetPositionRight();
-  lift.setVelocity(100, velocityUnits::pct);
-  //chain_bar_1.spinToPosition(0, degrees, 80, velocityUnits::pct, false);
-  turnToAngle(45, 750, true, 12);
-  claw.spin(fwd, 12, volt);
- /* boomerang(21, -31, 1, 30, 0.3, 1200, true, 9);//drive to the first pin stack and align
-  //driveTo(6, 750, false, 5);//drive into it
-  //wait(100, msec);
-  //chain_bar_pnuematics.set(false);//got the first pin stack on allaiance line
-  wait(150, msec);
-  claw.spin(reverse,12,volt);
-  driveTo(6, 500, false, 3);//drive into it
-  claw.spin(fwd,12,volt);
-  driveTo(3, 500, true, 3);
-  lift.spinToPosition(200, degrees, false);
-  //cascade.spinToPosition(1420, degrees, 90, velocityUnits::pct, false);
-  turnToAngle(135, 1100, false, 9);
-  boomerang(24, -46.5, 1, 180, 0.4, 1000, true, 11);//drive back to allaicne goal
-  //chain_bar_1.spinToPosition(50, degrees, 80, velocityUnits::pct, false);
-  wait(100, msec);
-  lift.setVelocity(60, velocityUnits::pct);
-  claw.spin(fwd, 0, volt);
-  lift.spinToPosition(0, degrees, true);
-  claw.spin(reverse, 12, volt);
-  //cascade.spinToPosition(550, degrees, 90, velocityUnits::pct, true); //lower b4 score
-  //chain_bar_pnuematics.set(true);//score the pin stack on allaince goal
-  //cascade.spinToPosition(1220, degrees, 90, velocityUnits::pct, false);
-/*
-  driveTo(-8, 550, false, 10);
-  //cascade.spinToPosition(0, degrees, 90, velocityUnits::pct, false);
-  //chain_bar_1.spinToPosition(0, degrees, 90, velocityUnits::pct, false);
-  turnToAngle(180, 400, true, 12);
-  resetPositionLeft();
-  //turnToAngle(155, 800, true, 12);
-  //claw.spin(fwd, 12, volt);
-  boomerang(36, -38, 1, 134, 0.3, 1500, true, 7);
-  wait(300, msec);
-  claw.spin(reverse, 12, volt);
-  //driveTo(4.2, 700, false, 5);//drive into it
-  //chain_bar_pnuematics.set(false);//pick up pin
-  driveTo(8, 600, false, 5);//drive into it
-  claw.spin(fwd,12,volt);
-  driveTo(5, 400, true, 5);
-  //cascade.spinToPosition(800, degrees, 90, velocityUnits::pct, false);
-  wait(120, msec);
-  lift.spinToPosition(200, degrees, false);
-  moveToPoint(17, -13, -1, 900, false, 10);
-  //moveToPoint(-18, -60, 1, 1000, false, 12);
-  //turnToAngle(-90, 200, true, 12);
-  //cascade.spinToPosition(1450, degrees, 90, velocityUnits::pct, false);
-  //chain_bar_1.spinToPosition(60, degrees, 100, velocityUnits::pct, false);
-  lift.spinToPosition(200, degrees, false);
-  lift.setVelocity(45, velocityUnits::pct);
-  boomerang(-28, -45.5, 1, 270, 0.4, 1650, true, 11);
-  claw.spin(fwd, 0, volt);
-  lift.spinToPosition(70, degrees, true);
-  //cascade.spinToPosition(800, degrees, 100, velocityUnits::pct, true); //lower b4 score
-  //chain_bar_pnuematics.set(true);//pick up pin
-  driveTo(-10, 800, false, 9);
-  turnToAngle(0, 800, true, 12);
-  resetPositionBack();
-  claw.spin(fwd, 12, volt);*/
- /* boomerang(-0.5, -26, 1, 0, 0.2, 900, false, 10);
-  driveTo(7, 500, true, 5);
-  wait(100, msec);
-  lift.spinToPosition(500, degrees, false);
-  boomerang(0,-5,1,0,0.2,900,true,11);
-  lift.spinToPosition(0, degrees, true);
-  claw.spin(fwd, 0, volt);
-  wait(500, msec);
-*/
-
-
-  
-
-
-  
-}
-void SKILLS(){
+void close_side_auto(){
   lift.setVelocity(100, velocityUnits::pct);
   lift.spinToPosition(30, degrees, false);
   setPose(-0.2, -62.7, 0);
@@ -526,9 +344,136 @@ void SKILLS(){
   wait(500, msec);
 
 */
-moveToPoint(50, -50, 1, 1000, false, 12);
-lift.spinToPosition(0, degrees, false);
-turnToAngle(180, 600, true, 12);
+
+
+  
+}
+void SKILLS(){
+  lift.setVelocity(100, velocityUnits::pct);
+  lift.spinToPosition(30, degrees, false);
+  setPose(-0.2, -62.7, 0);
+  //lift.spinToPosition(220, degrees, true);
+  //claw.spin(fwd, 6, volt);
+  //wait(100, msec);
+  //lift.spinToPosition(0, degrees, true);
+  // startMcl();
+  resetPositionBack();
+  //resetPositionRight();
+  //resetPositionLeft();
+  //moveToPoint(0, -6, 1, 400, true, 12);
+  active_toggle.spin(fwd,12,volt);
+  wait(460, msec);
+  lift.spinToPosition(210, degrees, false);
+  //resetPositionBack();
+
+  //chain_bar_1.spinToPosition(50, degrees, 80, velocityUnits::pct, false);
+  //boomerang(22, -49, 1, 90, 0.4, 1400, true, 8);//drive to alliance goal
+  driveTo(7.7, 800, false, 9);
+  turnToAngle(90, 700, false, 12);
+  driveTo(24, 1000, true, 10);
+  claw.spin(fwd, 0, volt);
+  resetPositionRight();
+  lift.setVelocity(50, velocityUnits::pct);
+  lift.spinToPosition(20, degrees, true);
+  wait(200,msec);
+  claw.spin(reverse, 12, volt);
+  wait(100, msec);
+  lift.spinToPosition(90, degrees, false);
+  driveTo(-7, 450, true, 12);//back out of allaince goal
+  lift.spinToPosition(0, degrees, false);
+  //resetPositionRight();
+  lift.setVelocity(100, velocityUnits::pct);
+  //chain_bar_1.spinToPosition(0, degrees, 80, velocityUnits::pct, false);
+  //turnToAngle(45, 550, false, 12);
+  claw.spin(fwd, 12, volt);
+  turnToAngle(32, 860, true, 9);
+  driveTo(16.3, 1000, true, 12);
+  //boomerang(14.94, -33, 1, 30, 0.2, 1400, true, 7);//drive to the first pin stack and align
+  //driveTo(6, 750, false, 5);//drive into it
+  //wait(100, msec);
+  //chain_bar_pnuematics.set(false);//got the first pin stack on allaiance line
+  wait(150, msec); 
+  claw.spin(reverse,12,volt);
+  driveTo(4, 600, false, 3);//drive into it
+  claw.spin(fwd,12,volt);
+  driveTo(3, 500, true, 3);
+  lift.setVelocity(70, velocityUnits::pct);
+  lift.spinToPosition(30, degrees, true);
+  lift.spinToPosition(460, degrees, false);
+  //cascade.spinToPosition(1420, degrees, 90, velocityUnits::pct, false);
+  turnToAngle(135, 1100, false, 9);
+  boomerang(21.5, -48.5, 1, 186, 0.4, 1000, true, 11);//drive back to allaicne goal
+  //chain_bar_1.spinToPosition(50, degrees, 80, velocityUnits::pct, false);
+  wait(100, msec);
+  lift.setVelocity(60, velocityUnits::pct);
+  claw.spin(fwd, 0, volt);
+  lift.spinToPosition(70, degrees, true);
+  claw.spin(reverse, 12, volt);
+  wait(100, msec);
+  //cascade.spinToPosition(550, degrees, 90, velocityUnits::pct, true); //lower b4 score
+  //chain_bar_pnuematics.set(true);//score the pin stack on allaince goal
+  //cascade.spinToPosition(1220, degrees, 90, velocityUnits::pct, false);
+
+  driveTo(-8, 550, false, 10);
+  lift.spinToPosition(0, degrees, false);
+  //cascade.spinToPosition(0, degrees, 90, velocityUnits::pct, false);
+  //chain_bar_1.spinToPosition(0, degrees, 90, velocityUnits::pct, false);
+  turnToAngle(180, 400, true, 12);
+  resetPositionLeft();
+  //turnToAngle(155, 800, true, 12);
+  //claw.spin(fwd, 12, volt);
+  boomerang(33.6, -36, 1, 134, 0.3, 1500, true, 7);
+  wait(300, msec);
+  claw.spin(reverse, 12, volt);
+  //driveTo(4.2, 700, false, 5);//drive into it
+  //chain_bar_pnuematics.set(false);//pick up pin
+  driveTo(13, 950, false, 5.5);//drive into it
+  lift.setVelocity(60, velocityUnits::pct);
+  claw.spin(fwd,12,volt);
+  driveTo(5, 400, true, 5);
+  lift.spinToPosition(50, degrees, true);
+  lift.spinToPosition(960, degrees, false);
+  //cascade.spinToPosition(800, degrees, 90, velocityUnits::pct, false);
+  wait(120, msec);
+  turnToAngle(-90, 800, true, 12);
+  boomerang(22, -44.5, 1, -90, 0.3, 1458, true, 8);
+  lift.spinToPosition(400, degrees, true);
+  claw.spin(reverse,12,volt);
+  //lift.spinToPosition(700, degrees, true);
+  wait(200, msec);
+  moveToPoint(70, -60, 1, 1000, false, 12);
+  Brain.Screen.print("HI ANISH");
+    // lift motor diagnostics: connected?, temp (C), current (A), own encoder (deg)
+    Brain.Screen.setCursor(10, 1);
+  lift.spinToPosition(0, degrees, false);
+  turnToAngle(180, 600, true, 12);
+
+  /*moveToPoint(17, -13, -1, 900, false, 10);
+  //moveToPoint(-18, -60, 1, 1000, false, 12);
+  //turnToAngle(-90, 200, true, 12);
+  //cascade.spinToPosition(1450, degrees, 90, velocityUnits::pct, false);
+  //chain_bar_1.spinToPosition(60, degrees, 100, velocityUnits::pct, false);
+  lift.spinToPosition(200, degrees, false);
+  lift.setVelocity(45, velocityUnits::pct);
+  boomerang(-28, -45.5, 1, 270, 0.4, 1650, true, 11);
+  claw.spin(fwd, 0, volt);
+  lift.spinToPosition(70, degrees, true);
+  //cascade.spinToPosition(800, degrees, 100, velocityUnits::pct, true); //lower b4 score
+  //chain_bar_pnuematics.set(true);//pick up pin
+  driveTo(-10, 800, false, 9);
+  turnToAngle(0, 800, true, 12);
+  resetPositionBack();
+  claw.spin(fwd, 12, volt);*/
+ /* boomerang(-0.5, -26, 1, 0, 0.2, 900, false, 10);
+  driveTo(7, 500, true, 5);
+  wait(100, msec);
+  lift.spinToPosition(500, degrees, false);
+  boomerang(0,-5,1,0,0.2,900,true,11);
+  lift.spinToPosition(0, degrees, true);
+  claw.spin(fwd, 0, volt);
+  wait(500, msec);
+
+*/
 
   
 }

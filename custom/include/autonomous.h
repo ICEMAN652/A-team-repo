@@ -4,9 +4,7 @@
 
 void exampleAuton();
 void movetwoinch();
-void SAWP();
+void close_side_auto();
 void RedRight();
 void BlueLeft();
-void elims();
-void elims_2();
 void SKILLS();
