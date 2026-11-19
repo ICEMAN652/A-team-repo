@@ -6,6 +6,9 @@ VERBOSE = 0
 # include toolchain options
 include vex/mkenv.mk
 
+# warn if this code is behind GitHub (see custom/update-check.mk)
+-include custom/update-check.mk
+
 # location of the project source cpp and c files
 SRC_C  = $(wildcard src/*.cpp) 
 SRC_C += $(wildcard src/*.c)
