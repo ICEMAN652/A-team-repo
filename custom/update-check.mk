@@ -5,13 +5,17 @@
 # internet, no git, or the branch isn't tracking GitHub, it stays quiet and the build goes on.
 #
 # Set UPDATE_CHECK_STRICT = 1 below to stop the build instead of just warning.
-UPDATE_CHECK_STRICT = 0
+UPDATE_CHECK_STRICT = 1
 
 ifeq ($(OS),Windows_NT)
 UC_NULL = nul
 else
 UC_NULL = /dev/null
 endif
+
+# Run the check only once per build, even if this file gets included twice
+ifndef UPDATE_CHECK_LOADED
+UPDATE_CHECK_LOADED = 1
 
 # Skip on `make clean`
 ifneq ($(MAKECMDGOALS),clean)
@@ -37,6 +41,8 @@ $(info )
 endif
 endif
 endif
+endif
+
 endif
 
 endif

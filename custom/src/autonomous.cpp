@@ -10,6 +10,7 @@
 #include "../include/robot-config.h"
 #include "motor-control.h"
 #include "../include/field-resets.h"
+#include "../include/lift.h"
 
 // Adding a new auton:
 // 1. Write the function in this file.
@@ -350,7 +351,7 @@ void close_side_auto(){
 }
 void SKILLS(){
   lift.setVelocity(100, velocityUnits::pct);
-  lift.spinToPosition(30, degrees, false);
+  liftTo(30, false);
   setPose(-0.2, -62.7, 0);
   //lift.spinToPosition(220, degrees, true);
   //claw.spin(fwd, 6, volt);
@@ -363,7 +364,7 @@ void SKILLS(){
   //moveToPoint(0, -6, 1, 400, true, 12);
   active_toggle.spin(fwd,12,volt);
   wait(460, msec);
-  lift.spinToPosition(210, degrees, false);
+  liftTo(210, false);
   //resetPositionBack();
 
   //chain_bar_1.spinToPosition(50, degrees, 80, velocityUnits::pct, false);
@@ -374,13 +375,13 @@ void SKILLS(){
   claw.spin(fwd, 0, volt);
   resetPositionRight();
   lift.setVelocity(50, velocityUnits::pct);
-  lift.spinToPosition(20, degrees, true);
+  liftTo(20, true);
   wait(200,msec);
   claw.spin(reverse, 12, volt);
   wait(100, msec);
-  lift.spinToPosition(90, degrees, false);
+  liftTo(90, false);
   driveTo(-7, 450, true, 12);//back out of allaince goal
-  lift.spinToPosition(0, degrees, false);
+  liftTo(0, false);
   //resetPositionRight();
   lift.setVelocity(100, velocityUnits::pct);
   //chain_bar_1.spinToPosition(0, degrees, 80, velocityUnits::pct, false);
@@ -398,8 +399,8 @@ void SKILLS(){
   claw.spin(fwd,12,volt);
   driveTo(3, 500, true, 3);
   lift.setVelocity(70, velocityUnits::pct);
-  lift.spinToPosition(30, degrees, true);
-  lift.spinToPosition(460, degrees, false);
+  liftTo(30, true);
+  liftTo(460, false);
   //cascade.spinToPosition(1420, degrees, 90, velocityUnits::pct, false);
   turnToAngle(135, 1100, false, 9);
   boomerang(21.5, -48.5, 1, 186, 0.4, 1000, true, 11);//drive back to allaicne goal
@@ -407,7 +408,7 @@ void SKILLS(){
   wait(100, msec);
   lift.setVelocity(60, velocityUnits::pct);
   claw.spin(fwd, 0, volt);
-  lift.spinToPosition(70, degrees, true);
+  liftTo(70, true);
   claw.spin(reverse, 12, volt);
   wait(100, msec);
   //cascade.spinToPosition(550, degrees, 90, velocityUnits::pct, true); //lower b4 score
@@ -415,7 +416,7 @@ void SKILLS(){
   //cascade.spinToPosition(1220, degrees, 90, velocityUnits::pct, false);
 
   driveTo(-8, 550, false, 10);
-  lift.spinToPosition(0, degrees, false);
+  liftTo(0, false);
   //cascade.spinToPosition(0, degrees, 90, velocityUnits::pct, false);
   //chain_bar_1.spinToPosition(0, degrees, 90, velocityUnits::pct, false);
   turnToAngle(180, 400, true, 12);
@@ -431,21 +432,22 @@ void SKILLS(){
   lift.setVelocity(60, velocityUnits::pct);
   claw.spin(fwd,12,volt);
   driveTo(5, 400, true, 5);
-  lift.spinToPosition(50, degrees, true);
-  lift.spinToPosition(960, degrees, false);
+  liftTo(50, true);
+  liftTo(960, false);
   //cascade.spinToPosition(800, degrees, 90, velocityUnits::pct, false);
   wait(120, msec);
   turnToAngle(-90, 800, true, 12);
   boomerang(22, -44.5, 1, -90, 0.3, 1458, true, 8);
-  lift.spinToPosition(400, degrees, true);
+  liftTo(400, true, 800);
   claw.spin(reverse,12,volt);
   //lift.spinToPosition(700, degrees, true);
   wait(200, msec);
   moveToPoint(70, -60, 1, 1000, false, 12);
   Brain.Screen.print("HI ANISH");
-    // lift motor diagnostics: connected?, temp (C), current (A), own encoder (deg)
-    Brain.Screen.setCursor(10, 1);
-  lift.spinToPosition(0, degrees, false);
+  // lift motor diagnostics: connected?, temp (C), current (A), own encoder (deg)  
+  Brain.Screen.setCursor(10, 1);
+  claw.spin(fwd,12,volt);
+  liftTo(0, false);
   turnToAngle(180, 600, true, 12);
 
   /*moveToPoint(17, -13, -1, 900, false, 10);
