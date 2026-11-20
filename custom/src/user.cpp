@@ -33,6 +33,7 @@ bool r2_last_state = false;
 bool b_last_state = false;
 bool toggle_b_moving = false; // true while B's 360 degree turn is running
 bool claw_reversing = false; // latched on by R2, off by the next R1/R2 press
+bool claw_idle_spin = false; // true after R1 intake -> claw holds at 2V; cleared by R2
 bool cascade_auto_moving = false;
 bool lift_homing = false; // true while Y is driving the lift down to 0
 //const double LIFT_MAX_DEG = 975.0; // top limit for L1, in motor degrees (360 = 1 rotation). 
@@ -169,12 +170,22 @@ void runDriver() {
       claw_reversing = true;
     }
 
+    // R1 arms the 2V idle spin (after intaking); R2 disarms it until R1 is pressed again
+    if (r1) {
+      claw_idle_spin = true;
+    }
+    if (r2_pressed) {
+      claw_idle_spin = false;
+    }
+
     if (claw_reversing){
       claw.spin(reverse, 12, volt);
     }else if (r1){
       claw.spin(fwd, 12, volt);
+    }else if (claw_idle_spin){
+      claw.spin(fwd, 2, volt); // keep light pressure on the cup after intaking
     }else{
-      claw.stop(hold); // hold the cup in place when R1 is released
+      claw.stop(hold);
     }
 
 

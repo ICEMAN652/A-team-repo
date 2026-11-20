@@ -472,7 +472,7 @@ void SKILLS(){
   liftTo(200, false);
   turnToAngle(0, 1000, true, 12);
   resetPositionRight();
-  boomerang(47, -24, 1, 0, 0.3, 800, true, 9);
+  boomerang(47, -22, 1, 0, 0.3, 800, true, 9);
   liftTo(50, true);
   
 

@@ -1,86 +1,86 @@
 {
-    "env": {
-        "vex_compilerPath": "${config:vexrobotics.vexcode.Cpp.Toolchain.Path}\\clang\\bin\\clang.exe",
-        "vex_sdkPath": "${config:vexrobotics.vexcode.Cpp.Sdk.Home}\\V5\\V5_20240802_15_00_00\\vexv5",
-        "vex_gcc": "${vex_sdkPath}/gcc/include/c++/4.9.3",
-        "vex_sdkIncludes": [
-            "${vex_sdkPath}/clang/8.0.0/include/**",
-            "${vex_gcc}/**",
-            "${vex_gcc}/arm-none-eabi/thumb",
-            "${vex_sdkPath}/gcc/include",
-            "${vex_sdkPath}/include/**",
-            "${workspaceFolder}/include/**",
-            "${workspaceFolder}/src/**"
-        ]
-    },
-    "configurations": [
-        {
-            "name": "Win32",
-            "includePath": [
-                "c:/Users/manav/AppData/Roaming/Code/User/globalStorage/vexrobotics.vexcode/sdk/cpp/V5/V5_20240802_15_00_00/vexv5/clang/8.0.0/include/**",
-                "c:/Users/manav/AppData/Roaming/Code/User/globalStorage/vexrobotics.vexcode/sdk/cpp/V5/V5_20240802_15_00_00/vexv5/gcc/include/c++/4.9.3/**",
-                "c:/Users/manav/AppData/Roaming/Code/User/globalStorage/vexrobotics.vexcode/sdk/cpp/V5/V5_20240802_15_00_00/vexv5/gcc/include/c++/4.9.3/arm-none-eabi/thumb",
-                "c:/Users/manav/AppData/Roaming/Code/User/globalStorage/vexrobotics.vexcode/sdk/cpp/V5/V5_20240802_15_00_00/vexv5/gcc/include",
-                "c:/Users/manav/AppData/Roaming/Code/User/globalStorage/vexrobotics.vexcode/sdk/cpp/V5/V5_20240802_15_00_00/vexv5/include/**",
-                "c:/Users/manav/Desktop/Python/A-team-repo/include/**",
-                "c:/Users/manav/Desktop/Python/A-team-repo/src/**",
-                "${workspaceFolder}/.git"
-            ],
-            "compilerPath": "c:\\Users\\manav\\AppData\\Roaming\\Code\\User\\globalStorage\\vexrobotics.vexcode\\tools\\cpp\\toolchain_win32\\clang\\bin\\clang.exe",
-            "cStandard": "gnu99",
-            "cppStandard": "gnu++11",
-            "intelliSenseMode": "windows-clang-x86",
-            "compilerPathInCppPropertiesJson": "c:\\Users\\manav\\AppData\\Roaming\\Code\\User\\globalStorage\\vexrobotics.vexcode\\tools\\cpp\\toolchain_win32\\clang\\bin\\clang.exe",
-            "mergeConfigurations": false,
-            "recursiveIncludes": {},
-            "browse": {
-                "limitSymbolsToIncludedHeaders": true
-            }
-        },
-        {
-            "name": "Mac",
-            "includePath": [
-                "c:/Users/manav/AppData/Roaming/Code/User/globalStorage/vexrobotics.vexcode/sdk/cpp/V5/V5_20240802_15_00_00/vexv5/clang/8.0.0/include/**",
-                "c:/Users/manav/AppData/Roaming/Code/User/globalStorage/vexrobotics.vexcode/sdk/cpp/V5/V5_20240802_15_00_00/vexv5/gcc/include/c++/4.9.3/**",
-                "c:/Users/manav/AppData/Roaming/Code/User/globalStorage/vexrobotics.vexcode/sdk/cpp/V5/V5_20240802_15_00_00/vexv5/gcc/include/c++/4.9.3/arm-none-eabi/thumb",
-                "c:/Users/manav/AppData/Roaming/Code/User/globalStorage/vexrobotics.vexcode/sdk/cpp/V5/V5_20240802_15_00_00/vexv5/gcc/include",
-                "c:/Users/manav/AppData/Roaming/Code/User/globalStorage/vexrobotics.vexcode/sdk/cpp/V5/V5_20240802_15_00_00/vexv5/include/**",
-                "c:/Users/manav/Desktop/Python/A-team-repo/include/**",
-                "c:/Users/manav/Desktop/Python/A-team-repo/src/**"
-            ],
-            "compilerPath": "c:\\Users\\manav\\AppData\\Roaming\\Code\\User\\globalStorage\\vexrobotics.vexcode\\tools\\cpp\\toolchain_win32\\clang\\bin\\clang.exe",
-            "cStandard": "gnu99",
-            "cppStandard": "gnu++11",
-            "intelliSenseMode": "macos-clang-x86",
-            "compilerPathInCppPropertiesJson": "c:\\Users\\manav\\AppData\\Roaming\\Code\\User\\globalStorage\\vexrobotics.vexcode\\tools\\cpp\\toolchain_win32\\clang\\bin\\clang.exe",
-            "mergeConfigurations": false,
-            "recursiveIncludes": {},
-            "browse": {
-                "limitSymbolsToIncludedHeaders": true
-            }
-        },
-        {
-            "name": "Linux",
-            "includePath": [
-                "c:/Users/manav/AppData/Roaming/Code/User/globalStorage/vexrobotics.vexcode/sdk/cpp/V5/V5_20240802_15_00_00/vexv5/clang/8.0.0/include/**",
-                "c:/Users/manav/AppData/Roaming/Code/User/globalStorage/vexrobotics.vexcode/sdk/cpp/V5/V5_20240802_15_00_00/vexv5/gcc/include/c++/4.9.3/**",
-                "c:/Users/manav/AppData/Roaming/Code/User/globalStorage/vexrobotics.vexcode/sdk/cpp/V5/V5_20240802_15_00_00/vexv5/gcc/include/c++/4.9.3/arm-none-eabi/thumb",
-                "c:/Users/manav/AppData/Roaming/Code/User/globalStorage/vexrobotics.vexcode/sdk/cpp/V5/V5_20240802_15_00_00/vexv5/gcc/include",
-                "c:/Users/manav/AppData/Roaming/Code/User/globalStorage/vexrobotics.vexcode/sdk/cpp/V5/V5_20240802_15_00_00/vexv5/include/**",
-                "c:/Users/manav/Desktop/Python/A-team-repo/include/**",
-                "c:/Users/manav/Desktop/Python/A-team-repo/src/**"
-            ],
-            "compilerPath": "",
-            "cStandard": "gnu99",
-            "cppStandard": "gnu++11",
-            "intelliSenseMode": "linux-clang-x86",
-            "compilerPathInCppPropertiesJson": "",
-            "mergeConfigurations": false,
-            "recursiveIncludes": {},
-            "browse": {
-                "limitSymbolsToIncludedHeaders": true
-            }
-        }
-    ],
-    "version": 4
+	"env": {
+		"vex_compilerPath": "${config:vexrobotics.vexcode.Cpp.Toolchain.Path}/clang/bin/clang",
+		"vex_sdkPath": "${config:vexrobotics.vexcode.Cpp.Sdk.Home}/V5/V5_20240802_15_00_00/vexv5",
+		"vex_gcc": "${vex_sdkPath}/gcc/include/c++/4.9.3",
+		"vex_sdkIncludes": [
+			"${vex_sdkPath}/clang/8.0.0/include/**",
+			"${vex_gcc}/**",
+			"${vex_gcc}/arm-none-eabi/thumb",
+			"${vex_sdkPath}/gcc/include",
+			"${vex_sdkPath}/include/**",
+			"${workspaceFolder}/include/**",
+			"${workspaceFolder}/src/**"
+		]
+	},
+	"configurations": [
+		{
+			"name": "Win32",
+			"includePath": [
+				"c:/Users/manav/AppData/Roaming/Code/User/globalStorage/vexrobotics.vexcode/sdk/cpp/V5/V5_20240802_15_00_00/vexv5/clang/8.0.0/include/**",
+				"c:/Users/manav/AppData/Roaming/Code/User/globalStorage/vexrobotics.vexcode/sdk/cpp/V5/V5_20240802_15_00_00/vexv5/gcc/include/c++/4.9.3/**",
+				"c:/Users/manav/AppData/Roaming/Code/User/globalStorage/vexrobotics.vexcode/sdk/cpp/V5/V5_20240802_15_00_00/vexv5/gcc/include/c++/4.9.3/arm-none-eabi/thumb",
+				"c:/Users/manav/AppData/Roaming/Code/User/globalStorage/vexrobotics.vexcode/sdk/cpp/V5/V5_20240802_15_00_00/vexv5/gcc/include",
+				"c:/Users/manav/AppData/Roaming/Code/User/globalStorage/vexrobotics.vexcode/sdk/cpp/V5/V5_20240802_15_00_00/vexv5/include/**",
+				"c:/Users/manav/Desktop/Python/A-team-repo/include/**",
+				"c:/Users/manav/Desktop/Python/A-team-repo/src/**",
+				"${workspaceFolder}/.git"
+			],
+			"compilerPath": "c:\\Users\\manav\\AppData\\Roaming\\Code\\User\\globalStorage\\vexrobotics.vexcode\\tools\\cpp\\toolchain_win32\\clang\\bin\\clang.exe",
+			"cStandard": "gnu99",
+			"cppStandard": "gnu++11",
+			"intelliSenseMode": "windows-clang-x86",
+			"compilerPathInCppPropertiesJson": "c:\\Users\\manav\\AppData\\Roaming\\Code\\User\\globalStorage\\vexrobotics.vexcode\\tools\\cpp\\toolchain_win32\\clang\\bin\\clang.exe",
+			"mergeConfigurations": false,
+			"recursiveIncludes": {},
+			"browse": {
+				"limitSymbolsToIncludedHeaders": true
+			}
+		},
+		{
+			"name": "Mac",
+			"includePath": [
+				"c:/Users/manav/AppData/Roaming/Code/User/globalStorage/vexrobotics.vexcode/sdk/cpp/V5/V5_20240802_15_00_00/vexv5/clang/8.0.0/include/**",
+				"c:/Users/manav/AppData/Roaming/Code/User/globalStorage/vexrobotics.vexcode/sdk/cpp/V5/V5_20240802_15_00_00/vexv5/gcc/include/c++/4.9.3/**",
+				"c:/Users/manav/AppData/Roaming/Code/User/globalStorage/vexrobotics.vexcode/sdk/cpp/V5/V5_20240802_15_00_00/vexv5/gcc/include/c++/4.9.3/arm-none-eabi/thumb",
+				"c:/Users/manav/AppData/Roaming/Code/User/globalStorage/vexrobotics.vexcode/sdk/cpp/V5/V5_20240802_15_00_00/vexv5/gcc/include",
+				"c:/Users/manav/AppData/Roaming/Code/User/globalStorage/vexrobotics.vexcode/sdk/cpp/V5/V5_20240802_15_00_00/vexv5/include/**",
+				"c:/Users/manav/Desktop/Python/A-team-repo/include/**",
+				"c:/Users/manav/Desktop/Python/A-team-repo/src/**"
+			],
+			"compilerPath": "c:\\Users\\manav\\AppData\\Roaming\\Code\\User\\globalStorage\\vexrobotics.vexcode\\tools\\cpp\\toolchain_win32\\clang\\bin\\clang.exe",
+			"cStandard": "gnu99",
+			"cppStandard": "gnu++11",
+			"intelliSenseMode": "macos-clang-x86",
+			"compilerPathInCppPropertiesJson": "c:\\Users\\manav\\AppData\\Roaming\\Code\\User\\globalStorage\\vexrobotics.vexcode\\tools\\cpp\\toolchain_win32\\clang\\bin\\clang.exe",
+			"mergeConfigurations": false,
+			"recursiveIncludes": {},
+			"browse": {
+				"limitSymbolsToIncludedHeaders": true
+			}
+		},
+		{
+			"name": "Linux",
+			"includePath": [
+				"c:/Users/manav/AppData/Roaming/Code/User/globalStorage/vexrobotics.vexcode/sdk/cpp/V5/V5_20240802_15_00_00/vexv5/clang/8.0.0/include/**",
+				"c:/Users/manav/AppData/Roaming/Code/User/globalStorage/vexrobotics.vexcode/sdk/cpp/V5/V5_20240802_15_00_00/vexv5/gcc/include/c++/4.9.3/**",
+				"c:/Users/manav/AppData/Roaming/Code/User/globalStorage/vexrobotics.vexcode/sdk/cpp/V5/V5_20240802_15_00_00/vexv5/gcc/include/c++/4.9.3/arm-none-eabi/thumb",
+				"c:/Users/manav/AppData/Roaming/Code/User/globalStorage/vexrobotics.vexcode/sdk/cpp/V5/V5_20240802_15_00_00/vexv5/gcc/include",
+				"c:/Users/manav/AppData/Roaming/Code/User/globalStorage/vexrobotics.vexcode/sdk/cpp/V5/V5_20240802_15_00_00/vexv5/include/**",
+				"c:/Users/manav/Desktop/Python/A-team-repo/include/**",
+				"c:/Users/manav/Desktop/Python/A-team-repo/src/**"
+			],
+			"compilerPath": "",
+			"cStandard": "gnu99",
+			"cppStandard": "gnu++11",
+			"intelliSenseMode": "linux-clang-x86",
+			"compilerPathInCppPropertiesJson": "",
+			"mergeConfigurations": false,
+			"recursiveIncludes": {},
+			"browse": {
+				"limitSymbolsToIncludedHeaders": true
+			}
+		}
+	],
+	"version": 4
 }
