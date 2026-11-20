@@ -400,7 +400,7 @@ void SKILLS(){
   driveTo(3, 500, true, 3);
   lift.setVelocity(70, velocityUnits::pct);
   liftTo(30, true);
-  liftTo(460, false);
+  liftTo(400, false);
   //cascade.spinToPosition(1420, degrees, 90, velocityUnits::pct, false);
   turnToAngle(135, 1100, false, 9);
   boomerang(21.5, -48.5, 1, 186, 0.4, 1000, true, 11);//drive back to allaicne goal
@@ -433,22 +433,54 @@ void SKILLS(){
   claw.spin(fwd,12,volt);
   driveTo(5, 400, true, 5);
   liftTo(50, true);
-  liftTo(960, false);
+  liftTo(560, false);
   //cascade.spinToPosition(800, degrees, 90, velocityUnits::pct, false);
   wait(120, msec);
   turnToAngle(-90, 800, true, 12);
-  boomerang(22, -44.5, 1, -90, 0.3, 1458, true, 8);
-  liftTo(400, true, 800);
+  boomerang(26, -44.5, 1, -90, 0.3, 1458, true, 8);
+  lift.setVelocity(80, velocityUnits::pct);
+  liftTo(400, true, 900);
   claw.spin(reverse,12,volt);
   //lift.spinToPosition(700, degrees, true);
   wait(200, msec);
-  moveToPoint(70, -60, 1, 1000, false, 12);
+  liftTo(0, false);
+  driveTo(-35.5, 1200, true, 12);
   Brain.Screen.print("HI ANISH");
   // lift motor diagnostics: connected?, temp (C), current (A), own encoder (deg)  
   Brain.Screen.setCursor(10, 1);
   claw.spin(fwd,12,volt);
-  liftTo(0, false);
   turnToAngle(180, 600, true, 12);
+  resetPositionLeft();
+  driveTo(24, 950, true, 12);
+  //wait(200, msec);
+  liftTo(50, true);
+  liftTo(850, false);
+  driveTo(-6, 600, false, 12);
+  boomerang(28.5, -47.5, 1, -90, 0.3, 1458, true, 9);
+  liftTo(580, true, 800);
+  wait(200, msec);
+  claw.spin(reverse, 12, volt);
+  liftTo(0, false);
+  driveTo(-35.5, 1200, true, 12);
+  claw.spin(fwd,12,volt);
+  turnToAngle(180, 600, true, 12);
+  resetPositionLeft();
+  driveTo(24, 950, true, 12);
+  //wait(200, msec);
+  liftTo(50, true);
+  driveTo(-8, 600, false, 12);
+  liftTo(200, false);
+  turnToAngle(0, 1000, true, 12);
+  resetPositionRight();
+  boomerang(47, -24, 1, 0, 0.3, 800, true, 9);
+  liftTo(50, true);
+  
+
+
+
+
+
+  
 
   /*moveToPoint(17, -13, -1, 900, false, 10);
   //moveToPoint(-18, -60, 1, 1000, false, 12);
