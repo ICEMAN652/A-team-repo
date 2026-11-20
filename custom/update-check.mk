@@ -5,7 +5,7 @@
 # internet, no git, or the branch isn't tracking GitHub, it stays quiet and the build goes on.
 #
 # Set UPDATE_CHECK_STRICT = 1 below to stop the build instead of just warning.
-UPDATE_CHECK_STRICT = 1
+UPDATE_CHECK_STRICT = 0
 
 ifeq ($(OS),Windows_NT)
 UC_NULL = nul
