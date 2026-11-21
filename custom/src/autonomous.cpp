@@ -433,7 +433,7 @@ void SKILLS(){
   claw.spin(fwd,12,volt);
   driveTo(5, 400, true, 5);
   liftTo(50, true);
-  liftTo(560, false);
+  liftTo(500, false);
   //cascade.spinToPosition(800, degrees, 90, velocityUnits::pct, false);
   wait(120, msec);
   turnToAngle(-90, 800, true, 12);
@@ -442,39 +442,60 @@ void SKILLS(){
   liftTo(400, true, 900);
   claw.spin(reverse,12,volt);
   //lift.spinToPosition(700, degrees, true);
-  wait(200, msec);
+  wait(500, msec);
   liftTo(0, false);
-  driveTo(-35.5, 1200, true, 12);
+  driveTo(-35.5, 1200, true, 12); //backout of the alliance goal after scoring the second line cup
   Brain.Screen.print("HI ANISH");
   // lift motor diagnostics: connected?, temp (C), current (A), own encoder (deg)  
   Brain.Screen.setCursor(10, 1);
   claw.spin(fwd,12,volt);
   turnToAngle(180, 600, true, 12);
   resetPositionLeft();
-  driveTo(24, 950, true, 12);
+  driveTo(14.8, 950, true, 9);//matchload #1
   //wait(200, msec);
   liftTo(50, true);
-  liftTo(850, false);
+  liftTo(750, false);
   driveTo(-6, 600, false, 12);
-  boomerang(28.5, -47.5, 1, -90, 0.3, 1458, true, 9);
-  liftTo(580, true, 800);
+  boomerang(27, -47.5, 1, -90, 0.3, 1758, true, 6);
+  wait(450, msec);
+  lift.setVelocity(50, velocityUnits::pct);
+  liftTo(530, true, 1300);
   wait(200, msec);
   claw.spin(reverse, 12, volt);
+  wait(300, msec);
   liftTo(0, false);
   driveTo(-35.5, 1200, true, 12);
   claw.spin(fwd,12,volt);
   turnToAngle(180, 600, true, 12);
   resetPositionLeft();
-  driveTo(24, 950, true, 12);
+  driveTo(12.5, 950, true, 8); //preload get
   //wait(200, msec);
   liftTo(50, true);
   driveTo(-8, 600, false, 12);
+  moveToPoint(46.5, -39, -1, 700, true, 12);
   liftTo(200, false);
   turnToAngle(0, 1000, true, 12);
   resetPositionRight();
-  boomerang(47, -22, 1, 0, 0.3, 800, true, 9);
+  boomerang(46.5, -20, 1, 0, 0.3, 800, true, 9);
   liftTo(50, true);
-  
+  claw.spin(reverse, 12, volt);
+  wait(300, msec);
+  driveTo(-10, 800, true, 12);
+  turnToAngle(180, 1000, true, 12);
+  liftTo(0, false);
+  distanceReset('L', 'F', 377, 690);
+  claw.spin(fwd,12,volt);
+  moveToPoint(13, -15, 1, 700, true, 12);
+  turnToAngle(180, 900, true, 12);
+  driveTo(4, 500, true, 12);
+  resetPositionLeft();
+  claw.spin(fwd,0,volt);
+  liftTo(50, true, 500);
+  wait(200, sec);
+  driveTo(-8, 600, true, 12);
+  moveToPoint(46.5, 39, -1, 700, true, 12);
+  turnToAngle(180, 1000, true, 12);
+  //left 377, front 690
 
 
 
