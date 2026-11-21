@@ -33,7 +33,7 @@ static double dr_sensorDistMm(DistResetSensor* s)    { return s->sensor->objectD
  *
  * Sensor layout is built from the existing robot-config sensors (one sensor per side).
  */
-void distanceReset(char xDirection, char yDirection, double expectedXmm, double expectedYmm) {
+bool distanceReset(char xDirection, char yDirection, double expectedXmm, double expectedYmm) {
     // Build sensor descriptors from existing robot-config sensors.
     DistResetSensor drFront = { &front_sensor, front_sensor_offsetX, front_sensor_offsetY, 0.0   };
     DistResetSensor drRight = { &right_sensor, right_sensor_offsetX, right_sensor_offsetY, 90.0  };
@@ -58,7 +58,7 @@ void distanceReset(char xDirection, char yDirection, double expectedXmm, double 
 
     if (std::isnan(rawXIn) || std::isnan(rawYIn) || rawXIn > 300 || rawYIn > 300) {
         Brain.Screen.print("distanceReset: bad sensors, aborting");
-        return;
+        return false;
     }
 
     double expectedX = dr_mmToIn((float)expectedXmm);
@@ -71,4 +71,5 @@ void distanceReset(char xDirection, char yDirection, double expectedXmm, double 
     snprintf(buf, sizeof(buf), "%.3f, %.3f, %.3f", (float)x_pos, (float)y_pos, (float)getInertialHeading());
     Brain.Screen.setCursor(1, 1);
     Brain.Screen.print("Distance Reset: %s", buf);
+    return true;
 }

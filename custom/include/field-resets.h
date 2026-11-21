@@ -26,4 +26,4 @@ struct DistResetSensor {
 //   in MILLIMETERS (measured by hand beforehand) -- converted to inches
 //   internally to match x_pos/y_pos, which stay in inches like the rest of
 //   the template.
-void distanceReset(char xDirection, char yDirection, double expectedXmm, double expectedYmm);
+bool distanceReset(char xDirection, char yDirection, double expectedXmm, double expectedYmm); // true = position was reset

@@ -18,6 +18,8 @@ double correct_angle = 0;
 double field_half_size = 70.25;  // Half field size in inches
 // Colors of the PID graph that turns draw on the Brain screen
 const uint32_t graph_background = 0x000000, graph_target = 0x00FF00, graph_trace = 0xFF0000;
+// false = turns/swings do NOT draw their PID graph on the Brain screen (keeps auton debug text visible)
+bool draw_pid_graph = false;
 
 // Odometry extras: total distance driven (for waitUntilTraveled) and current speeds (for stall exits)
 double odom_traveled_in = 0;
@@ -399,8 +401,8 @@ void turnToAngle(double turn_angle, TurnDirection direction, double time_limit_m
 
   // Draw baseline for visualization
   double draw_amplifier = 230 / fabs(turn_angle);
-  hw::screenClear(graph_background);
-  hw::screenLine(0, fabs(turn_angle) * draw_amplifier, 600, fabs(turn_angle) * draw_amplifier, graph_target);
+  if (draw_pid_graph) hw::screenClear(graph_background);
+  if (draw_pid_graph) hw::screenLine(0, fabs(turn_angle) * draw_amplifier, 600, fabs(turn_angle) * draw_amplifier, graph_target);
 
   // PID loop for turning
   double start_time = hw::timeMsec();
@@ -414,7 +416,7 @@ void turnToAngle(double turn_angle, TurnDirection direction, double time_limit_m
       current_heading = getInertialHeading();
       output = pid.update(current_heading); // PID update for heading
       // Draw heading trace
-      hw::screenLine(index * 3, fabs(previous_heading) * draw_amplifier, (index + 1) * 3, fabs(current_heading * draw_amplifier), graph_trace);
+      if (draw_pid_graph) hw::screenLine(index * 3, fabs(previous_heading) * draw_amplifier, (index + 1) * 3, fabs(current_heading * draw_amplifier), graph_trace);
       index++;
       previous_heading = current_heading;
       // Clamp output
@@ -429,7 +431,7 @@ void turnToAngle(double turn_angle, TurnDirection direction, double time_limit_m
     while (getInertialHeading() > turn_angle && motionActive(start_time, time_limit_msec)) {
       current_heading = getInertialHeading();
       output = pid.update(current_heading);
-      hw::screenLine(index * 3, fabs(previous_heading) * draw_amplifier, (index + 1) * 3, fabs(current_heading * draw_amplifier), graph_trace);
+      if (draw_pid_graph) hw::screenLine(index * 3, fabs(previous_heading) * draw_amplifier, (index + 1) * 3, fabs(current_heading * draw_amplifier), graph_trace);
       index++;
       previous_heading = current_heading;
       if(output < min_output) output = min_output;
@@ -443,7 +445,7 @@ void turnToAngle(double turn_angle, TurnDirection direction, double time_limit_m
     while (!pid.targetArrived() && motionActive(start_time, time_limit_msec)) {
       current_heading = getInertialHeading();
       output = pid.update(current_heading);
-      hw::screenLine(index * 3, fabs(previous_heading) * draw_amplifier, (index + 1) * 3, fabs(current_heading * draw_amplifier), graph_trace);
+      if (draw_pid_graph) hw::screenLine(index * 3, fabs(previous_heading) * draw_amplifier, (index + 1) * 3, fabs(current_heading * draw_amplifier), graph_trace);
       index++;
       previous_heading = current_heading;
       if(output > max_output) output = max_output;
@@ -782,8 +784,8 @@ void swing(double swing_angle, double drive_direction, double time_limit_msec, b
 
   // Draw the baseline for visualization
   double draw_amplifier = 230 / fabs(swing_angle);
-  hw::screenClear(graph_background);
-  hw::screenLine(0, fabs(swing_angle) * draw_amplifier, 600, fabs(swing_angle) * draw_amplifier, graph_target);
+  if (draw_pid_graph) hw::screenClear(graph_background);
+  if (draw_pid_graph) hw::screenLine(0, fabs(swing_angle) * draw_amplifier, 600, fabs(swing_angle) * draw_amplifier, graph_target);
 
   // Start the PID loop
   double start_time = hw::timeMsec();
@@ -812,7 +814,7 @@ void swing(double swing_angle, double drive_direction, double time_limit_msec, b
       output = pid.update(current_heading);
 
       // Draw heading trace
-      hw::screenLine(
+      if (draw_pid_graph) hw::screenLine(
           index * 3, fabs(previous_heading) * draw_amplifier, 
           (index + 1) * 3, fabs(current_heading * draw_amplifier), graph_trace);
       index++;
@@ -834,7 +836,7 @@ void swing(double swing_angle, double drive_direction, double time_limit_msec, b
       output = pid.update(current_heading);
 
       // Draw heading trace
-      hw::screenLine(
+      if (draw_pid_graph) hw::screenLine(
           index * 3, fabs(previous_heading) * draw_amplifier, 
           (index + 1) * 3, fabs(current_heading * draw_amplifier), graph_trace);
       index++;
@@ -856,7 +858,7 @@ void swing(double swing_angle, double drive_direction, double time_limit_msec, b
       output = pid.update(current_heading);
 
       // Draw heading trace
-      hw::screenLine(
+      if (draw_pid_graph) hw::screenLine(
           index * 3, fabs(previous_heading) * draw_amplifier, 
           (index + 1) * 3, fabs(current_heading * draw_amplifier), graph_trace);
       index++;
@@ -878,7 +880,7 @@ void swing(double swing_angle, double drive_direction, double time_limit_msec, b
       output = pid.update(current_heading);
 
       // Draw heading trace
-      hw::screenLine(
+      if (draw_pid_graph) hw::screenLine(
           index * 3, fabs(previous_heading) * draw_amplifier, 
           (index + 1) * 3, fabs(current_heading * draw_amplifier), graph_trace);
       index++;
@@ -901,7 +903,7 @@ void swing(double swing_angle, double drive_direction, double time_limit_msec, b
     output = pid.update(current_heading);
 
     // Draw heading trace
-    hw::screenLine(
+    if (draw_pid_graph) hw::screenLine(
         index * 3, fabs(previous_heading) * draw_amplifier, 
         (index + 1) * 3, fabs(current_heading * draw_amplifier), graph_trace);
     index++;
@@ -1120,8 +1122,8 @@ void turnToPoint(double x, double y, int direction, double time_limit_msec) {
 
   // Draw the baseline for visualization
   double draw_amplifier = 230 / fabs(turn_angle);
-  hw::screenClear(graph_background);
-  hw::screenLine(0, fabs(turn_angle) * draw_amplifier, 
+  if (draw_pid_graph) hw::screenClear(graph_background);
+  if (draw_pid_graph) hw::screenLine(0, fabs(turn_angle) * draw_amplifier, 
                         600, fabs(turn_angle) * draw_amplifier, graph_target);
 
   // Start the PID loop
@@ -1137,7 +1139,7 @@ void turnToPoint(double x, double y, int direction, double time_limit_msec) {
     output = pid.update(current_heading);
 
     // Draw heading trace
-    hw::screenLine(
+    if (draw_pid_graph) hw::screenLine(
         index * 3, fabs(previous_heading) * draw_amplifier, 
         (index + 1) * 3, fabs(current_heading * draw_amplifier), graph_trace);
     index++;
