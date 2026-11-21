@@ -698,7 +698,7 @@ void SKILLS(){
   liftTo(50, true, 600);
   chkDriveTo(-8, 600, false, 12);
   liftTo(320, false);
-  moveToPoint(48, -39, -1, 700, true, 12);//move 
+  moveToPoint(49.6, -39, -1, 700, true, 12);//move 
   turnToAngle(0, 1000, true, 12);//fix angle
   chkResetRight();
   driveTo(14, 700, true, 12);
@@ -715,9 +715,9 @@ void SKILLS(){
   chkDistanceReset('L', 'F', 377, 690);
   checkpoint("postDR");
   claw.spin(fwd,12,volt);
-  moveToPoint(12, -10, 1, 900, true, 12);//go to matchloader
+  moveToPoint(15.8, -10, 1, 900, true, 12);//go to matchloader
   checkpoint("mtp1");
-  turnToAngle(183, 900, true, 12);
+  turnToAngle(184, 900, true, 12);
   chkDriveTo(8, 700, true, 12);//pick it up
   checkpoint("pickup");
   //chkResetLeft();
@@ -728,12 +728,12 @@ void SKILLS(){
   //wait(200, msec);
   driveChassis(-12,-12);
   liftTo(410, false);
-  wait(400, msec);
+  wait(230, msec);
   driveChassis(0,0);
   //chkDriveTo(-80, 5600, true, 12);
   checkpoint("back8");
-  moveToPoint(3, 8, 1, 700, true, 10);
-  turnToAngle(0, 700, true, 12);
+  moveToPoint(8, 6, 1, 900, true, 10);
+  turnToAngle(2, 700, true, 12);
   driveTo(8, 600, true, 12);
   //boomerang(2, 26, 1, 0, 0.3, 800, true, 12);
   liftTo(60, true, 670);
