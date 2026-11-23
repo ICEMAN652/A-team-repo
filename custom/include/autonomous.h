@@ -3,6 +3,7 @@
 // April tag and distanceReset helpers are in custom/include/field-resets.h
 
 void exampleAuton();
+void farside();
 void movetwoinch();
 void close_side_auto();
 void RedRight();
