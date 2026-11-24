@@ -9,3 +9,4 @@ void close_side_auto();
 void RedRight();
 void BlueLeft();
 void SKILLS();
+void near_side_auton();

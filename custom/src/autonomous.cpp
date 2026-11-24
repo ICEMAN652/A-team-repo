@@ -630,6 +630,142 @@ void chkDriveTo(double distance_in, double time_limit_msec, bool exit, double ma
   }
 }
 
+void near_side_auton(){
+  auton_start_ms = Brain.timer(msec);
+  Brain.Screen.clearScreen();
+  checkpoint("start"); // if you don't see this on the Brain screen, the new code isn't on the robot
+  lift.setVelocity(100, velocityUnits::pct);
+  liftTo(30, false);
+  claw.spin(fwd,12,volt);
+  setPose(-0.2, -62.7, 0);
+  //lift.spinToPosition(220, degrees, true);
+  //claw.spin(fwd, 6, volt);
+  //wait(100, msec);
+  //lift.spinToPosition(0, degrees, true);
+  // startMcl();
+  chkResetBack();
+  //chkResetRight();
+  //chkResetLeft();
+  //moveToPoint(0, -6, 1, 400, true, 12);
+  active_toggle.spin(fwd,12,volt);
+  wait(400, msec);
+  liftTo(200, false);
+  //chkResetBack();
+
+  //chain_bar_1.spinToPosition(50, degrees, 80, velocityUnits::pct, false);
+  //boomerang(22, -49, 1, 90, 0.4, 1400, true, 8);//drive to alliance goal
+  chkDriveTo(7.9, 800, false, 9);
+  turnToAngle(90, 700, false, 9);
+  chkDriveTo(23.5, 1000, true, 12);//preload
+  claw.spin(fwd, 0, volt);
+  chkResetRight();
+  lift.setVelocity(100, velocityUnits::pct);
+  liftTo(20, true);
+  //wait(200,msec);
+  active_toggle.spin(fwd,0,volt);
+  claw.spin(reverse, 12, volt);//drop preload
+  wait(100, msec);
+  liftTo(90, false);
+  chkDriveTo(-8, 400, true, 12);//back out of allaince goal
+  liftTo(0, false);
+  //chkResetRight();
+  lift.setVelocity(100, velocityUnits::pct);
+  //chain_bar_1.spinToPosition(0, degrees, 80, velocityUnits::pct, false);
+  //turnToAngle(45, 550, false, 12);
+  claw.spin(fwd, 12, volt);
+  turnToAngle(34, 860, false, 9);
+  chkDriveTo(17, 1000, true, 10);//allign to the first pin stack
+  //boomerang(14.94, -33, 1, 30, 0.2, 1400, true, 7);//drive to the first pin stack and align
+  //chkDriveTo(6, 750, false, 5);//drive into it
+  //wait(100, msec);
+  //chain_bar_pnuematics.set(false);//got the first pin stack on allaiance line
+  //wait(150, msec); 
+  claw.spin(reverse,12,volt);
+  chkDriveTo(5, 600, false, 6);//drive into it
+  claw.spin(fwd,12,volt);
+  chkDriveTo(4, 500, true, 5);//intake
+  lift.setVelocity(100, velocityUnits::pct);
+  //liftTo(30, true);
+  liftTo(340, false);
+  //cascade.spinToPosition(1420, degrees, 90, velocityUnits::pct, false);
+  turnToAngle(135, 1100, false, 9);
+  boomerang(22, -48.5, 1, 186, 0.4, 1000, true, 11);//drive back to allaicne goal
+  //chain_bar_1.spinToPosition(50, degrees, 80, velocityUnits::pct, false);
+  //wait(100, msec);
+  lift.setVelocity(100, velocityUnits::pct);
+  claw.spin(fwd, 0, volt);
+  liftTo(140, true);
+  claw.spin(reverse, 12, volt);//score the first pin stack
+  //wait(100, msec);
+  //cascade.spinToPosition(550, degrees, 90, velocityUnits::pct, true); //lower b4 score
+  //chain_bar_pnuematics.set(true);//score the pin stack on allaince goal
+  //cascade.spinToPosition(1220, degrees, 90, velocityUnits::pct, false);
+
+  chkDriveTo(-8, 550, false, 10);
+  liftTo(0, false);
+  //cascade.spinToPosition(0, degrees, 90, velocityUnits::pct, false);
+  //chain_bar_1.spinToPosition(0, degrees, 90, velocityUnits::pct, false);
+  turnToAngle(180, 400, true, 12);
+  chkResetLeft();
+  //turnToAngle(155, 800, true, 12);
+  //claw.spin(fwd, 12, volt);
+  boomerang(37, -36, 1, 134, 0.3, 1350, true, 10);//prepare for second pin stack
+  //wait(300, msec);
+  claw.spin(reverse, 12, volt);
+  //chkDriveTo(4.2, 700, false, 5);//drive into it
+  //chain_bar_pnuematics.set(false);//pick up second pin stack
+  chkDriveTo(10, 850, false, 5);//drive into it
+  //chkDriveTo(3, 300, false, 7);
+  lift.setVelocity(100, velocityUnits::pct);
+  claw.spin(fwd,12,volt);//grab it
+  chkDriveTo(8, 420, true, 5);
+  liftTo(150, false);
+  
+
+  moveToPoint(24, -22.4, 1, 1050, false, 12);//get out of area
+  liftTo(400, false);
+  boomerang(-22, -50, 1, -90, 0.3, 1400, false, 12);//allign to neutral goal
+  driveTo(5, 300, true, 9);
+  liftTo(250, true, 300);
+  claw.spin(reverse, 12, volt);//score
+
+  driveTo(-10, 800, false,12);
+  liftTo(0, false);
+  turnToAngle(0, 700, true, 12);
+  driveTo(10, 1000, false, 12);
+  driveTo(4, 400, false, 6);
+  claw.spin(fwd,12,volt);
+  //liftTo(30, true, 200);
+  liftTo(500, false);
+  driveTo(3, 200, true, 6);
+  //liftTo(600, false);
+  driveTo(20, 800, true, 12);
+  liftTo(0, true);
+
+
+
+  
+  /*liftTo(700, false);
+  //cascade.spinToPosition(800, degrees, 90, velocityUnits::pct, false);
+  wait(120, msec);
+  turnToAngle(-90, 800, true, 12);
+  boomerang(26, -45.5, 1, -90, 0.3, 1458, true, 8);//score second pin stack point
+  wait(200, msec);
+  claw.spin(fwd,2,volt);
+  lift.setVelocity(50, velocityUnits::pct);
+  liftTo(400, true, 950);
+  claw.spin(reverse,12,volt);//score second pin stack point
+  //lift.spinToPosition(700, degrees, true);
+  wait(500, msec);
+  liftTo(0, false);
+  chkDriveTo(-35.5, 1200, true, 12); //backout of the alliance goal after scoring the second line cup
+  checkpoint("out2");
+  Brain.Screen.print("HI ANISH");
+  // lift motor diagnostics: connected?, temp (C), current (A), own encoder (deg)  
+  Brain.Screen.setCursor(10, 1);
+  claw.spin(fwd,12,volt);*/
+}
+
 void SKILLS(){
   auton_start_ms = Brain.timer(msec);
   Brain.Screen.clearScreen();
