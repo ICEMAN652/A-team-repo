@@ -5,7 +5,9 @@
 # internet, no git, or the branch isn't tracking GitHub, it stays quiet and the build goes on.
 #
 # Set UPDATE_CHECK_STRICT = 1 below to stop the build instead of just warning.
-UPDATE_CHECK_STRICT = 0
+# Strict mode keeps the Build button: pressing it shows the OUTDATED CODE error and
+# no program is made, so old code can't be downloaded.
+UPDATE_CHECK_STRICT = 1
 
 ifeq ($(OS),Windows_NT)
 UC_NULL = nul
@@ -31,7 +33,15 @@ ifneq ($(UC_BEHIND),)
 ifneq ($(UC_BEHIND),0)
 UC_MSG = OUTDATED CODE: you are $(UC_BEHIND) commit(s) behind $(UC_UPSTREAM). Run "git pull" (or Source Control > Pull in VS Code) before downloading to the robot.
 ifeq ($(UPDATE_CHECK_STRICT),1)
-$(error $(UC_MSG))
+# Stop the build at link time, NOT here while the makefile is being read: a $(error) at
+# read time breaks every `make` call, including the ones the VEX extension runs to load
+# the project, and that hides the Build button. This way the makefile always loads, the
+# Build button stays, and pressing Build fails with this message and makes no .bin.
+.DEFAULT_GOAL := all
+.PHONY: update-check-outdated
+update-check-outdated:
+	$(error $(UC_MSG))
+$(BUILD)/$(PROJECT).elf: update-check-outdated
 else
 $(info )
 $(info ************************************************************************)
