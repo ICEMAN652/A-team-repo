@@ -1,12 +1,8 @@
 // Format: returnType functionName();
 
-// April tag and distanceReset helpers are in custom/include/field-resets.h
-
+void movetwoinch();
 void exampleAuton();
 void farside();
-void movetwoinch();
-void close_side_auto();
-void RedRight();
-void BlueLeft();
+void farside_3_cup_auton();
 void SKILLS();
 void near_side_auton();

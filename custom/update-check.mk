@@ -37,10 +37,23 @@ ifeq ($(UPDATE_CHECK_STRICT),1)
 # read time breaks every `make` call, including the ones the VEX extension runs to load
 # the project, and that hides the Build button. This way the makefile always loads, the
 # Build button stays, and pressing Build fails with this message and makes no .bin.
+#
+# It also opens a popup window so nobody misses it (Mac: system alert, Windows: message box,
+# Linux: zenity/notify-send if installed). The popup text has no quotes or apostrophes on
+# purpose, so it survives every shell. If a popup can't open, the build still stops with the error.
+UC_POPUP_TITLE = Outdated code - build stopped
+UC_POPUP_TEXT  = This code is $(UC_BEHIND) commit(s) behind GitHub ($(UC_UPSTREAM)). Pull first: Source Control > Pull in VS Code, or run git pull. Then build again. Nothing was built, so the old code was NOT downloaded to the robot.
+ifeq ($(OS),Windows_NT)
+UC_POPUP = powershell -NoProfile -Command "Add-Type -AssemblyName PresentationFramework; [void][System.Windows.MessageBox]::Show('$(UC_POPUP_TEXT)', '$(UC_POPUP_TITLE)', 'OK', 'Error')" >$(UC_NULL) 2>&1
+else ifeq ($(shell uname -s),Darwin)
+UC_POPUP = osascript -e 'display alert "$(UC_POPUP_TITLE)" message "$(UC_POPUP_TEXT)" as critical' >$(UC_NULL) 2>&1 &
+else
+UC_POPUP = (zenity --error --title='$(UC_POPUP_TITLE)' --text='$(UC_POPUP_TEXT)' || notify-send '$(UC_POPUP_TITLE)' '$(UC_POPUP_TEXT)') >$(UC_NULL) 2>&1 &
+endif
 .DEFAULT_GOAL := all
 .PHONY: update-check-outdated
 update-check-outdated:
-	$(error $(UC_MSG))
+	$(shell $(UC_POPUP))$(error $(UC_MSG))
 $(BUILD)/$(PROJECT).elf: update-check-outdated
 else
 $(info )
