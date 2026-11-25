@@ -15,15 +15,24 @@ struct DistResetSensor {
     double headingOffsetDeg;
 };
 
-// Reads the raw sensor-lens-to-wall distance off each of two chosen distance
-// sensors and sets x_pos/y_pos to the ERROR between the distance you expected
-// (expectedXmm, expectedYmm) and what the sensor actually reads right now --
-// a direct raw-distance comparison, with no heading correction or field-center
-// projection applied. Does nothing if either sensor can't see a wall.
-// xDirection: which sensor to use for the X-side reading ('F'=front, 'B'=back, 'R'=right, 'L'=left)
-// yDirection: which sensor to use for the Y-side reading ('F'=front, 'B'=back, 'R'=right, 'L'=left)
-// expectedXmm / expectedYmm: the sensor-to-wall distance you expect right now,
-//   in MILLIMETERS (measured by hand beforehand) -- converted to inches
-//   internally to match x_pos/y_pos, which stay in inches like the rest of
-//   the template.
-void distanceReset(char xDirection, char yDirection, double expectedXmm, double expectedYmm);
+// What distanceReset() used, for debugging (see chkDistanceReset in auton-debug).
+struct DistanceResetInfo {
+    bool ok = false;
+    const char* fail_reason = "";   // why it was skipped, when ok is false
+    double square_heading = 0;      // heading rounded to 0/90/180/270
+    double off_square_deg = 0;      // how far the real heading was from that (e.g. 0.45)
+    double side_mm = 0, end_mm = 0; // raw readings
+    char side_axis = '?', end_axis = '?';  // 'x' or 'y': which coordinate each sensor set
+    int side_sign = 0, end_sign = 0;       // +1 = sensor faces a - wall, -1 = faces a + wall
+};
+
+// Resets x_pos/y_pos from two distance sensors. The heading decides which sensor sets x and
+// which sets y (and the sign), so you only pick the sensors:
+//   sideSensor: 'L' or 'R'      endSensor: 'F' or 'B'
+//   expectedSideMm / expectedEndMm: what THAT sensor reads (mm) at the spot you want to be 0.
+// Works with headings that aren't exactly square (270.45, 271, ...): it rounds to the nearest
+// 0/90/180/270 and corrects the reading for the small tilt. Skipped if more than 15 deg off square.
+// Example, robot at ~180:  distanceReset('L', 'F', 377, 690);
+// Returns true if the position was reset. Details of the full rules: custom/src/field-resets.cpp
+bool distanceReset(char sideSensor, char endSensor, double expectedSideMm, double expectedEndMm,
+                   DistanceResetInfo* info = nullptr);

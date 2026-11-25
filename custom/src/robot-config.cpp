@@ -28,7 +28,7 @@ motor right_chassis2 = motor(PORT9, ratio6_1, false); //right back //recremp
 motor_group right_chassis = motor_group(right_chassis1, right_chassis2);
 
 motor claw = motor(PORT1, ratio18_1, true); 
-motor active_toggle=motor(PORT13, ratio18_1, true);
+motor active_toggle=motor(PORT12, ratio18_1, true);
 //motor chain_bar_2 = motor(PORT16, ratio18_1, true);
 
 //motor_group chain_bar = motor_group(chain_bar_1, chain_bar_2);    

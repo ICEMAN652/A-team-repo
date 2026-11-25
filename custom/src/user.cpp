@@ -257,7 +257,12 @@ void runPreAutonomous() {
   // Autonomous routines for the selector, in the order they appear on the Brain screen.
   // The first one is picked by default (until a choice is saved on the SD card).
   //addAuton("Move 2 in", movetwoinch); pid  addAuton("Move 2 in", movetwoinch);
+  addAuton("near_side_auton", near_side_auton);
   addAuton("SKILLS", SKILLS);
+  addAuton("farside", farside);
+  addAuton("red right", RedRight);
+  addAuton("Blue Left", BlueLeft);
+  //addAuton("SKILLS", SKILLS);
   addAuton("close_side_auto", close_side_auto);
   addAuton("Blue Left", BlueLeft);
   addAuton("Example", exampleAuton);
