@@ -103,8 +103,84 @@ void farside(){
 }
 
 //scores preload and 3 more cups while almost getting local awp
+// Mirror of near_side_auton across the field's center line (x = 0):
+//   x -> -x, y unchanged, heading -> -heading (36 -> -36, 90 -> -90, 180 -> -180, 0 stays 0),
+//   and the LEFT/RIGHT distance resets swap (the wall the right sensor saw is now on the left).
+//   driveTo distances, moveToPoint directions, lift and claw are unchanged.
 void farside_3_cup_auton(){
-  
+  startAutonDebug("FAR 3 CUP");
+  lift.setVelocity(100, velocityUnits::pct);
+  liftTo(30, false);
+  claw.spin(fwd,12,volt);
+  setPose(0.2, -62.7, 0);
+  chkResetBack();
+  active_toggle.spin(fwd,12,volt);
+  wait(400, msec);
+  liftTo(206, false);
+
+  chkDriveTo(7.9, 800, false, 9);
+  boomerang(-23.5, -47.6, 1, -90, 0.4, 1200, true, 10);//preload
+
+  claw.spin(fwd, 0, volt);
+  chkResetLeft();                              // near side: chkResetRight
+  lift.setVelocity(100, velocityUnits::pct);
+  liftTo(20, true);
+  active_toggle.spin(fwd,0,volt);
+  claw.spin(reverse, 12, volt);//drop preload
+  wait(100, msec);
+  liftTo(90, false);
+  chkDriveTo(-7.67, 400, true, 12);//back out of allaince goal
+  liftTo(0, false);
+  lift.setVelocity(100, velocityUnits::pct);
+  claw.spin(fwd, 12, volt);
+  turnToAngle(-36, 860, false, 9);
+  chkDriveTo(17, 1000, true, 10);//allign to the first pin stack
+  claw.spin(reverse,12,volt);
+  chkDriveTo(6, 600, false, 4);//drive into it
+  claw.spin(fwd,12,volt);                     //grab 1st pin and cup
+  liftTo(340, false);
+  chkDriveTo(5.5, 500, true, 5);//intake
+  lift.setVelocity(100, velocityUnits::pct);
+  turnToAngle(-135, 1100, false, 9);
+  boomerang(-22.5, -46, 1, -186, 0.4, 900, true, 11);//drive back to allaicne goal
+  lift.setVelocity(100, velocityUnits::pct);
+  claw.spin(fwd, 0, volt);
+  liftTo(140, true);
+  claw.spin(reverse, 12, volt);//score the first pin stack
+
+  chkDriveTo(-8, 550, false, 10);
+  liftTo(0, false);
+  turnToAngle(-180, 400, true, 12);
+  chkResetRight();                             // near side: chkResetLeft
+  boomerang(-37.2, -36, 1, -134, 0.2, 1350, true, 10);//prepare for second pin stack
+  claw.spin(reverse, 12, volt);
+  chkDriveTo(13, 960, false, 6);//drive into it
+  lift.setVelocity(100, velocityUnits::pct);
+  claw.spin(fwd,12,volt);//grab it
+  chkDriveTo(7, 420, true, 4);
+  liftTo(150, false);
+
+  moveToPoint(-24, -22.4, 1, 1050, false, 12);//get out of area
+  liftTo(400, false);
+  boomerang(22, -51, 1, 90, 0.3, 1450, false, 12);//allign to neutral goal
+  driveTo(5, 300, true, 7);
+  chkResetRight();                             // near side: chkResetLeft
+  liftTo(250, true, 300);
+  claw.spin(reverse, 12, volt);//score
+
+  moveToPoint(0,-48,-1,700, false, 12);
+  liftTo(0, false);
+  turnToAngle(0, 650, true, 12);
+  moveToPoint(-1.2,-28,1,500,false,12);
+  claw.spin(reverse,12,volt);
+  driveTo(4.5, 500, false, 5);
+  claw.spin(fwd, 12, volt);
+  liftTo(500, false);
+  driveTo(3.6, 350, true, 3.5);
+  moveToPoint(-2.2,-4.6,1,500,false,12);
+  wait(150, msec);
+  lift.setVelocity(100, velocityUnits::pct);
+  liftTo(350, false, 500);
 }
 
 //(-0.2,-63.7) is starting point with the toggle on the back
