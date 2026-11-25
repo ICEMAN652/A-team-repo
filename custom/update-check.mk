@@ -7,7 +7,7 @@
 # Set UPDATE_CHECK_STRICT = 1 below to stop the build instead of just warning.
 # Strict mode keeps the Build button: pressing it shows the OUTDATED CODE error and
 # no program is made, so old code can't be downloaded.
-UPDATE_CHECK_STRICT = 0
+UPDATE_CHECK_STRICT = 1
 
 ifeq ($(OS),Windows_NT)
 UC_NULL = nul
