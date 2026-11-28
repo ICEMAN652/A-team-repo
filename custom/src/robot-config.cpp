@@ -35,7 +35,7 @@ motor active_toggle=motor(PORT12, ratio18_1, true);
 
 motor lift_1 = motor(PORT3, ratio18_1, true);  
 motor lift_2 = motor(PORT14, ratio18_1, false); 
-motor lift_3 = motor(PORT8, ratio18_1, false);
+motor lift_3 = motor(PORT6, ratio18_1, false);
 
 motor_group lift = motor_group(lift_1, lift_2, lift_3);
 
@@ -55,9 +55,9 @@ rotation vertical_tracker = rotation(PORT17, true);
 
 // Set these to random ports if you are not using distance resets
 distance left_sensor = distance(PORT10);
-distance right_sensor = distance(PORT19); 
+distance right_sensor = distance(PORT15); 
 distance back_sensor = distance(PORT4);
-distance front_sensor = distance(PORT15);
+distance front_sensor = distance(PORT19);
 
 
 // ============================================================================

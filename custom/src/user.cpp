@@ -257,7 +257,7 @@ void runPreAutonomous() {
   // Autonomous routines for the selector, in the order they appear on the Brain screen.
   // The first one is picked by default (until a choice is saved on the SD card).
 //addAuton("farside_3_cup_auton", farside_3_cup_auton);
-addAuton("near_side_auton", near_side_auton);
+//addAuton("near_side_auton", near_side_auton);
   addAuton("SKILLS", SKILLS);
   addAuton("farside", farside);
 //addAuton("farside_3_cup_auton", farside_3_cup_auton);
