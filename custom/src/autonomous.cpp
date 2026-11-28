@@ -109,17 +109,18 @@ void farside(){
 //   driveTo distances, moveToPoint directions, lift and claw are unchanged.
 void farside_3_cup_auton(){
   startAutonDebug("FAR 3 CUP");
+  active_toggle.spin(fwd,12,volt);
   lift.setVelocity(100, velocityUnits::pct);
   liftTo(30, false);
   claw.spin(fwd,12,volt);
   setPose(0.2, -62.7, 0);
   chkResetBack();
-  active_toggle.spin(fwd,12,volt);
+  
   wait(450, msec);
   liftTo(206, false);
 
   chkDriveTo(7.9, 800, false, 9);
-  boomerang(-23.5, -47.6, 1, -90, 0.4, 1200, true, 10);//preload
+  boomerang(-23.5, -47.6, 1, -90, 0.4, 1150, true, 12);//preload
 
   claw.spin(fwd, 0, volt);
   chkResetLeft();                              // near side: chkResetRight
@@ -129,12 +130,12 @@ void farside_3_cup_auton(){
   claw.spin(reverse, 12, volt);//drop preload
   wait(100, msec);
   liftTo(90, false);
-  chkDriveTo(-7.54, 400, true, 12);//back out of allaince goal
+  chkDriveTo(-7.5, 400, true, 12);//back out of allaince goal
   liftTo(0, false);
   lift.setVelocity(100, velocityUnits::pct);
   claw.spin(fwd, 12, volt);
-  turnToAngle(-36, 860, false, 9);
-  chkDriveTo(17, 1000, true, 10);//allign to the first pin stack
+  turnToAngle(-36.75, 860, false, 9);
+  chkDriveTo(17, 900, true, 12);//allign to the first pin stack
   claw.spin(reverse,12,volt);
   chkDriveTo(7, 600, false, 5);//drive into it
   claw.spin(fwd,12,volt);                     //grab 1st pin and cup
@@ -142,7 +143,7 @@ void farside_3_cup_auton(){
   chkDriveTo(5.5, 500, true, 5);//intake
   lift.setVelocity(100, velocityUnits::pct);
   turnToAngle(-135, 1100, false, 9);
-  boomerang(-25.5, -46, 1, -186, 0.4, 900, true, 11);//drive back to allaicne goal
+  boomerang(-25.5, -46, 1, -186, 0.4, 900, true, 12);//drive back to allaicne goal
   lift.setVelocity(100, velocityUnits::pct);
   claw.spin(fwd, 0, volt);
   liftTo(140, true);
@@ -152,9 +153,9 @@ void farside_3_cup_auton(){
   liftTo(0, false);
   turnToAngle(-180, 400, true, 12);
   chkResetRight();                             // near side: chkResetLeft
-  boomerang(-36.2, -36, 1, -134, 0.2, 1350, true, 10);//prepare for second pin stack
+  boomerang(-35.56, -36, 1, -134, 0.2, 1550, true, 9);//prepare for second pin stack
   claw.spin(reverse, 12, volt);
-  chkDriveTo(14, 1060,false, 6);//drive into it
+  chkDriveTo(12, 1060,false, 6);//drive into it
   lift.setVelocity(100, velocityUnits::pct);
   claw.spin(fwd,12,volt);//grab it
   chkDriveTo(7, 420, true, 4);
@@ -168,16 +169,17 @@ void farside_3_cup_auton(){
   liftTo(250, true, 300);
   claw.spin(reverse, 12, volt);//score
 
-  moveToPoint(1,-48,-1,700, false, 12);
+  moveToPoint(2,-48,-1,700, false, 12);
   liftTo(0, false);
   turnToAngle(0, 650, true, 12);
-  moveToPoint(1.2,-28,1,500,false,12);
+  moveToPoint(2.2,-28,1,500,false,12);
   claw.spin(reverse,12,volt);
-  driveTo(4.1, 500, false, 5);
+  driveTo(2.5, 500, false, 4);
   claw.spin(fwd, 12, volt);
+  driveTo(4, 350, true, 3.5);
+  wait(10,msec);
   liftTo(500, false);
-  driveTo(3.6, 350, true, 3.5);
-  moveToPoint(1.2,-4.6,1,500,false,12);
+  moveToPoint(2.2,-4.6,1,500,false,12);
   wait(150, msec);
   lift.setVelocity(100, velocityUnits::pct);
   liftTo(350, false, 500);
