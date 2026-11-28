@@ -92,8 +92,8 @@ void runDriver() {
       double t = turnInput / 127.0;
 
      // === TUNING PARAMETERS ===
-    const double QUICK_TURN_GAIN = 0.8; // High sensitivity for spinning in place (1.0 is default)
-    const double CURVE_GAIN = 1.8;      // Amplifies the power difference between left and right sides during a curve 
+    const double QUICK_TURN_GAIN = 1.3; // High sensitivity for spinning in place (1.0 is default)
+    const double CURVE_GAIN = 2.8;      // Amplifies the power difference between left and right sides during a curve 
     
     // 3. Curvature Drive Logic
     // We want the turn gripping power to change based on forward speed.
